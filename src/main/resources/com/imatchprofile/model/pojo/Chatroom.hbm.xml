@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 14 d?c. 2017 20:28:42 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.imatchprofile.model.pojo.Chatroom" table="chatroom" catalog="imatchprofile" optimistic-lock="version">
+        <id name="chatroomId" type="java.lang.Integer">
+            <column name="chatroom_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="candidate" class="com.imatchprofile.model.pojo.Candidate" fetch="select">
+            <column name="candidate_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="recruiter" class="com.imatchprofile.model.pojo.Recruiter" fetch="select">
+            <column name="recruiter_id" not-null="true" />
+        </many-to-one>
+        <property name="status" type="byte">
+            <column name="status" not-null="true" />
+        </property>
+        <set name="messages" table="message" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="chatroom_id" not-null="true" />
+            </key>
+            <one-to-many class="com.imatchprofile.model.pojo.Message" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 14 d?c. 2017 20:28:42 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.imatchprofile.model.pojo.Message" table="message" catalog="imatchprofile" optimistic-lock="version">
+        <id name="messageId" type="java.lang.Integer">
+            <column name="message_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="chatroom" class="com.imatchprofile.model.pojo.Chatroom" fetch="select">
+            <column name="chatroom_id" not-null="true" />
+        </many-to-one>
+        <property name="sentByRecruiter" type="byte">
+            <column name="sent_by_recruiter" not-null="true" />
+        </property>
+        <property name="content" type="string">
+            <column name="content" length="300" not-null="true" />
+        </property>
+        <property name="sendingDate" type="timestamp">
+            <column name="sending_date" length="19" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

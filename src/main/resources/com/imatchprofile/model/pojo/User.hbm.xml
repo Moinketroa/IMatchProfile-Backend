@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 14 d?c. 2017 20:28:42 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.imatchprofile.model.pojo.User" table="user" catalog="imatchprofile" optimistic-lock="version">
+        <id name="userId" type="java.lang.Integer">
+            <column name="user_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="candidate" class="com.imatchprofile.model.pojo.Candidate" fetch="select">
+            <column name="sub_user_id" />
+        </many-to-one>
+        <many-to-one name="moderator" class="com.imatchprofile.model.pojo.Moderator" update="false" insert="false" fetch="select">
+            <column name="sub_user_id" />
+        </many-to-one>
+        <many-to-one name="recruiter" class="com.imatchprofile.model.pojo.Recruiter" update="false" insert="false" fetch="select">
+            <column name="sub_user_id" />
+        </many-to-one>
+        <property name="lastname" type="string">
+            <column name="lastname" length="45" not-null="true" />
+        </property>
+        <property name="firstname" type="string">
+            <column name="firstname" length="45" not-null="true" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="45" not-null="true" unique="true" />
+        </property>
+        <property name="password" type="string">
+            <column name="password" length="45" not-null="true" />
+        </property>
+        <property name="photoUrl" type="string">
+            <column name="photoUrl" length="45" />
+        </property>
+        <property name="role" type="string">
+            <column name="role" length="45" />
+        </property>
+        <set name="candidates" table="candidate" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user_id" not-null="true" />
+            </key>
+            <one-to-many class="com.imatchprofile.model.pojo.Candidate" />
+        </set>
+        <set name="candidatereportses" table="candidatereports" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user_id" not-null="true" />
+            </key>
+            <one-to-many class="com.imatchprofile.model.pojo.Candidatereports" />
+        </set>
+        <set name="recruiters" table="recruiter" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user_id" not-null="true" />
+            </key>
+            <one-to-many class="com.imatchprofile.model.pojo.Recruiter" />
+        </set>
+        <set name="jobreportses" table="jobreports" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user_id" not-null="true" />
+            </key>
+            <one-to-many class="com.imatchprofile.model.pojo.Jobreports" />
+        </set>
+        <set name="moderators" table="moderator" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user_id" not-null="true" />
+            </key>
+            <one-to-many class="com.imatchprofile.model.pojo.Moderator" />
+        </set>
+    </class>
+</hibernate-mapping>

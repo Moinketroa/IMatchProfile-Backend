@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 14 d?c. 2017 20:28:42 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.imatchprofile.model.pojo.Masters" table="masters" catalog="imatchprofile" optimistic-lock="version">
+        <id name="mastersId" type="java.lang.Integer">
+            <column name="masters_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="candidate" class="com.imatchprofile.model.pojo.Candidate" fetch="select">
+            <column name="candidate_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="skill" class="com.imatchprofile.model.pojo.Skill" fetch="select">
+            <column name="skill_id" not-null="true" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 14 d?c. 2017 20:28:42 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.imatchprofile.model.pojo.Recruiter" table="recruiter" catalog="imatchprofile" optimistic-lock="version">
+        <id name="recruiterId" type="java.lang.Integer">
+            <column name="recruiter_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="user" class="com.imatchprofile.model.pojo.User" fetch="select">
+            <column name="user_id" not-null="true" />
+        </many-to-one>
+        <property name="description" type="string">
+            <column name="description" length="300" not-null="true" />
+        </property>
+        <property name="company" type="string">
+            <column name="company" length="45" not-null="true" />
+        </property>
+        <set name="chatrooms" table="chatroom" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="recruiter_id" not-null="true" />
+            </key>
+            <one-to-many class="com.imatchprofile.model.pojo.Chatroom" />
+        </set>
+        <set name="jobs" table="job" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="recruiter_id" not-null="true" />
+            </key>
+            <one-to-many class="com.imatchprofile.model.pojo.Job" />
+        </set>
+        <set name="users" table="user" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="sub_user_id" />
+            </key>
+            <one-to-many class="com.imatchprofile.model.pojo.User" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 14 d?c. 2017 20:28:42 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.imatchprofile.model.pojo.Experience" table="experience" catalog="imatchprofile" optimistic-lock="version">
+        <id name="experienceId" type="java.lang.Integer">
+            <column name="experience_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="candidate" class="com.imatchprofile.model.pojo.Candidate" fetch="select">
+            <column name="candidate_id" not-null="true" />
+        </many-to-one>
+        <property name="title" type="string">
+            <column name="title" length="45" not-null="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="300" not-null="true" />
+        </property>
+        <property name="startDate" type="timestamp">
+            <column name="start_date" length="19" not-null="true" />
+        </property>
+        <property name="endDate" type="timestamp">
+            <column name="end_date" length="19" not-null="true" />
+        </property>
+        <property name="company" type="string">
+            <column name="company" length="45" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
