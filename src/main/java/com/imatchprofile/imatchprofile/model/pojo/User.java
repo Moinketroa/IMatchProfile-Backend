@@ -1,5 +1,5 @@
 package com.imatchprofile.imatchprofile.model.pojo;
-// Generated 8 déc. 2017 20:48:06 by Hibernate Tools 4.3.1
+// Generated 8 dï¿½c. 2017 20:48:06 by Hibernate Tools 4.3.1
 
 
 import java.util.HashSet;
@@ -215,6 +215,11 @@ public class User  implements java.io.Serializable {
     
     public void setModerators(Set moderators) {
         this.moderators = moderators;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" + "userId=" + userId + ", candidate=" + candidate + ", moderator=" + moderator + ", recruiter=" + recruiter + ", lastname=" + lastname + ", firstname=" + firstname + ", email=" + email + ", password=" + password + ", photoUrl=" + photoUrl + ", role=" + role + ", candidates=" + candidates + ", candidatereportses=" + candidatereportses + ", recruiters=" + recruiters + ", jobreportses=" + jobreportses + ", moderators=" + moderators + '}';
     }
 
 
