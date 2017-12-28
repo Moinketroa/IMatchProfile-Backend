@@ -1,5 +1,5 @@
 package com.imatchprofile.model.pojo;
-// Generated 14 déc. 2017 20:28:42 by Hibernate Tools 4.3.1
+// Generated 27 déc. 2017 17:10:07 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
