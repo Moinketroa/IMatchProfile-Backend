@@ -30,7 +30,7 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(com.imatchprofile.routes.CandidateRoutes.class);
+        resources.add(com.imatchprofile.routes.CrossOriginResourceSharingFilter.class);
         resources.add(com.imatchprofile.routes.UserRoutes.class);
-    }
-    
+    }  
 }
