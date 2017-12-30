@@ -15,7 +15,7 @@ import org.json.JSONObject;
  */
 public class User  implements java.io.Serializable {
 
-    private static String SALT = "impsalt";
+    private static String SALT = "#x#542j7#Z3-J84EU-W#dxxDSD7s#m_4f";
 
      private Integer userId;
      private Candidate candidate;
@@ -114,15 +114,7 @@ public class User  implements java.io.Serializable {
     }
     
     public void setPassword(String password) {
-        try {
-            String saltedPassword = password + SALT;
-            
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-            messageDigest.update(saltedPassword.getBytes());
-            this.password = new String(messageDigest.digest());
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        this.password = password;
     }
     public String getPhotoUrl() {
         return this.photoUrl;
@@ -174,26 +166,40 @@ public class User  implements java.io.Serializable {
         this.moderators = moderators;
     }
 
-    public String toJSON(){
+    public static String encryptPassword(String password) {
+        try {
+            String saltedPassword = password + SALT;
+            
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(saltedPassword.getBytes());
+            return new String(messageDigest.digest());
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    
+    public JSONObject toJSON(){
         JSONObject userJSON = new JSONObject();
         userJSON.put("user_id", this.userId);
         userJSON.put("lastname", this.lastname);
         userJSON.put("firstname", this.firstname);
         userJSON.put("email", this.email);
         userJSON.put("photoUrl", this.photoUrl);
+        userJSON.put("role", this.role);
         switch (this.role){
             case "C":
-                userJSON.put("candidate_id", this.candidate.getCandidateId());
+                userJSON.put("sub_user_id", this.candidate.getCandidateId());
                 break;
             case "R":
-                userJSON.put("recruiter_id", this.recruiter.getRecruiterId());
+                userJSON.put("sub_user_id", this.recruiter.getRecruiterId());
                 break;
             case "M":
-                userJSON.put("moderator_id", this.moderator.getModeratorId());
+                userJSON.put("sub_user_id", this.moderator.getModeratorId());
                 break;
         }
         
-        return userJSON.toString();
+        return userJSON;
     }
 }
 

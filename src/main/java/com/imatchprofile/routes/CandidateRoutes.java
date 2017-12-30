@@ -30,17 +30,7 @@ public class CandidateRoutes {
     @Context
     private UriInfo context;
     
-    @Context
-    private HttpServletResponse response;
-    
-    private CandidateDAO candidateDAO;
-
-    /**
-     * Creates a new instance of CandidateRoutes
-     */
-    public CandidateRoutes() {
-        this.candidateDAO = new CandidateDAO();
-    }
+    private final CandidateDAO candidateDAO = new CandidateDAO();
     
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -48,10 +38,11 @@ public class CandidateRoutes {
     public Response postCandidate(String content){
         Gson g = new Gson();
         User userCandidate = g.fromJson(content, User.class);
+        userCandidate.setPassword(User.encryptPassword(userCandidate.getPassword()));
         candidateDAO.create(userCandidate);
         if (userCandidate.getUserId() == null)
             return Response.status(Response.Status.BAD_REQUEST).entity(content).build();
         else
-            return Response.status(Response.Status.CREATED).entity(userCandidate.toJSON()).build();
+            return Response.status(Response.Status.CREATED).entity(userCandidate.toJSON().toString()).build();
     }
 }

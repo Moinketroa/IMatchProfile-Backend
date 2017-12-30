@@ -42,7 +42,7 @@ Contributor(s):
 <hibernate-configuration>
   <session-factory>
     <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-    <property name="hibernate.connection.url">jdbc:mysql://imatchprofiledb.cs71b8arlkz9.eu-central-1.rds.amazonaws.com:3306/imatchprofileDB?zeroDateTimeBehavior=convertToNull</property>
+    <property name="hibernate.connection.url">jdbc:mysql://imatchprofiledb.cs71b8arlkz9.eu-central-1.rds.amazonaws.com:3306/imatchprofile?zeroDateTimeBehavior=convertToNull</property>
     <property name="hibernate.connection.username">imatchprofileADM</property>
     <property name="hibernate.connection.password">H#f6Z74#6gxy8k_6J+3)q6F+kM=A*AGr4</property>
     <property name="hibernate.connection.pool_size">10</property>
