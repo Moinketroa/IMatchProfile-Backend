@@ -41,6 +41,8 @@ public class LoginRoutes {
             return Response.status(Response.Status.OK).entity(loginService.login(content)).build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{}").build();
+        } catch (Throwable t) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{}").build();
         }
     }
 }

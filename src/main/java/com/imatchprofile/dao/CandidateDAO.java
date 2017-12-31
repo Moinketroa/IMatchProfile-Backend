@@ -5,7 +5,6 @@
  */
 package com.imatchprofile.dao;
 
-import com.google.gson.Gson;
 import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.Role;
 import com.imatchprofile.model.pojo.User;
@@ -20,46 +19,28 @@ import org.hibernate.Transaction;
 public class CandidateDAO {
 
     public void create(User userCandidate) {
-        //creating a user without any subclass
+        
         Transaction trns = null;
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
+            //creating a user without any subclass
             trns = session.beginTransaction();
             session.save(userCandidate);
             session.getTransaction().commit();
-        } catch (RuntimeException e) {
-            if (trns != null) {
-                trns.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
+
+            //creating a candidate with the user created
+            Candidate newCandidate = new Candidate(userCandidate, "", "", "", (byte) 1);
         
-        //creating a candidate with the user created
-        Candidate newCandidate = new Candidate(userCandidate, "", "", "", (byte) 1);
-        
-        trns = null;
-        session = HibernateUtil.getSessionFactory().openSession();
-        try {
             trns = session.beginTransaction();
             session.save(newCandidate);
             session.getTransaction().commit();
-        } catch (RuntimeException e) {
-            if (trns != null) {
-                trns.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
         
-        //updating the user with the candidate created
-        userCandidate.setCandidate(newCandidate);
-        userCandidate.setRole(Role.CANDIDATE.toString());
-        trns = null;
-        session = HibernateUtil.getSessionFactory().openSession();
-        try {
+            //updating the user with the candidate created
+            userCandidate.setCandidate(newCandidate);
+            userCandidate.setRole(Role.CANDIDATE.toString());
+            trns = null;
+            session = HibernateUtil.getSessionFactory().openSession();
+
             trns = session.beginTransaction();
             session.update(userCandidate);
             session.getTransaction().commit();

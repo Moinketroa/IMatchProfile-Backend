@@ -7,6 +7,7 @@ package com.imatchprofile.dao;
 
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -33,7 +34,14 @@ public class UserDAO {
         Root<User> root = query.from(User.class);
         query.select(root).where(builder.equal(root.get("email"), email));
         Query<User> q = session.createQuery(query);
-        User userFound = q.getSingleResult();
+        User userFound;
+        
+        try {
+            userFound = q.getSingleResult();
+        } catch (NoResultException ex) {
+            userFound = null;
+        }
+        
         transaction.commit();
         
         //fermeture session

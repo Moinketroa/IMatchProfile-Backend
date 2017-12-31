@@ -23,10 +23,10 @@ import org.json.JSONObject;
  *
  * @author MasterChief
  */
-public class LoginService {
+public class LoginService extends Service {
     
-    public static final String SECRET = "3__v#LU_c-2R-J6#Mv-L2BMjK#_kh5r9y-6r7D59HD7fbs3#8vF55Rp--63-wc_La35dcSMqc93ZUDj-T-d-8HLPa-4_4_k-n_M85R#_gdrn2422##-Kha5FLR-#P_W-QzFFc3B4cc862";
-    public final UserDAO userDAO = new UserDAO();
+    private static final String SECRET = "3__v#LU_c-2R-J6#Mv-L2BMjK#_kh5r9y-6r7D59HD7fbs3#8vF55Rp--63-wc_La35dcSMqc93ZUDj-T-d-8HLPa-4_4_k-n_M85R#_gdrn2422##-Kha5FLR-#P_W-QzFFc3B4cc862";
+    private final UserDAO userDAO = new UserDAO();
     
     public String login(String content) throws IMPException {
         
@@ -43,7 +43,7 @@ public class LoginService {
         }
         
         //verification de l'existence des champs
-        if (email == null || password == null)
+        if (oneOfIsNull(email, password))
             throw new IMPException(Response.Status.BAD_REQUEST);
         
         //verification de l'email

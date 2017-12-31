@@ -8,7 +8,9 @@ package com.imatchprofile.routes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.imatchprofile.dao.CandidateDAO;
+import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.model.pojo.User;
+import com.imatchprofile.service.CandidateService;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -30,19 +32,18 @@ public class CandidateRoutes {
     @Context
     private UriInfo context;
     
-    private final CandidateDAO candidateDAO = new CandidateDAO();
+    private final CandidateService candidateService = new CandidateService();
     
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response postCandidate(String content){
-        Gson g = new Gson();
-        User userCandidate = g.fromJson(content, User.class);
-        userCandidate.setPassword(User.encryptPassword(userCandidate.getPassword()));
-        candidateDAO.create(userCandidate);
-        if (userCandidate.getUserId() == null)
-            return Response.status(Response.Status.BAD_REQUEST).entity(content).build();
-        else
-            return Response.status(Response.Status.CREATED).entity(userCandidate.toJSON().toString()).build();
+        try {
+            return Response.status(Response.Status.CREATED).entity(candidateService.signIn(content)).build();
+        } catch (IMPException ex) {
+            return Response.status(ex.getStatus()).entity("{}").build();
+        } catch (Throwable t) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{}").build();
+        }
     }
 }
