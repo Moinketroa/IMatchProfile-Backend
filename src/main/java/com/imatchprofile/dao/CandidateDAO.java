@@ -38,8 +38,6 @@ public class CandidateDAO {
             //updating the user with the candidate created
             userCandidate.setCandidate(newCandidate);
             userCandidate.setRole(Role.CANDIDATE.toString());
-            trns = null;
-            session = HibernateUtil.getSessionFactory().openSession();
 
             trns = session.beginTransaction();
             session.update(userCandidate);

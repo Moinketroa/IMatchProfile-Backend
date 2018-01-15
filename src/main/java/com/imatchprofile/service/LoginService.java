@@ -74,6 +74,7 @@ public class LoginService extends Service {
                     .withExpiresAt(expirationDate)
                     .sign(algorithm);
         } catch (UnsupportedEncodingException | IllegalArgumentException | JWTCreationException ex) {
+            System.out.println(ex.getMessage());
             throw new IMPException(Response.Status.INTERNAL_SERVER_ERROR);
         } 
         

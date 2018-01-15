@@ -167,6 +167,7 @@ public class User  implements java.io.Serializable {
     }
 
     public static String encryptPassword(String password) {
+        /*
         try {
             String saltedPassword = password + SALT;
             
@@ -177,6 +178,8 @@ public class User  implements java.io.Serializable {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+        */
+        return password;
     }
     
     public JSONObject toJSON(){
