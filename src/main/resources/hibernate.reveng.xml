@@ -41,21 +41,21 @@ Contributor(s):
 -->
 <hibernate-reverse-engineering>
   <schema-selection match-catalog="imatchprofile"/>
-  <table-filter match-name="chatroom"/>
-  <table-filter match-name="masters"/>
-  <table-filter match-name="media"/>
   <table-filter match-name="candidate"/>
+  <table-filter match-name="training"/>
+  <table-filter match-name="skill"/>
   <table-filter match-name="user"/>
   <table-filter match-name="needs"/>
-  <table-filter match-name="training"/>
-  <table-filter match-name="job"/>
-  <table-filter match-name="moderator"/>
-  <table-filter match-name="applies"/>
-  <table-filter match-name="jobreports"/>
-  <table-filter match-name="matches"/>
-  <table-filter match-name="recruiter"/>
-  <table-filter match-name="experience"/>
   <table-filter match-name="candidatereports"/>
+  <table-filter match-name="experience"/>
+  <table-filter match-name="recruiter"/>
+  <table-filter match-name="media"/>
+  <table-filter match-name="masters"/>
+  <table-filter match-name="moderator"/>
+  <table-filter match-name="jobreports"/>
+  <table-filter match-name="applies"/>
   <table-filter match-name="message"/>
-  <table-filter match-name="skill"/>
+  <table-filter match-name="matches"/>
+  <table-filter match-name="job"/>
+  <table-filter match-name="chatroom"/>
 </hibernate-reverse-engineering>

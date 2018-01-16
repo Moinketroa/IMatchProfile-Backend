@@ -1,7 +1,8 @@
 package com.imatchprofile.model.pojo;
-// Generated 27 déc. 2017 17:10:07 by Hibernate Tools 4.3.1
+// Generated 16 janv. 2018 14:37:09 by Hibernate Tools 4.3.1
 
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +17,7 @@ public class Job  implements java.io.Serializable {
      private String title;
      private String description;
      private byte visibility;
+     private Date createDate;
      private Set applieses = new HashSet(0);
      private Set needses = new HashSet(0);
      private Set matcheses = new HashSet(0);
@@ -25,17 +27,19 @@ public class Job  implements java.io.Serializable {
     }
 
 	
-    public Job(Recruiter recruiter, String title, String description, byte visibility) {
+    public Job(Recruiter recruiter, String title, String description, byte visibility, Date createDate) {
         this.recruiter = recruiter;
         this.title = title;
         this.description = description;
         this.visibility = visibility;
+        this.createDate = createDate;
     }
-    public Job(Recruiter recruiter, String title, String description, byte visibility, Set applieses, Set needses, Set matcheses, Set jobreportses) {
+    public Job(Recruiter recruiter, String title, String description, byte visibility, Date createDate, Set applieses, Set needses, Set matcheses, Set jobreportses) {
        this.recruiter = recruiter;
        this.title = title;
        this.description = description;
        this.visibility = visibility;
+       this.createDate = createDate;
        this.applieses = applieses;
        this.needses = needses;
        this.matcheses = matcheses;
@@ -76,6 +80,13 @@ public class Job  implements java.io.Serializable {
     
     public void setVisibility(byte visibility) {
         this.visibility = visibility;
+    }
+    public Date getCreateDate() {
+        return this.createDate;
+    }
+    
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
     public Set getApplieses() {
         return this.applieses;

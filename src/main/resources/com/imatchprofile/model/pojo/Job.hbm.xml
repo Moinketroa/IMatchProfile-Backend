@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 27 d?c. 2017 17:10:08 by Hibernate Tools 4.3.1 -->
+<!-- Generated 16 janv. 2018 14:37:15 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="com.imatchprofile.model.pojo.Job" table="job" catalog="imatchprofile" optimistic-lock="version">
         <id name="jobId" type="java.lang.Integer">
@@ -19,6 +19,9 @@
         </property>
         <property name="visibility" type="byte">
             <column name="visibility" not-null="true" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="19" not-null="true" />
         </property>
         <set name="applieses" table="applies" inverse="true" lazy="true" fetch="select">
             <key>
