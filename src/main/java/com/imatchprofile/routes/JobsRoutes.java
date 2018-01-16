@@ -13,6 +13,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -46,10 +47,22 @@ public class JobsRoutes {
         session.close();
         
         StringBuilder sb = new StringBuilder();
-        for (Job job : listJobs)
-            sb.append(job.getJobId() + "\n");
-        
+        sb.append("[");
+        for (int i = 0; i < listJobs.size()-1;i++)
+            sb.append(listJobs.get(i).allJson() + ",\n");
+        sb.append(listJobs.get(listJobs.size()-1));
+        sb.append("]");
         return "OK \n" + sb.toString();
+    }
+    
+    @GET
+    @Path("{id}")
+    public String getJob(@PathParam("id") String id){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Integer jobId = Integer.parseInt(id);
+        Job res = (Job) session.get(Job.class, jobId);
+        System.err.println("job / " + res);
+        return "RETURN "+id;
     }
 
     
