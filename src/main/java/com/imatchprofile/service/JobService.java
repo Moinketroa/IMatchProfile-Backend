@@ -24,6 +24,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.imatchprofile.util.HibernateUtil;
+import java.util.List;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -93,5 +96,42 @@ public class JobService extends Service {
         
         return "{}";
     }
+    
+    public String getAllJob(){
+        
+        List<Job> listJobs = jobDAO.findAllJob();
+        HibernateUtil.getSessionFactory().getCurrentSession().close();
+        StringBuilder sb = new StringBuilder();
+        sb.append("[\n");
+        for (int i = 0; i < listJobs.size()-1;i++)
+            sb.append(listJobs.get(i).allJson() + ",\n");
+        sb.append(listJobs.get(listJobs.size()-1).allJson());
+        sb.append("\n]");
+
+        return sb.toString();
+    }
+    
+    public String getJobById(String Id) throws IMPException{
+
+        if(!isInteger(Id) || Id == null){
+            throw new IMPPayloadException();
+        }
+        Job job = jobDAO.findOneById(Integer.parseInt(Id));
+        HibernateUtil.getSessionFactory().getCurrentSession().close();
+        return job.allJson();
+    }
+    
+    public boolean isInteger(String s) {
+    try { 
+        Integer.parseInt(s); 
+    } catch(NumberFormatException e) { 
+        return false; 
+    } catch(NullPointerException e) {
+        return false;
+    }
+    // only got here if we didn't return false
+    return true;
+}
+    
     
 }

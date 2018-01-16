@@ -6,10 +6,16 @@
 package com.imatchprofile.dao;
 
 import com.imatchprofile.model.pojo.Job;
+import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
 import java.util.List;
+import javax.persistence.NoResultException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 /**
  *
@@ -42,4 +48,22 @@ public class JobDAO {
             
         }
     }
+    
+    public Job findOneById(Integer id){
+       Session session = HibernateUtil.getSessionFactory().openSession();
+        Job res = (Job) session.get(Job.class, id);
+        //session.close();
+        return res;
+    }
+     
+    public List<Job> findAllJob(){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        CriteriaQuery<Job> query = session.getCriteriaBuilder().createQuery(Job.class);
+        Root<Job> root = query.from(Job.class);
+        query.select(root);
+        List<Job> res = session.createQuery(query).getResultList();
+        //session.close();
+        return res;
+    }
+    
 }
