@@ -43,6 +43,22 @@ public class JobService {
         HibernateUtil.getSessionFactory().getCurrentSession().close();
         return job.allJson();
     }
+        public String getRecentJobs(String pagenumber,String entitieperpages) throws IMPException{
+
+        if(!isInteger(pagenumber) || pagenumber == null || !isInteger(entitieperpages) || entitieperpages == null){
+            throw new IMPPayloadException();
+        }
+        List<Job> listJobs = jobDAO.getMostRecent(Integer.parseInt(pagenumber),Integer.parseInt(entitieperpages));
+         HibernateUtil.getSessionFactory().getCurrentSession().close();
+        StringBuilder sb = new StringBuilder();
+        sb.append("[\n");
+        for (int i = 0; i < listJobs.size()-1;i++)
+            sb.append(listJobs.get(i).allJson() + ",\n");
+        sb.append(listJobs.get(listJobs.size()-1).allJson());
+        sb.append("\n]");
+
+        return sb.toString();
+    }
     
     public boolean isInteger(String s) {
     try { 
