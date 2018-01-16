@@ -7,7 +7,9 @@ package com.imatchprofile.service;
 
 import com.imatchprofile.dao.JobDAO;
 import com.imatchprofile.exceptions.IMPException;
+import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.model.pojo.Job;
+import javax.ws.rs.core.Response;
 /**
  *
  * @author j-m_d
@@ -16,14 +18,12 @@ public class JobService {
     
     private final JobDAO jobDAO = new JobDAO();
     
-    public Job getJobById(String Id) throws IMPException{
-        
-        if()
-        
-        if(isInteger(Id))
-        
-        
-        return null;
+    public String getJobById(String Id) throws IMPException{
+
+        if(!isInteger(Id) || Id == null){
+            throw new IMPPayloadException();
+        }        
+        return jobDAO.findOneById(Integer.parseInt(Id)).allJson();
     }
     
     public boolean isInteger(String s) {
