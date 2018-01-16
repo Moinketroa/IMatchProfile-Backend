@@ -52,4 +52,11 @@ public class CandidateDAO {
         }
     }
     
+    public Candidate findOneById(Integer id){
+       Session session = HibernateUtil.getSessionFactory().openSession();
+        Candidate res = (Candidate) session.get(Candidate.class, id);
+        //session.close();
+        return res;
+    }
+    
 }

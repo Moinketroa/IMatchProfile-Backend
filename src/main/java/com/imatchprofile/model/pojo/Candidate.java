@@ -168,7 +168,7 @@ public class Candidate  implements java.io.Serializable {
         //info user
         candidateJSON.put("user_id", user.getUserId());
         candidateJSON.put("firstname", user.getFirstname());
-        candidateJSON.put("lastname", user.getFirstname());
+        candidateJSON.put("lastname", user.getLastname());
         candidateJSON.put("email", user.getEmail());
         candidateJSON.put("photoUrl", user.getPhotoUrl());
         //info candidat
@@ -179,6 +179,27 @@ public class Candidate  implements java.io.Serializable {
         candidateJSON.put("visibility", (visibility != 0));
         
         return candidateJSON;
+    }
+    
+    public String profilJson(){
+        //StringBuilder sb = new StringBuilder(this.toJSON().toString());
+        //sb.append(",\n");
+        StringBuilder sb = new StringBuilder();
+        sb.append("[\n");
+        sb.append(this.toJSON().toString());
+        sb.append(",\n");
+        
+        for (Object obj : experiences) {
+            Experience experience = (Experience)obj;
+            sb.append(experience.toJSON());
+            sb.append(",\n");
+        }
+        for (Object obj : trainings) {
+            Training training = (Training)obj;
+            sb.append(training.toJSON());
+        }
+        sb.append("]\n");
+        return sb.toString();
     }
 }
 
