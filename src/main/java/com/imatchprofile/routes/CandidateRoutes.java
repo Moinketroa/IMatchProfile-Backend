@@ -75,21 +75,30 @@ public class CandidateRoutes {
         List<User> listUser = sessionUser.createQuery(queryUser).getResultList();
         sessionUser.close();
         
-        StringBuilder sb = new StringBuilder();
-        for (Candidate c : listCandidate){
+        StringBuilder json = new StringBuilder();
+        json.append("[");
+        for (int i=0; i < listCandidate.size(); i++){
+            Candidate c = listCandidate.get(i);
+            json.append("\n{\n");
             User u = c.getUser();
             for(User user : listUser){
                 if(u.getUserId() == user.getUserId()){
-                    sb.append(user.getUserId() + "\n");
-                    sb.append(user.getLastname() + "\n");
-                    sb.append(user.getFirstname() + "\n");
+                    json.append("\"userId\": " + "\""+ user.getUserId() + "\","+ "\n");
+                    json.append("\"lastname\": " + "\""+ user.getLastname() + "\","+ "\n");
+                    json.append("\"firstname\": "  + "\""+ user.getFirstname() + "\","+ "\n");
                 }
             }
-            sb.append(c.getTitle() + "\n");
-            sb.append(c.getCompany() + "\n");
+            json.append("\"title\": " + "\""+ c.getTitle() + "\","+ "\n");
+            json.append("\"company\": " + "\""+ c.getCompany() + "\""+ "\n");
+            if((i+1) == listCandidate.size()){
+                json.append("}");
+            }else{
+                json.append("},");
+            }
         }
+        json.append("\n]");
            
-        return "OK \n" + sb.toString();
+        return json.toString();
     }
     
 }
