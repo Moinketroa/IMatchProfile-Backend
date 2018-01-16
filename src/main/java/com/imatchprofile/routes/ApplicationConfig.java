@@ -29,7 +29,9 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(com.imatchprofile.routes.CandidateRoutes.class);
+        resources.add(com.imatchprofile.routes.CrossOriginResourceSharingFilter.class);
+        resources.add(com.imatchprofile.routes.LoginRoutes.class);
         resources.add(com.imatchprofile.routes.UserRoutes.class);
-    }
-    
+    }  
 }
