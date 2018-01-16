@@ -43,6 +43,7 @@ Contributor(s):
   <session-factory>
     <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
 <<<<<<< HEAD
+<<<<<<< HEAD
     <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/mysql?zeroDateTimeBehavior=convertToNull</property>
     <property name="hibernate.connection.username">root</property>
     <!--
@@ -52,13 +53,17 @@ Contributor(s):
     -->
 =======
 <!--
+=======
+
+>>>>>>> d909f4f55174abfa56282f596abd3dbeb647252b
     <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/imatchprofile?zeroDateTimeBehavior=convertToNull</property>
     <property name="hibernate.connection.username">root</property>
     <property name="hibernate.connection.password">123</property>
--->
+<!--
     <property name="hibernate.connection.url">jdbc:mysql://imatchprofiledb.cs71b8arlkz9.eu-central-1.rds.amazonaws.com:3306/imatchprofile?zeroDateTimeBehavior=convertToNull</property>
     <property name="hibernate.connection.username">imatchprofileADM</property>
     <property name="hibernate.connection.password">H#f6Z74#6gxy8k_6J+3)q6F+kM=A*AGr4</property>
+-->
     <property name="hibernate.connection.pool_size">10</property>
 >>>>>>> 409319d41b3a81c9319f141a000f8c656524caa7
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>

@@ -5,12 +5,10 @@
  */
 package com.imatchprofile.service;
 
-import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.imatchprofile.dao.JobDAO;
 import com.imatchprofile.dao.UserDAO;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPExpiredTokenException;
-import com.imatchprofile.exceptions.IMPInternalServerException;
 import com.imatchprofile.exceptions.IMPNoTokenException;
 import com.imatchprofile.exceptions.IMPNotARecruiterException;
 import com.imatchprofile.exceptions.IMPNotAUserException;
@@ -72,7 +70,7 @@ public class JobService extends Service {
         Integer userId;
         try {
             userId = JWTHelper.decrypt(token);
-        } catch (IllegalArgumentException | UnsupportedEncodingException | JWTDecodeException ex) {
+        } catch (IllegalArgumentException | UnsupportedEncodingException ex) {
             throw new IMPWrongTokenException();
         }
         if (userId == null) {
@@ -92,25 +90,11 @@ public class JobService extends Service {
         if (recruiter == null)
             throw new IMPNotARecruiterException();
         
-        //creation de l'annonce
         Job newJob = new Job(recruiter, title, description, (byte) 1, new Date());
         
-        jobDAO.create(newJob);
+        //
         
-        //regeneration du token
-        String newToken;
-        
-        try {
-            newToken = JWTHelper.createToken(userId);
-        } catch (IllegalArgumentException | UnsupportedEncodingException ex) {
-            throw new IMPInternalServerException(ex.getMessage());
-        }
-        
-        JSONObject response = new JSONObject();
-        response.put("token", newToken);
-        response.put("job", newJob.toJson());
-        
-        return response.toString();
+        return "{}";
     }
     
     public String getAllJob(){
@@ -136,23 +120,6 @@ public class JobService extends Service {
         HibernateUtil.getSessionFactory().getCurrentSession().close();
         return job.allJson();
     }
-<<<<<<< HEAD
-        public String getRecentJobs(String pagenumber,String entitieperpages) throws IMPException{
-
-        if(!isInteger(pagenumber) || pagenumber == null || !isInteger(entitieperpages) || entitieperpages == null){
-            throw new IMPPayloadException();
-        }
-        List<Job> listJobs = jobDAO.getMostRecent(Integer.parseInt(pagenumber),Integer.parseInt(entitieperpages));
-         HibernateUtil.getSessionFactory().getCurrentSession().close();
-        StringBuilder sb = new StringBuilder();
-        sb.append("[\n");
-        for (int i = 0; i < listJobs.size()-1;i++)
-            sb.append(listJobs.get(i).allJson() + ",\n");
-        sb.append(listJobs.get(listJobs.size()-1).allJson());
-        sb.append("\n]");
-
-        return sb.toString();
-    }
     
     public boolean isInteger(String s) {
     try { 
@@ -167,6 +134,4 @@ public class JobService extends Service {
 }
     
     
-=======
->>>>>>> d909f4f55174abfa56282f596abd3dbeb647252b
 }
