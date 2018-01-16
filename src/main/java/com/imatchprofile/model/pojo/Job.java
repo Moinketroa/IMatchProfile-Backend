@@ -11,7 +11,6 @@ import java.util.Set;
  */
 public class Job  implements java.io.Serializable {
 
-
      private Integer jobId;
      private Recruiter recruiter;
      private String title;
