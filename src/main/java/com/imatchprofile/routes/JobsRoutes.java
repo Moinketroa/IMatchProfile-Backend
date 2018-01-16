@@ -54,7 +54,7 @@ public class JobsRoutes {
         sb.append(listJobs.get(listJobs.size()-1).allJson());
         sb.append("\n]");
          session.close();
-        return "OK \n" + sb.toString();
+        return sb.toString();
     }
     
     @GET
