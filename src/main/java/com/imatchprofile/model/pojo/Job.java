@@ -1,5 +1,5 @@
 package com.imatchprofile.model.pojo;
-// Generated 16 janv. 2018 14:37:09 by Hibernate Tools 4.3.1
+
 
 
 import java.util.Date;
@@ -118,6 +118,14 @@ public class Job  implements java.io.Serializable {
     }
 
 
+    public String allJson(){
+        StringBuilder json = new StringBuilder();
+        json.append("{\"jobId\": \""+jobId+"\",");
+        json.append("{\"recruiter\": \""+recruiter+"\",");
+        json.append("{\"title\": \""+title+"\",");
+        json.append("{\"description\": \""+description+"\"}");
+        return json.toString();
+    }
 
 
 }
