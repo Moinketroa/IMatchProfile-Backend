@@ -45,15 +45,16 @@ public class JobsRoutes {
         Root<Job> root = query.from(Job.class);
         query.select(root);
         List<Job> listJobs = session.createQuery(query).getResultList();
-        session.close();
+       
         
         StringBuilder sb = new StringBuilder();
-        sb.append("[");
+        sb.append("[\n");
         for (int i = 0; i < listJobs.size()-1;i++)
             sb.append(listJobs.get(i).allJson() + ",\n");
-        sb.append(listJobs.get(listJobs.size()-1));
-        sb.append("]");
-        return "OK \n" + sb.toString();
+        sb.append(listJobs.get(listJobs.size()-1).allJson());
+        sb.append("\n]");
+         session.close();
+        return sb.toString();
     }
     
     @GET
