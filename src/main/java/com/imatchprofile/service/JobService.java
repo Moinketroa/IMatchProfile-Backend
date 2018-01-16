@@ -5,10 +5,12 @@
  */
 package com.imatchprofile.service;
 
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.imatchprofile.dao.JobDAO;
 import com.imatchprofile.dao.UserDAO;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPExpiredTokenException;
+import com.imatchprofile.exceptions.IMPInternalServerException;
 import com.imatchprofile.exceptions.IMPNoTokenException;
 import com.imatchprofile.exceptions.IMPNotARecruiterException;
 import com.imatchprofile.exceptions.IMPNotAUserException;
@@ -70,7 +72,7 @@ public class JobService extends Service {
         Integer userId;
         try {
             userId = JWTHelper.decrypt(token);
-        } catch (IllegalArgumentException | UnsupportedEncodingException ex) {
+        } catch (IllegalArgumentException | UnsupportedEncodingException | JWTDecodeException ex) {
             throw new IMPWrongTokenException();
         }
         if (userId == null) {
@@ -90,11 +92,25 @@ public class JobService extends Service {
         if (recruiter == null)
             throw new IMPNotARecruiterException();
         
+        //creation de l'annonce
         Job newJob = new Job(recruiter, title, description, (byte) 1, new Date());
         
-        //
+        jobDAO.create(newJob);
         
-        return "{}";
+        //regeneration du token
+        String newToken;
+        
+        try {
+            newToken = JWTHelper.createToken(userId);
+        } catch (IllegalArgumentException | UnsupportedEncodingException ex) {
+            throw new IMPInternalServerException(ex.getMessage());
+        }
+        
+        JSONObject response = new JSONObject();
+        response.put("token", newToken);
+        response.put("job", newJob.toJson());
+        
+        return response.toString();
     }
     
     public String getAllJob(){

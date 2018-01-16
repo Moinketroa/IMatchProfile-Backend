@@ -36,13 +36,9 @@ public class JobDAO {
         Transaction transaction = null;
         Session session = HibernateUtil.getSessionFactory().openSession();
         
-        try {
-            transaction = session.beginTransaction();
-            session.save(newJob);
-            session.getTransaction().commit();
-        } catch (RuntimeException e) {
-            
-        }
+        transaction = session.beginTransaction();
+        session.save(newJob);
+        session.getTransaction().commit();
     }
     
     public Job findOneById(Integer id){
