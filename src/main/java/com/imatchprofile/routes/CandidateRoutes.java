@@ -9,17 +9,24 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.imatchprofile.dao.CandidateDAO;
 import com.imatchprofile.exceptions.IMPException;
+import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.service.CandidateService;
+import com.imatchprofile.util.HibernateUtil;
+import java.util.List;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.hibernate.Session;
 
 /**
  * REST Web Service
@@ -46,4 +53,43 @@ public class CandidateRoutes {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{}").build();
         }
     }
+    
+    /**
+     * Retrieves representation of an instance of com.imatchprofile.routes.UserRoutes
+     * @return an instance of java.lang.String
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getJson() {
+        Session sessionCandidate = HibernateUtil.getSessionFactory().openSession();
+        CriteriaQuery<Candidate> queryCandidate = sessionCandidate.getCriteriaBuilder().createQuery(Candidate.class);
+        Root<Candidate> rootCandidate = queryCandidate.from(Candidate.class);
+        queryCandidate.select(rootCandidate);
+        List<Candidate> listCandidate = sessionCandidate.createQuery(queryCandidate).getResultList();
+        sessionCandidate.close();
+        
+        Session sessionUser = HibernateUtil.getSessionFactory().openSession();
+        CriteriaQuery<User> queryUser = sessionUser.getCriteriaBuilder().createQuery(User.class);
+        Root<User> rootUser = queryUser.from(User.class);
+        queryUser.select(rootUser);
+        List<User> listUser = sessionUser.createQuery(queryUser).getResultList();
+        sessionUser.close();
+        
+        StringBuilder sb = new StringBuilder();
+        for (Candidate c : listCandidate){
+            User u = c.getUser();
+            for(User user : listUser){
+                if(u.getUserId() == user.getUserId()){
+                    sb.append(user.getUserId() + "\n");
+                    sb.append(user.getLastname() + "\n");
+                    sb.append(user.getFirstname() + "\n");
+                }
+            }
+            sb.append(c.getTitle() + "\n");
+            sb.append(c.getCompany() + "\n");
+        }
+           
+        return "OK \n" + sb.toString();
+    }
+    
 }
