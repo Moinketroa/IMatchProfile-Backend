@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response.Status;
 public class IMPException extends Exception {
     
     private Status httpStatus;
+    protected String errorMessage;
     
     public IMPException(Status status) {
         this.httpStatus = status;
@@ -21,5 +22,9 @@ public class IMPException extends Exception {
     
     public Status getStatus(){
         return httpStatus;
+    }
+    
+    public String getErrorMessage() {
+        return errorMessage;
     }
 }

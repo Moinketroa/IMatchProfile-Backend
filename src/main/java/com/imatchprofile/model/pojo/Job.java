@@ -1,5 +1,4 @@
 package com.imatchprofile.model.pojo;
-// Generated 16 janv. 2018 14:37:09 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -17,6 +16,8 @@ public class Job  implements java.io.Serializable {
      private String description;
      private byte visibility;
      private Date createDate;
+
+   
      private Set applieses = new HashSet(0);
      private Set needses = new HashSet(0);
      private Set matcheses = new HashSet(0);
@@ -117,8 +118,19 @@ public class Job  implements java.io.Serializable {
     }
 
 
+    public String allJson(){
+        StringBuilder json = new StringBuilder();
+        json.append("{\n\"jobId\": \""+jobId+"\",\n");
+        json.append("\"recruiter\": "+recruiter.allJson()+",\n");
+        json.append("\"title\": \""+title+"\",\n");
+        json.append("\"description\": \""+description+"\"\n}");
+        return json.toString();
+    }
 
-
+     @Override
+    public String toString() {
+        return "Job{" + "jobId=" + jobId + ", recruiter=" + recruiter + ", title=" + title + ", description=" + description + ", visibility=" + visibility + ", createDate=" + createDate + ", applieses=" + applieses + ", needses=" + needses + ", matcheses=" + matcheses + ", jobreportses=" + jobreportses + '}';
+    }
 }
 
 
