@@ -204,6 +204,13 @@ public class User  implements java.io.Serializable {
         
         return userJSON;
     }
+
+    @Override
+    public String toString() {
+        return "User{" + "userId=" + userId + ", candidate=" + candidate + ", moderator=" + moderator + ", recruiter=" + recruiter + ", lastname=" + lastname + ", firstname=" + firstname + ", email=" + email + ", password=" + password + ", photoUrl=" + photoUrl + ", role=" + role + ", candidates=" + candidates + ", candidatereportses=" + candidatereportses + ", recruiters=" + recruiters + ", jobreportses=" + jobreportses + ", moderators=" + moderators + '}';
+    }
+    
+    
 }
 
 

@@ -8,11 +8,13 @@ package com.imatchprofile.routes;
 import com.imatchprofile.model.pojo.Job;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
+import com.imatchprofile.util.JsonUtil;
 import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -43,14 +45,26 @@ public class JobsRoutes {
         Root<Job> root = query.from(Job.class);
         query.select(root);
         List<Job> listJobs = session.createQuery(query).getResultList();
-        session.close();
+       
         
         StringBuilder sb = new StringBuilder();
-        for (Job job : listJobs)
-            sb.append(job.getJobId() + "\n");
-        
-        return "OK \n" + sb.toString();
+        sb.append("[\n");
+        for (int i = 0; i < listJobs.size()-1;i++)
+            sb.append(listJobs.get(i).allJson() + ",\n");
+        sb.append(listJobs.get(listJobs.size()-1).allJson());
+        sb.append("\n]");
+         session.close();
+        return sb.toString();
     }
-
+    
+    @GET
+    @Path("{id}")
+    public String getJob(@PathParam("id") String id){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Integer jobId = Integer.parseInt(id);
+        Job res = (Job) session.get(Job.class, jobId);
+        return "OK \n" + res.allJson();
+    }
+    
     
 }
