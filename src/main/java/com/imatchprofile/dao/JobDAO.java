@@ -46,7 +46,21 @@ public class JobDAO {
         return res1;
     }
     
-     public Job findOneById(Integer id){
+    public void create(Job newJob) {
+        
+        Transaction transaction = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        
+        try {
+            transaction = session.beginTransaction();
+            session.save(newJob);
+            session.getTransaction().commit();
+        } catch (RuntimeException e) {
+            
+        }
+    }
+    
+    public Job findOneById(Integer id){
        Session session = HibernateUtil.getSessionFactory().openSession();
         Job res = (Job) session.get(Job.class, id);
         //session.close();

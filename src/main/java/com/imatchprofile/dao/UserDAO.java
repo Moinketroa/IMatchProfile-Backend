@@ -50,4 +50,26 @@ public class UserDAO {
         return userFound;
     }
     
+    public User findById(Integer id) {
+        //ouverture session
+        Transaction transaction = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        transaction = session.beginTransaction();
+        
+        User userFound;
+        
+        try {
+            userFound = session.get(User.class, id);
+        } catch (NoResultException ex) {
+            userFound = null;
+        }
+        
+        transaction.commit();
+        
+        //fermeture session
+        session.close();
+        
+        return userFound;
+    }
+    
 }
