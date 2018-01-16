@@ -29,4 +29,17 @@ public class JobDAO {
         return null;
     }
     
+    public void create(Job newJob) {
+        
+        Transaction transaction = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        
+        try {
+            transaction = session.beginTransaction();
+            session.save(newJob);
+            session.getTransaction().commit();
+        } catch (RuntimeException e) {
+            
+        }
+    }
 }
