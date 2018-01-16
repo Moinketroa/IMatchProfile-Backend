@@ -129,6 +129,7 @@ CREATE TABLE `job` (
   `title` varchar(45) NOT NULL,
   `description` varchar(300) NOT NULL,
   `visibility` tinyint(4) NOT NULL DEFAULT '1',
+  `create_date` datetime NOT NULL,
   PRIMARY KEY (`job_id`),
   KEY `fk_job_recruiter_idx` (`recruiter_id`),
   CONSTRAINT `fk_job_recruiter` FOREIGN KEY (`recruiter_id`) REFERENCES `recruiter` (`recruiter_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
