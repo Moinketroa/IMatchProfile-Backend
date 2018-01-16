@@ -8,6 +8,7 @@ package com.imatchprofile.routes;
 import com.imatchprofile.model.pojo.Job;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
+import com.imatchprofile.util.JsonUtil;
 import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -62,9 +63,8 @@ public class JobsRoutes {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Integer jobId = Integer.parseInt(id);
         Job res = (Job) session.get(Job.class, jobId);
-        System.err.println("job / " + res);
-        return "RETURN "+id;
+        return "OK \n" + res.allJson();
     }
-
+    
     
 }
