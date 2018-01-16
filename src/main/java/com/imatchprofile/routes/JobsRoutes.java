@@ -59,9 +59,7 @@ public class JobsRoutes {
     @GET
     @Path("{id}")
     public String getJob(@PathParam("id") String id){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Integer jobId = Integer.parseInt(id);
-        Job res = (Job) session.get(Job.class, jobId);
+        
         return "OK \n" + res.allJson();
     }
     
