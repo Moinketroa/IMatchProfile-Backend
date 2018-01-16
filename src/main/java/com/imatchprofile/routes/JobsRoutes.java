@@ -45,22 +45,8 @@ public class JobsRoutes {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getJson() {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        CriteriaQuery<Job> query = session.getCriteriaBuilder().createQuery(Job.class);
-        Root<Job> root = query.from(Job.class);
-        query.select(root);
-        List<Job> listJobs = session.createQuery(query).getResultList();
-       
-        
-        StringBuilder sb = new StringBuilder();
-        sb.append("[\n");
-        for (int i = 0; i < listJobs.size()-1;i++)
-            sb.append(listJobs.get(i).allJson() + ",\n");
-        sb.append(listJobs.get(listJobs.size()-1).allJson());
-        sb.append("\n]");
-         session.close();
-        return sb.toString();
+    public Response getJobs() {
+        return Response.status(Response.Status.OK).entity(jobService.getAllJob()).build();
     }
     
     @GET

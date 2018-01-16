@@ -38,7 +38,17 @@ public class JobDAO {
      public Job findOneById(Integer id){
        Session session = HibernateUtil.getSessionFactory().openSession();
         Job res = (Job) session.get(Job.class, id);
-        session.close();
+        //session.close();
+        return res;
+    }
+     
+    public List<Job> findAllJob(){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        CriteriaQuery<Job> query = session.getCriteriaBuilder().createQuery(Job.class);
+        Root<Job> root = query.from(Job.class);
+        query.select(root);
+        List<Job> res = session.createQuery(query).getResultList();
+        //session.close();
         return res;
     }
     

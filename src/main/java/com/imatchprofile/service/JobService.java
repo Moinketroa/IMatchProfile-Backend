@@ -9,6 +9,8 @@ import com.imatchprofile.dao.JobDAO;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.model.pojo.Job;
+import com.imatchprofile.util.HibernateUtil;
+import java.util.List;
 import javax.ws.rs.core.Response;
 /**
  *
@@ -18,12 +20,28 @@ public class JobService {
     
     private final JobDAO jobDAO = new JobDAO();
     
+    public String getAllJob(){
+        
+        List<Job> listJobs = jobDAO.findAllJob();
+        HibernateUtil.getSessionFactory().getCurrentSession().close();
+        StringBuilder sb = new StringBuilder();
+        sb.append("[\n");
+        for (int i = 0; i < listJobs.size()-1;i++)
+            sb.append(listJobs.get(i).allJson() + ",\n");
+        sb.append(listJobs.get(listJobs.size()-1).allJson());
+        sb.append("\n]");
+
+        return sb.toString();
+    }
+    
     public String getJobById(String Id) throws IMPException{
 
         if(!isInteger(Id) || Id == null){
             throw new IMPPayloadException();
-        }        
-        return jobDAO.findOneById(Integer.parseInt(Id)).allJson();
+        }
+        Job job = jobDAO.findOneById(Integer.parseInt(Id));
+        HibernateUtil.getSessionFactory().getCurrentSession().close();
+        return job.allJson();
     }
     
     public boolean isInteger(String s) {
