@@ -8,6 +8,8 @@ package com.imatchprofile.helper;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import java.io.UnsupportedEncodingException;
@@ -34,17 +36,18 @@ public class JWTHelper {
                     .sign(algorithm);
     }
     
-    public static Integer decrypt(String token) throws IllegalArgumentException, UnsupportedEncodingException {
+    public static Integer decrypt(String token) throws IllegalArgumentException, UnsupportedEncodingException, JWTDecodeException {
         Algorithm algorithm = Algorithm.HMAC256(JWTHelper.SECRET);
         JWTVerifier verifier = JWT.require(algorithm).build();
-        DecodedJWT decoded = verifier.verify(token);
-        Date expirationDate = decoded.getExpiresAt();
-        Date now = new Date();
-        if (now.getTime() > expirationDate.getTime()) {
+        DecodedJWT decoded;
+        
+        try {
+            decoded = verifier.verify(token);
+        } catch (TokenExpiredException ex) {
             return null;
-        } else {
-            Claim claim = decoded.getClaim("user_id");
-            return claim.asInt();
         }
+        
+        Claim claim = decoded.getClaim("user_id");
+        return claim.asInt();
     }
 }
