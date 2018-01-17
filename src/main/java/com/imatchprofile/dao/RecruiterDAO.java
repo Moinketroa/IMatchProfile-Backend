@@ -5,7 +5,6 @@
  */
 package com.imatchprofile.dao;
 
-import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.Recruiter;
 import com.imatchprofile.model.pojo.Role;
 import com.imatchprofile.model.pojo.User;

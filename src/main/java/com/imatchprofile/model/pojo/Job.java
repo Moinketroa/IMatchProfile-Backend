@@ -21,7 +21,6 @@ public class Job  implements java.io.Serializable {
      private String description;
      private byte visibility;
      private Date createDate;
-
    
      private Set applieses = new HashSet(0);
      private Set needses = new HashSet(0);
