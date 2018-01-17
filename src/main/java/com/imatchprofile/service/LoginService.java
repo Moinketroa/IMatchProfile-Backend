@@ -73,11 +73,7 @@ public class LoginService extends Service {
         //creation de la reponse json
         JSONObject response = new JSONObject();
         response.put("token", jwtToken);
-        try{
-           response.put("user", userFound.toJSON());
-        }catch(NullPointerException e){
-            
-        }
+        response.put("user", userFound.toJSON());
 
         
         return response.toString();

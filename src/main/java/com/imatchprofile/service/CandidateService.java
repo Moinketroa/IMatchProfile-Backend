@@ -82,5 +82,7 @@ public class CandidateService extends Service {
         return candidate.profilJson();
     }
     
-    
+    public String search(String query) throws IMPException {
+        return null;
+    }
 }
