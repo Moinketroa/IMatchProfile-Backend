@@ -20,7 +20,7 @@ import org.json.JSONObject;
  */
 public class TokenHelper {
  
-    public static String verifyOptionalAndRefresh(String tokenBearer) throws IMPException {
+    public static TokenHelperResult verifyOptionalAndRefresh(String tokenBearer) throws IMPException {
         if (tokenBearer != null) {
             String token = tokenBearer.replace("Bearer ", "");
             if (token != null) {
@@ -39,7 +39,7 @@ public class TokenHelper {
                     } catch (IllegalArgumentException | UnsupportedEncodingException ex) {
                         throw new IMPInternalServerException(ex.getMessage());
                     }
-                    return token;
+                    return new TokenHelperResult(token, userId);
                 }
             }
         }
@@ -47,7 +47,7 @@ public class TokenHelper {
         return null;
     }
     
-    public static Object[] verifyNeededAndRefresh(String tokenBearer) throws IMPException {
+    public static TokenHelperResult verifyNeededAndRefresh(String tokenBearer) throws IMPException {
         //verification et traitement de la valeur de l'header
         if (tokenBearer == null) {
             throw new IMPNoTokenException();
@@ -75,11 +75,8 @@ public class TokenHelper {
         } catch (IllegalArgumentException | UnsupportedEncodingException ex) {
             throw new IMPInternalServerException(ex.getMessage());
         }
-        
-        Object[] result = new Object[2];
-        result[0] = token;
-        result[1] = userId;
-        return result;
+
+        return new TokenHelperResult(token, userId);
     }
     
     public static String concatJsonsToken(String jsonResponse, String responseName, String token) {

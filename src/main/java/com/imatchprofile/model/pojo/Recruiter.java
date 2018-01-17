@@ -4,6 +4,7 @@ package com.imatchprofile.model.pojo;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -97,7 +98,7 @@ public class Recruiter  implements java.io.Serializable {
         candidateJSON.put("lastname", user.getLastname());
         candidateJSON.put("email", user.getEmail());
         candidateJSON.put("photoUrl", user.getPhotoUrl());
-        //info candidat
+        //info recruteur
         candidateJSON.put("recruiter_id", recruiterId);
         candidateJSON.put("description", description);
         candidateJSON.put("company", company);
@@ -110,8 +111,20 @@ public class Recruiter  implements java.io.Serializable {
         return "Recruiter{" + "recruiterId=" + recruiterId + ", user=" + user + ", description=" + description + ", company=" + company + ", chatrooms=" + chatrooms + ", jobs=" + jobs + ", users=" + users + '}';
     }
 
-
-
+    public Object toJSONComplete() {
+        JSONObject result = toJSON();
+        
+        JSONArray jobArray = new JSONArray();
+        for (Object o : jobs) {
+            Job j = (Job) o;
+            jobArray.put(j.toJson());
+        }
+        
+        result.put("jobs", jobArray);
+        
+        return result;
+    }
+    
 }
 
 

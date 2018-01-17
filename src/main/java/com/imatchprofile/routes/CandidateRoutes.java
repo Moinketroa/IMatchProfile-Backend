@@ -7,6 +7,7 @@ package com.imatchprofile.routes;
 
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.helper.TokenHelper;
+import com.imatchprofile.helper.TokenHelperResult;
 import com.imatchprofile.service.CandidateService;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -71,9 +72,9 @@ public class CandidateRoutes {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMyCandidate(@HeaderParam("Authorization") String token) {
         try {
-            Object[] resultTH = TokenHelper.verifyNeededAndRefresh(token);
-            String result = candidateService.getMyProfile((Integer) resultTH[1]);
-            return Response.status(Response.Status.OK).entity(TokenHelper.concatJsonsToken(result, "candidate", (String) resultTH[0])).build();
+            TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
+            String result = candidateService.getMyProfile(thr.getUserId());
+            return Response.status(Response.Status.OK).entity(TokenHelper.concatJsonsToken(result, "candidate", thr.getNewToken())).build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
         } catch (Throwable t) {

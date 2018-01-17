@@ -1,6 +1,7 @@
 package com.imatchprofile.model.pojo;
 
 
+import com.imatchprofile.helper.DateHelper;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -127,17 +128,13 @@ public class Job  implements java.io.Serializable {
     }
 
     public JSONObject toJson() {
-        Instant instantCreated = this.createDate.toInstant();
-        ZoneId z = ZoneId.of( "Europe/Paris" );
-        ZonedDateTime zdt = instantCreated.atZone( z );
-        String dateString = zdt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace( "T" , " " );
-        
         JSONObject result = new JSONObject();
+        
         result.put("jod_id", this.jobId);
         result.put("recruiter_id", this.recruiter.getRecruiterId());
         result.put("title", this.title);
         result.put("description", this.description);
-        result.put("create_date", dateString);
+        result.put("create_date", DateHelper.getPrettyDate(createDate));
         
         return result;
     }

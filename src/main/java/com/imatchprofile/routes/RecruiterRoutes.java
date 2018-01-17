@@ -6,9 +6,12 @@
 package com.imatchprofile.routes;
 
 import com.imatchprofile.exceptions.IMPException;
+import com.imatchprofile.helper.TokenHelper;
+import com.imatchprofile.helper.TokenHelperResult;
 import com.imatchprofile.service.RecruiterService;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -41,5 +44,21 @@ public class RecruiterRoutes {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllRecruiter() {
         return Response.status(Response.Status.OK).entity(recruiterService.getAll()).build();
+    }
+    
+    @GET
+    @Path("/me")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMyRecruiter(@HeaderParam("Authorization") String token) {
+        try {
+            TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
+            String result = recruiterService.getMyProfile(thr.getUserId());
+            return Response.status(Response.Status.OK).entity(TokenHelper.concatJsonsToken(result, "recruiter", thr.getNewToken())).build();
+        } catch (IMPException ex) {
+            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
+        }
     }
 }

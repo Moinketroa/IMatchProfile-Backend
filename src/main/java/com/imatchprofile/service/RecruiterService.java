@@ -6,6 +6,7 @@
 package com.imatchprofile.service;
 
 import com.imatchprofile.exceptions.IMPException;
+import com.imatchprofile.exceptions.IMPNotARecruiterException;
 import com.imatchprofile.model.pojo.Recruiter;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
@@ -37,5 +38,15 @@ public class RecruiterService extends UserService{
         sb.append(listRecruiter.get(listRecruiter.size()-1).toJSON());
         sb.append("\n]");
         return sb.toString();
+    }
+    
+    public String getMyProfile(Integer userId) throws IMPException {
+        User meUser = this.userDAO.findById(userId);
+        Recruiter meRecruiter = meUser.getRecruiter();
+        
+        if (meRecruiter == null)
+            throw new IMPNotARecruiterException();
+        
+        return meRecruiter.toJSONComplete().toString();
     }
 }
