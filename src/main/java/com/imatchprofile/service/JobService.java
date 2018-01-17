@@ -22,13 +22,10 @@ import com.imatchprofile.model.pojo.Recruiter;
 import com.imatchprofile.model.pojo.User;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.imatchprofile.util.HibernateUtil;
 import java.util.List;
-import javax.ws.rs.core.Response;
 
 /**
  *
@@ -114,17 +111,16 @@ public class JobService extends Service {
     }
     
     public String getAllJob(){
-        
         List<Job> listJobs = jobDAO.findAllJob();
         HibernateUtil.getSessionFactory().getCurrentSession().close();
         StringBuilder sb = new StringBuilder();
         sb.append("[\n");
         for (int i = 0; i < listJobs.size()-1;i++)
-            sb.append(listJobs.get(i).allJson() + ",\n");
-        sb.append(listJobs.get(listJobs.size()-1).allJson());
+            sb.append(listJobs.get(i).allJson()+",\n");
+        sb.append(listJobs.get(0).allJson());
         sb.append("\n]");
 
-        return sb.toString();
+        return sb.toString();//sb.toString();
     }
     
     public String getJobById(String Id) throws IMPException{

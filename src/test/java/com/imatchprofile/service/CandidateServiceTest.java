@@ -41,13 +41,13 @@ public class CandidateServiceTest {
     }
 
     /**
-     * Test of signIn method, of class CandidateService.
+     * Test of signIn method, of class UserService.
      */
     @Test
     public void testSignIn() throws Exception {
         System.out.println("signIn");
         
-        CandidateService instance = new CandidateService();
+        UserService instance = new UserService();
         
         JSONObject rightContent = new JSONObject();
         rightContent.put("lastname", "testLastName");

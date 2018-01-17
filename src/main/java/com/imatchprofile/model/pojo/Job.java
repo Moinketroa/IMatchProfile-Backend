@@ -2,9 +2,7 @@ package com.imatchprofile.model.pojo;
 
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -143,7 +141,7 @@ public class Job  implements java.io.Serializable {
     public String allJson(){
         StringBuilder json = new StringBuilder();
         json.append("{\n\"jobId\": \""+jobId+"\",\n");
-        json.append("\"recruiter\": "+recruiter.allJson()+",\n");
+        json.append("\"recruiter\": "+recruiter.toJSON()+",\n");
         json.append("\"title\": \""+title+"\",\n");
         json.append("\"description\": \""+description+"\"\n}");
         return json.toString();

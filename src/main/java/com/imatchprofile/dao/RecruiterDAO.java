@@ -6,6 +6,7 @@
 package com.imatchprofile.dao;
 
 import com.imatchprofile.model.pojo.Candidate;
+import com.imatchprofile.model.pojo.Recruiter;
 import com.imatchprofile.model.pojo.Role;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
@@ -17,9 +18,9 @@ import org.hibernate.Transaction;
 
 /**
  *
- * @author MasterChief
+ * @author achyle
  */
-public class CandidateDAO {
+public class RecruiterDAO {
     
     public void create(User user) {
         Transaction trns = null;
@@ -29,14 +30,14 @@ public class CandidateDAO {
             trns = session.beginTransaction();
             session.save(user);
             session.getTransaction().commit();
-            //creating a candidate with the user created
-            Candidate newUsers = new Candidate(user, "", "", "", (byte) 1);
+            //creating a recruiter with the user created
+            Recruiter newUsers = new Recruiter(user, "", "");
             trns = session.beginTransaction();
             session.save(newUsers);
             session.getTransaction().commit();
             //updating the user with the candidate created
-            user.setCandidate(newUsers);
-            user.setRole(Role.CANDIDATE.toString());
+            user.setRecruiter(newUsers);
+            user.setRole(Role.RECRUITER.toString());
                 
             trns = session.beginTransaction();
             session.update(user);
@@ -51,12 +52,12 @@ public class CandidateDAO {
         }
     }
     
-    public List<Candidate> findAll(){
+    public List<Recruiter> findAll(){
         Session session = HibernateUtil.getSessionFactory().openSession();
-        CriteriaQuery<Candidate> queryCandidate = session.getCriteriaBuilder().createQuery(Candidate.class);
-        Root<Candidate> root = queryCandidate.from(Candidate.class);
-        queryCandidate.select(root);
-        List<Candidate> res = session.createQuery(queryCandidate).getResultList();
+        CriteriaQuery<Recruiter> queryRecruiter = session.getCriteriaBuilder().createQuery(Recruiter.class);
+        Root<Recruiter> root = queryRecruiter.from(Recruiter.class);
+        queryRecruiter.select(root);
+        List<Recruiter> res = session.createQuery(queryRecruiter).getResultList();
         //session.close();
         return res;
     }

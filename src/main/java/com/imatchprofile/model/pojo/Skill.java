@@ -1,5 +1,5 @@
 package com.imatchprofile.model.pojo;
-// Generated 27 déc. 2017 17:10:07 by Hibernate Tools 4.3.1
+// Generated 27 dï¿½c. 2017 17:10:07 by Hibernate Tools 4.3.1
 
 
 import java.util.HashSet;
@@ -10,7 +10,6 @@ import java.util.Set;
  */
 public class Skill  implements java.io.Serializable {
 
-
      private Integer skillId;
      private String title;
      private Set needses = new HashSet(0);
@@ -18,7 +17,6 @@ public class Skill  implements java.io.Serializable {
 
     public Skill() {
     }
-
 	
     public Skill(String title) {
         this.title = title;
@@ -57,9 +55,6 @@ public class Skill  implements java.io.Serializable {
     public void setMasterses(Set masterses) {
         this.masterses = masterses;
     }
-
-
-
 
 }
 
