@@ -6,9 +6,13 @@
 package com.imatchprofile.routes;
 
 import com.imatchprofile.exceptions.IMPException;
+import com.imatchprofile.exceptions.IMPNoContentException;
+import com.imatchprofile.helper.TokenHelper;
+import com.imatchprofile.helper.TokenHelperResult;
 import com.imatchprofile.service.JobService;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -37,21 +41,32 @@ public class JobsRoutes {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getJobs() {
-        return Response.status(Response.Status.OK).entity(jobService.getAllJob()).build();
+    public Response getJobs(@HeaderParam("Authorization") String token) {
+        try {
+            TokenHelperResult thr = TokenHelper.verifyOptionalAndRefresh(token);
+            String result = jobService.getAllJob();
+            return Response.status(Response.Status.OK).entity(TokenHelper.concatJsonsToken(result, "jobs", thr.getNewToken())).build();
+        } catch (IMPException ex) {
+            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
+        }
     }
     
     @GET
     @Path("{id}")
-    public Response getJob(@PathParam("id") String id){
-         try {
-            return Response.status(Response.Status.OK).entity(jobService.getJobById(id)).build();
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getJob(@HeaderParam("Authorization") String token, @PathParam("id") String id){
+        try {
+            TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
+            String result = jobService.getJobById(id);
+            return Response.status(Response.Status.OK).entity(TokenHelper.concatJsonsToken(result, "job", thr.getNewToken())).build();
         } catch (IMPException ex) {
-            return Response.status(ex.getStatus()).entity("{}").build();
+            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
         } catch (Throwable t) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{}").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
         }
-         
     }
     
     @POST

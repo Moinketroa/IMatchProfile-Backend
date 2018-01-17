@@ -138,35 +138,16 @@ public class Job  implements java.io.Serializable {
         
         return result;
     }
-
-
-   public JSONObject allJson(){
-        Instant instantCreated = this.createDate.toInstant();
-        ZoneId z = ZoneId.of( "Europe/Paris" );
-        ZonedDateTime zdt = instantCreated.atZone( z );
-        String dateString = zdt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace( "T" , " " );
-        
-        JSONObject result = new JSONObject();
-        result.put("jod_id", this.jobId);
-        result.put("company", this.recruiter.getCompany());
-        result.put("title", this.title);
-        result.put("create_date", dateString);
-        
-        return result;
-    }
     
     public JSONObject toJsonJob(){
-        Instant instantCreated = this.createDate.toInstant();
-        ZoneId z = ZoneId.of( "Europe/Paris" );
-        ZonedDateTime zdt = instantCreated.atZone( z );
-        String dateString = zdt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace( "T" , " " );
-        
         JSONObject result = new JSONObject();
+        
         result.put("jod_id", this.jobId);
         result.put("company", this.recruiter.getCompany());
         result.put("recuiter", recruiter.toJSON());
         result.put("title", this.title);
-        result.put("create_date", dateString);
+        result.put("description", this.description);
+        result.put("create_date", DateHelper.getPrettyDate(createDate));
         
         return result;
     }
@@ -176,9 +157,21 @@ public class Job  implements java.io.Serializable {
         result.put("jod_id", this.jobId);
         result.put("company", this.recruiter.getCompany());
         result.put("title", this.title);
+        result.put("create_date", DateHelper.getPrettyDate(createDate));
         
         return result.toString();
     }
+    
+    public JSONObject visiteurJsonObject(){
+        JSONObject result = new JSONObject();
+        result.put("jod_id", this.jobId);
+        result.put("company", this.recruiter.getCompany());
+        result.put("title", this.title);
+        result.put("create_date", DateHelper.getPrettyDate(createDate));
+        
+        return result;
+    }
+    
      @Override
     public String toString() {
         return "Job{" + "jobId=" + jobId + ", recruiter=" + recruiter + ", title=" + title + ", description=" + description + ", visibility=" + visibility + ", createDate=" + createDate + ", applieses=" + applieses + ", needses=" + needses + ", matcheses=" + matcheses + ", jobreportses=" + jobreportses + '}';

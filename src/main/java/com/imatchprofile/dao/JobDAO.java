@@ -52,9 +52,9 @@ public class JobDAO {
     }
     
     public Job findOneById(Integer id){
-       Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().openSession();
         Job res = (Job) session.get(Job.class, id);
-        //session.close();
+        session.close();
         return res;
     }
      
@@ -65,7 +65,7 @@ public class JobDAO {
         query.select(root);
         
         List<Job> res = session.createQuery(query).getResultList();
-        //session.close();
+        session.close();
         return res;
     }
     

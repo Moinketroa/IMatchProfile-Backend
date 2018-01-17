@@ -12,6 +12,8 @@ import com.imatchprofile.exceptions.IMPInternalServerException;
 import com.imatchprofile.exceptions.IMPNoTokenException;
 import com.imatchprofile.exceptions.IMPWrongTokenException;
 import java.io.UnsupportedEncodingException;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -44,7 +46,7 @@ public class TokenHelper {
             }
         }
         
-        return null;
+        return new TokenHelperResult(null, null);
     }
     
     public static TokenHelperResult verifyNeededAndRefresh(String tokenBearer) throws IMPException {
@@ -80,9 +82,14 @@ public class TokenHelper {
     }
     
     public static String concatJsonsToken(String jsonResponse, String responseName, String token) {
-        JSONObject response = new JSONObject(jsonResponse);
         JSONObject result = new JSONObject();
-        result.put(responseName, response);
+        
+        try {
+            result.put(responseName, new JSONObject(jsonResponse));
+        } catch (JSONException e) {
+            //weird case if jsonResponse is an array
+            result.put(responseName, new JSONArray(jsonResponse));
+        }
         
         if (token != null) {
             result.put("token", token);

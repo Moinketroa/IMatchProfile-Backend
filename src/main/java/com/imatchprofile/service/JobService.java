@@ -11,11 +11,13 @@ import com.imatchprofile.dao.UserDAO;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPExpiredTokenException;
 import com.imatchprofile.exceptions.IMPInternalServerException;
+import com.imatchprofile.exceptions.IMPNoContentException;
 import com.imatchprofile.exceptions.IMPNoTokenException;
 import com.imatchprofile.exceptions.IMPNotARecruiterException;
 import com.imatchprofile.exceptions.IMPNotAUserException;
 import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.exceptions.IMPWrongTokenException;
+import com.imatchprofile.exceptions.IMPWrongURLParameterException;
 import com.imatchprofile.helper.JWTHelper;
 import com.imatchprofile.model.pojo.Job;
 import com.imatchprofile.model.pojo.Recruiter;
@@ -27,6 +29,7 @@ import org.json.JSONObject;
 import com.imatchprofile.util.HibernateUtil;
 import java.util.ArrayList;
 import java.util.List;
+import org.json.JSONArray;
 
 /**
  *
@@ -112,25 +115,25 @@ public class JobService extends Service {
     }
     
     public String getAllJob(){
-        List<JSONObject> listJobs = new ArrayList<>();
+        JSONArray listJobs = new JSONArray();
+        
         for(Job job : jobDAO.findAllJob()){
-            listJobs.add(job.allJson());
+            listJobs.put(job.visiteurJsonObject());
         }
-        JSONObject jsonJobs = new JSONObject();
-        jsonJobs.put("jobs", listJobs);
-       
-        HibernateUtil.getSessionFactory().getCurrentSession().close();
-        System.out.println(jsonJobs.toString());
-        return jsonJobs.toString();
+        
+        return listJobs.toString();
     }
     
     public String getJobById(String Id) throws IMPException{
 
-        if(!isInteger(Id) || Id == null){
-            throw new IMPPayloadException();
-        }
+        if(!isInteger(Id) || Id == null)
+            throw new IMPWrongURLParameterException();
+        
         Job job = jobDAO.findOneById(Integer.parseInt(Id));
-        HibernateUtil.getSessionFactory().getCurrentSession().close();
+        
+        if (job == null)
+            throw new IMPNoContentException();
+        
         return job.toJsonJob().toString();
     }
 
