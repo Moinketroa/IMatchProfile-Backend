@@ -61,7 +61,7 @@ public class CandidateServiceTest {
         
         
         try {
-            instance.signIn(contentWithoutLastname.toString());
+            instance.signInToVerif(contentWithoutLastname.toString());
             fail();
         } catch (IMPException e) {
             assertEquals(Response.Status.BAD_REQUEST, e.getStatus());
@@ -71,7 +71,7 @@ public class CandidateServiceTest {
         contentWithoutFirstname.remove("firstname");
         
         try {
-            instance.signIn(contentWithoutFirstname.toString());
+            instance.signInToVerif(contentWithoutFirstname.toString());
             fail();
         } catch (IMPException e) {
             assertEquals(Response.Status.BAD_REQUEST, e.getStatus());
@@ -81,7 +81,7 @@ public class CandidateServiceTest {
         contentWithoutEmail.remove("email");
         
         try {
-            instance.signIn(contentWithoutEmail.toString());
+            instance.signInToVerif(contentWithoutEmail.toString());
             fail();
         } catch (IMPException e) {
             assertEquals(Response.Status.BAD_REQUEST, e.getStatus());
@@ -91,7 +91,7 @@ public class CandidateServiceTest {
         contentWithoutPassword.remove("password");
         
         try {
-            instance.signIn(contentWithoutPassword.toString());
+            instance.signInToVerif(contentWithoutPassword.toString());
             fail();
         } catch (IMPException e) {
             assertEquals(Response.Status.BAD_REQUEST, e.getStatus());
@@ -101,7 +101,7 @@ public class CandidateServiceTest {
         contentWithoutPhotoUrl.remove("photoUrl");
         
         try {
-            instance.signIn(contentWithoutPhotoUrl.toString());
+            instance.signInToVerif(contentWithoutPhotoUrl.toString());
             fail();
         } catch (IMPException e) {
             assertEquals(Response.Status.BAD_REQUEST, e.getStatus());
@@ -111,7 +111,7 @@ public class CandidateServiceTest {
         contentWrongEmail.put("email", "testNotAnEmail");
         
         try {
-            instance.signIn(contentWrongEmail.toString());
+            instance.signInToVerif(contentWrongEmail.toString());
             fail();
         } catch (IMPException e) {
             assertEquals(Response.Status.BAD_REQUEST, e.getStatus());
@@ -121,7 +121,7 @@ public class CandidateServiceTest {
         contentWrongUrl.put("photoUrl", "testNotAURL");
         
         try {
-            instance.signIn(contentWrongUrl.toString());
+            instance.signInToVerif(contentWrongUrl.toString());
             fail();
         } catch (IMPException e) {
             assertEquals(Response.Status.BAD_REQUEST, e.getStatus());
