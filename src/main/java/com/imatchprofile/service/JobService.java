@@ -144,7 +144,7 @@ public class JobService extends Service {
         }
         Job job = jobDAO.findOneById(Integer.parseInt(Id));
         HibernateUtil.getSessionFactory().getCurrentSession().close();
-        return job.toJsonJob();
+        return job.toJsonJob().toString();
     }
 
     public String getRecentJobs(String pagenumber,String entitieperpages) throws IMPException{

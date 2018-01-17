@@ -160,13 +160,20 @@ public class Job  implements java.io.Serializable {
         return result;
     }
     
-    public String toJsonJob(){
-        StringBuilder json = new StringBuilder();
-        json.append("{\n\"jobId\": "+jobId+",\n");
-        json.append("\"recruiter\": "+recruiter.allJson()+",\n");
-        json.append("\"title\": \""+title+"\",\n");
-        json.append("\"description\": \""+description+"\"\n}");
-        return json.toString();
+    public JSONObject toJsonJob(){
+        Instant instantCreated = this.createDate.toInstant();
+        ZoneId z = ZoneId.of( "Europe/Paris" );
+        ZonedDateTime zdt = instantCreated.atZone( z );
+        String dateString = zdt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace( "T" , " " );
+        
+        JSONObject result = new JSONObject();
+        result.put("jod_id", this.jobId);
+        result.put("company", this.recruiter.getCompany());
+        result.put("recuiter", recruiter.toJSON());
+        result.put("title", this.title);
+        result.put("create_date", dateString);
+        
+        return result;
     }
 
     public String visiteurJson(){
