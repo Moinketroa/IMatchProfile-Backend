@@ -23,7 +23,6 @@ public class JobService {
     public String getAllJob(){
         
         List<Job> listJobs = jobDAO.findAllJob();
-        HibernateUtil.getSessionFactory().getCurrentSession().close();
         StringBuilder sb = new StringBuilder();
         sb.append("[\n");
         for (int i = 0; i < listJobs.size()-1;i++)

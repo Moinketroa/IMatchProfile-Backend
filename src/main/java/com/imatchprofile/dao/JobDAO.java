@@ -48,7 +48,7 @@ public class JobDAO {
         Root<Job> root = query.from(Job.class);
         query.select(root);
         List<Job> res = session.createQuery(query).getResultList();
-        //session.close();
+        session.close();
         return res;
     }
     

@@ -122,7 +122,16 @@ public class Job  implements java.io.Serializable {
 
     public String allJson(){
         StringBuilder json = new StringBuilder();
-        json.append("{\n\"jobId\": \""+jobId+"\",\n");
+        json.append("{\n\"jobId\": "+jobId+",\n");
+        //json.append("\"recruiter\": "+recruiter.allJson()+",\n");
+        json.append("\"title\": \""+title+"\",\n");
+        json.append("\"description\": \""+description+"\"\n}");
+        return json.toString();
+    }
+    
+    public String toJson(){
+        StringBuilder json = new StringBuilder();
+        json.append("{\n\"jobId\": "+jobId+",\n");
         json.append("\"recruiter\": "+recruiter.allJson()+",\n");
         json.append("\"title\": \""+title+"\",\n");
         json.append("\"description\": \""+description+"\"\n}");
