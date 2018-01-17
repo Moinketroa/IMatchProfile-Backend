@@ -25,16 +25,17 @@ public class JobDAO {
         Transaction transaction = null;
         Session session = HibernateUtil.getSessionFactory().openSession();
         CriteriaQuery<Job> query = session.getCriteriaBuilder().createQuery(Job.class);
+
         Root<Job> root = query.from(Job.class);
         query.select(root);
         query.orderBy( session.getCriteriaBuilder().asc(root.get("createDate")));
         List<Job> res = session.createQuery(query).getResultList();
         List<Job> res1 = new Vector<>();
        
-      for(int i=(pageNumber*entitiesPerPage)-entitiesPerPage;i<(pageNumber*entitiesPerPage) ;i++){
-     Job job = new Job(res.get(i).getRecruiter(),res.get(i).getTitle(), res.get(i).getDescription()  , res.get(i).getVisibility(), res.get(i).getCreateDate());
+        for(int i=(pageNumber*entitiesPerPage)-entitiesPerPage;i<(pageNumber*entitiesPerPage) ;i++){
+            Job job = new Job(res.get(i).getRecruiter(),res.get(i).getTitle(), res.get(i).getDescription()  , res.get(i).getVisibility(), res.get(i).getCreateDate());
             job.setJobId(res.get(i).getJobId());
-        res1.add(job);
+            res1.add(job);
         }
         //session.close();
         return res1;
@@ -62,9 +63,15 @@ public class JobDAO {
         CriteriaQuery<Job> query = session.getCriteriaBuilder().createQuery(Job.class);
         Root<Job> root = query.from(Job.class);
         query.select(root);
+        
         List<Job> res = session.createQuery(query).getResultList();
+        
         //session.close();
         return res;
     }
+    
+    
+    
+    
     
 }
