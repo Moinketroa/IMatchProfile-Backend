@@ -5,9 +5,6 @@
  */
 package com.imatchprofile.service;
 
-
-import com.imatchprofile.exceptions.IMPBadFormatException;
-import com.imatchprofile.exceptions.IMPEmailAlreadyTakenException;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPNotACandidateException;
 import com.imatchprofile.exceptions.IMPPayloadException;
@@ -15,8 +12,6 @@ import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
 import java.util.List;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  *

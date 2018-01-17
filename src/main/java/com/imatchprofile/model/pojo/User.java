@@ -1,13 +1,8 @@
 package com.imatchprofile.model.pojo;
 // Generated 27 d�c. 2017 17:10:07 by Hibernate Tools 4.3.1
 
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.JSONObject;
 
 /**
