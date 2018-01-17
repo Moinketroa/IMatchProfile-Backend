@@ -48,9 +48,9 @@ public class CandidateRoutes {
         try {
             return Response.status(Response.Status.CREATED).entity(candidateService.signIn(content)).build();
         } catch (IMPException ex) {
-            return Response.status(ex.getStatus()).entity("{}").build();
+            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
         } catch (Throwable t) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{}").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
         }
     }
     
