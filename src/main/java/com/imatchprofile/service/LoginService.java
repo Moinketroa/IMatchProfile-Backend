@@ -10,6 +10,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.imatchprofile.dao.UserDAO;
 import com.imatchprofile.exceptions.IMPException;
+import com.imatchprofile.helper.JWTHelper;
 import com.imatchprofile.model.pojo.User;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
@@ -60,19 +61,10 @@ public class LoginService extends Service {
         if (!(userFound.getPassword().equals(User.encryptPassword(password))))
             throw new IMPException(Response.Status.UNAUTHORIZED);
         
-        //expiration
-        Calendar calendar = Calendar.getInstance();
-        long currentTime = calendar.getTimeInMillis();
-        Date expirationDate = new Date(currentTime + (30 * 60000));
-        
         //creation token JWT
         String jwtToken;
         try {
-            Algorithm algorithm = Algorithm.HMAC256(SECRET);
-            jwtToken = JWT.create()
-                    .withClaim("user_id", userFound.getUserId())
-                    .withExpiresAt(expirationDate)
-                    .sign(algorithm);
+            jwtToken = JWTHelper.createToken(userFound.getUserId());      
         } catch (UnsupportedEncodingException | IllegalArgumentException | JWTCreationException ex) {
             System.out.println(ex.getMessage());
             throw new IMPException(Response.Status.INTERNAL_SERVER_ERROR);

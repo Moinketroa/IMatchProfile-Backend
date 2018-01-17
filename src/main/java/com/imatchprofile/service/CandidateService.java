@@ -8,7 +8,10 @@ package com.imatchprofile.service;
 import com.imatchprofile.dao.CandidateDAO;
 import com.imatchprofile.dao.UserDAO;
 import com.imatchprofile.exceptions.IMPException;
+import com.imatchprofile.exceptions.IMPPayloadException;
+import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.User;
+import com.imatchprofile.util.HibernateUtil;
 import javax.ws.rs.core.Response;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -66,6 +69,15 @@ public class CandidateService extends Service {
 
         //reponse json
         return userCandidate.getCandidate().toJSON().toString();
+    }
+    
+    public String getProfilById(String Id) throws IMPException{
+        if(!isInteger(Id) || Id == null){
+            throw new IMPPayloadException();
+        }
+        Candidate candidate = candidateDAO.findOneById(Integer.parseInt(Id));
+        HibernateUtil.getSessionFactory().getCurrentSession().close();
+        return candidate.profilJson();
     }
     
     
