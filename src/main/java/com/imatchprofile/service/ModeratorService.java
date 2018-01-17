@@ -6,8 +6,7 @@
 package com.imatchprofile.service;
 
 import com.imatchprofile.exceptions.IMPException;
-import com.imatchprofile.exceptions.IMPNotACandidateException;
-import com.imatchprofile.model.pojo.Candidate;
+import com.imatchprofile.exceptions.IMPNotAModeratorException;
 import com.imatchprofile.model.pojo.Moderator;
 import com.imatchprofile.model.pojo.User;
 
@@ -22,7 +21,7 @@ public class ModeratorService extends UserService {
         Moderator meModerator = meUser.getModerator();
         
         if (meModerator == null)
-            throw new IMPNotACandidateException();
+            throw new IMPNotAModeratorException();
         
         return meModerator.toJSONComplete().toString();
     }
