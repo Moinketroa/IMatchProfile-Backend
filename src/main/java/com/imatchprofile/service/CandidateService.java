@@ -5,8 +5,7 @@
  */
 package com.imatchprofile.service;
 
-import com.imatchprofile.dao.CandidateDAO;
-import com.imatchprofile.dao.UserDAO;
+
 import com.imatchprofile.exceptions.IMPBadFormatException;
 import com.imatchprofile.exceptions.IMPEmailAlreadyTakenException;
 import com.imatchprofile.exceptions.IMPException;
@@ -15,61 +14,22 @@ import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
-import javax.ws.rs.core.Response;
-import org.apache.commons.validator.routines.EmailValidator;
-import org.apache.commons.validator.routines.UrlValidator;
+import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  *
- * @author MasterChief
+ * @author achyle
  */
-public class CandidateService extends Service {
-
-    private final CandidateDAO candidateDAO = new CandidateDAO();
-    private final UserDAO userDAO = new UserDAO();
+public class CandidateService extends UserService{
     
     public String signIn(String content) throws IMPException {
-        
-        //analyse du payload
-        JSONObject payload = new JSONObject(content);
-        
-        String lastname, firstname, email, password, photoUrl;
-        
-        try {
-            lastname = payload.getString("lastname");
-            firstname = payload.getString("firstname");
-            email = payload.getString("email");
-            password = payload.getString("password");
-            photoUrl = payload.getString("photoUrl");
-        } catch (JSONException e) {
-            throw new IMPPayloadException();
-        }
-        
-        //verification de l'existence des champs
-        if (oneOfIsNull(lastname, firstname, email, password, photoUrl))
-            throw new IMPPayloadException();
-        
-        //verification de l'email et de l'url de la photo
-        if (!EmailValidator.getInstance().isValid(email) || 
-            !UrlValidator.getInstance().isValid(photoUrl))
-            throw new IMPBadFormatException("email");
-        
-        //verification si email déjà présent
-        User userFoundByEmail = userDAO.findOneByEmail(email);
-        if (userFoundByEmail != null)
-            throw new IMPEmailAlreadyTakenException();
-        
-        //chiffrage du password
-        password = User.encryptPassword(password);
-        
+        String[] tabContent = this.signInToVerif(content);
         //creation du User
-        User userCandidate = new User(lastname, firstname, email, password);
-        userCandidate.setPhotoUrl(photoUrl);
-        
-        candidateDAO.create(userCandidate);
-
+        User userCandidate = new User(tabContent[0], tabContent[1], tabContent[2], tabContent[3]);
+        userCandidate.setPhotoUrl(tabContent[4]);
+        this.getCandidateDAO().create(userCandidate);
         //reponse json
         return userCandidate.getCandidate().toJSON().toString();
     }
@@ -78,17 +38,29 @@ public class CandidateService extends Service {
         if(!isInteger(Id) || Id == null){
             throw new IMPPayloadException();
         }
-        Candidate candidate = candidateDAO.findOneById(Integer.parseInt(Id));
+        Candidate candidate = this.getUserDAO().findById(Integer.parseInt(Id)).getCandidate();
         HibernateUtil.getSessionFactory().getCurrentSession().close();
         return candidate.profilJson();
     }
     
+    public String getAll(){
+        List<Candidate> listCandidate = getCandidateDAO().findAll();
+        HibernateUtil.getSessionFactory().getCurrentSession().close();
+        StringBuilder sb = new StringBuilder();
+        sb.append("[\n");
+        for (int i=0; i < listCandidate.size()-1; i++)
+            sb.append(listCandidate.get(i).toJSON()+",\n");
+        sb.append(listCandidate.get(listCandidate.size()-1).toJSON());
+        sb.append("\n]");
+        return sb.toString();
+    }
+
     public String search(String query) throws IMPException {
         return null;
     }
     
     public String getMyProfile(Integer userId) throws IMPException {
-        User meUser = userDAO.findById(userId);
+        User meUser = this.userDAO.findById(userId);
         Candidate meCandidate = meUser.getCandidate();
         
         if (meCandidate == null)

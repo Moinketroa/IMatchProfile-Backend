@@ -5,21 +5,18 @@
  */
 package com.imatchprofile.dao;
 
-import com.imatchprofile.model.pojo.Candidate;
+import com.imatchprofile.model.pojo.Moderator;
 import com.imatchprofile.model.pojo.Role;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
-import java.util.List;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 /**
  *
- * @author MasterChief
+ * @author achyle
  */
-public class CandidateDAO {
+public class ModeratorDAO {
     
     public void create(User user) {
         Transaction trns = null;
@@ -29,14 +26,14 @@ public class CandidateDAO {
             trns = session.beginTransaction();
             session.save(user);
             session.getTransaction().commit();
-            //creating a candidate with the user created
-            Candidate newUsers = new Candidate(user, "", "", "", (byte) 1);
+            //creating a moderator with the user created
+            Moderator newUsers = new Moderator(user);
             trns = session.beginTransaction();
             session.save(newUsers);
             session.getTransaction().commit();
             //updating the user with the candidate created
-            user.setCandidate(newUsers);
-            user.setRole(Role.CANDIDATE.toString());
+            user.setModerator(newUsers);
+            user.setRole(Role.MODERATOR.toString());
                 
             trns = session.beginTransaction();
             session.update(user);
@@ -51,13 +48,4 @@ public class CandidateDAO {
         }
     }
     
-    public List<Candidate> findAll(){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        CriteriaQuery<Candidate> queryCandidate = session.getCriteriaBuilder().createQuery(Candidate.class);
-        Root<Candidate> root = queryCandidate.from(Candidate.class);
-        queryCandidate.select(root);
-        List<Candidate> res = session.createQuery(queryCandidate).getResultList();
-        //session.close();
-        return res;
-    }
 }

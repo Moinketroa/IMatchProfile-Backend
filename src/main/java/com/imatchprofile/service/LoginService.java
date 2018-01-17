@@ -5,16 +5,12 @@
  */
 package com.imatchprofile.service;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.imatchprofile.dao.UserDAO;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.helper.JWTHelper;
 import com.imatchprofile.model.pojo.User;
 import java.io.UnsupportedEncodingException;
-import java.util.Calendar;
-import java.util.Date;
 import javax.ws.rs.core.Response;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.json.JSONException;

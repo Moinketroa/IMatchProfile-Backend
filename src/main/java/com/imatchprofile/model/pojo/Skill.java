@@ -11,7 +11,6 @@ import org.json.JSONObject;
  */
 public class Skill  implements java.io.Serializable {
 
-
      private Integer skillId;
      private String title;
      private Set needses = new HashSet(0);
@@ -19,7 +18,6 @@ public class Skill  implements java.io.Serializable {
 
     public Skill() {
     }
-
 	
     public Skill(String title) {
         this.title = title;
@@ -58,15 +56,13 @@ public class Skill  implements java.io.Serializable {
     public void setMasterses(Set masterses) {
         this.masterses = masterses;
     }
-
+    
     public JSONObject toJSON() {
         JSONObject result = new JSONObject();
         result.put("skill_id", getSkillId());
         result.put("title", getTitle());
         return result;
     }
-
-
 }
 
 
