@@ -65,7 +65,7 @@ public class LoginService extends Service {
         String jwtToken;
         try {
             jwtToken = JWTHelper.createToken(userFound.getUserId());      
-        } catch (UnsupportedEncodingException | IllegalArgumentException | JWTCreationException ex) {
+        } catch (UnsupportedEncodingException | IllegalArgumentException | JWTCreationException | NullPointerException ex) {
             System.out.println(ex.getMessage());
             throw new IMPException(Response.Status.INTERNAL_SERVER_ERROR);
         } 
@@ -73,7 +73,12 @@ public class LoginService extends Service {
         //creation de la reponse json
         JSONObject response = new JSONObject();
         response.put("token", jwtToken);
-        response.put("user", userFound.toJSON());
+        try{
+           response.put("user", userFound.toJSON());
+        }catch(NullPointerException e){
+            
+        }
+
         
         return response.toString();
     }
