@@ -5,14 +5,17 @@
  */
 package com.imatchprofile.exceptions;
 
+import javax.ws.rs.core.Response.Status;
+
 /**
  *
  * @author j-m_d
  */
-public class IMPPayloadException extends IMPBadRequestException {
+public class IMPBadRequestException extends IMPException {
     
-    public IMPPayloadException() {
-        super("Missing parameter in Payload");
+    public IMPBadRequestException(String errMes) {
+        super(Status.BAD_REQUEST);
+        errorMessage = errMes;
     }
     
 }

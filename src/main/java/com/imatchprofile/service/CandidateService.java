@@ -7,6 +7,8 @@ package com.imatchprofile.service;
 
 import com.imatchprofile.dao.CandidateDAO;
 import com.imatchprofile.dao.UserDAO;
+import com.imatchprofile.exceptions.IMPBadFormatException;
+import com.imatchprofile.exceptions.IMPEmailAlreadyTakenException;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.model.pojo.Candidate;
@@ -41,22 +43,22 @@ public class CandidateService extends Service {
             password = payload.getString("password");
             photoUrl = payload.getString("photoUrl");
         } catch (JSONException e) {
-            throw new IMPException(Response.Status.BAD_REQUEST);
+            throw new IMPPayloadException();
         }
         
         //verification de l'existence des champs
         if (oneOfIsNull(lastname, firstname, email, password, photoUrl))
-            throw new IMPException(Response.Status.BAD_REQUEST);
+            throw new IMPPayloadException();
         
         //verification de l'email et de l'url de la photo
         if (!EmailValidator.getInstance().isValid(email) || 
             !UrlValidator.getInstance().isValid(photoUrl))
-            throw new IMPException(Response.Status.BAD_REQUEST);
+            throw new IMPBadFormatException("email");
         
         //verification si email déjà présent
         User userFoundByEmail = userDAO.findOneByEmail(email);
         if (userFoundByEmail != null)
-            throw new IMPException(Response.Status.PRECONDITION_FAILED);
+            throw new IMPEmailAlreadyTakenException();
         
         //chiffrage du password
         password = User.encryptPassword(password);

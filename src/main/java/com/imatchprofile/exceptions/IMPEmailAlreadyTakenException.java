@@ -5,14 +5,17 @@
  */
 package com.imatchprofile.exceptions;
 
+import javax.ws.rs.core.Response;
+
 /**
  *
  * @author j-m_d
  */
-public class IMPPayloadException extends IMPBadRequestException {
+public class IMPEmailAlreadyTakenException extends IMPException {
     
-    public IMPPayloadException() {
-        super("Missing parameter in Payload");
+    public IMPEmailAlreadyTakenException() {
+        super(Response.Status.PRECONDITION_FAILED);
+        errorMessage = "Email already taken";
     }
     
 }
