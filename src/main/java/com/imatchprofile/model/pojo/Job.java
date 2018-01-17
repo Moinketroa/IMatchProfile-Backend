@@ -33,7 +33,12 @@ public class Job  implements java.io.Serializable {
     public Job() {
     }
 
-	
+     public Job( String title, String description, byte visibility, Date createDate) {
+        this.title = title;
+        this.description = description;
+        this.visibility = visibility;
+        this.createDate = createDate;
+    }
     public Job(Recruiter recruiter, String title, String description, byte visibility, Date createDate) {
         this.recruiter = recruiter;
         this.title = title;
@@ -146,6 +151,13 @@ public class Job  implements java.io.Serializable {
         json.append("\"recruiter\": "+recruiter.allJson()+",\n");
         json.append("\"title\": \""+title+"\",\n");
         json.append("\"description\": \""+description+"\"\n}");
+        return json.toString();
+    }
+      public String visiteurJson(){
+        StringBuilder json = new StringBuilder();
+        json.append("{\n\"jobId\": \""+jobId+"\",\n");
+        json.append("\"company\": "+recruiter.getCompany()+",\n");
+        json.append("\"title\": \""+title+"\"\n}");
         return json.toString();
     }
 

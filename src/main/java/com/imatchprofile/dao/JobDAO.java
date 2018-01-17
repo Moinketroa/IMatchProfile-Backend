@@ -8,6 +8,7 @@ package com.imatchprofile.dao;
 import com.imatchprofile.model.pojo.Job;
 import com.imatchprofile.util.HibernateUtil;
 import java.util.List;
+import java.util.Vector;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -23,12 +24,20 @@ public class JobDAO {
         
         Transaction transaction = null;
         Session session = HibernateUtil.getSessionFactory().openSession();
-         /*
-        try {
-            transaction = session.beginTransaction();
-        }*/
-         
-        return null;
+        CriteriaQuery<Job> query = session.getCriteriaBuilder().createQuery(Job.class);
+        Root<Job> root = query.from(Job.class);
+        query.select(root);
+        query.orderBy( session.getCriteriaBuilder().asc(root.get("createDate")));
+        List<Job> res = session.createQuery(query).getResultList();
+        List<Job> res1 = new Vector<>();
+       
+      for(int i=(pageNumber*entitiesPerPage)-entitiesPerPage;i<(pageNumber*entitiesPerPage) ;i++){
+     Job job = new Job(res.get(i).getRecruiter(),res.get(i).getTitle(), res.get(i).getDescription()  , res.get(i).getVisibility(), res.get(i).getCreateDate());
+            job.setJobId(res.get(i).getJobId());
+        res1.add(job);
+        }
+        //session.close();
+        return res1;
     }
     
     public void create(Job newJob) {
