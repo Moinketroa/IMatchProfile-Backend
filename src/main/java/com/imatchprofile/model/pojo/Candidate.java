@@ -4,6 +4,7 @@ package com.imatchprofile.model.pojo;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -200,6 +201,41 @@ public class Candidate  implements java.io.Serializable {
         }
         sb.append("]\n");
         return sb.toString();
+    }
+    
+    public JSONObject toJSONComplete() {
+        JSONObject result = toJSON();
+
+        JSONArray skillsArray = new JSONArray();
+        for (Object o : masterses) {
+            Masters m = (Masters) o;
+            skillsArray.put(m.getSkill().toJSON());
+        }
+        
+        JSONArray mediaArray = new JSONArray();
+        for (Object o : medias) {
+            Media m = (Media) o;
+            mediaArray.put(m.toJSON());
+        }
+        
+        JSONArray trainingArray = new JSONArray();
+        for (Object o : trainings) {
+            Training t = (Training) o;
+            trainingArray.put(t.toJSONObject());
+        }
+        
+        JSONArray experienceArray = new JSONArray();
+        for (Object o : experiences) {
+            Experience e = (Experience) o;
+            experienceArray.put(e.toJSONObject());
+        }
+        
+        result.put("skills", skillsArray);
+        result.put("medias", mediaArray);
+        result.put("trainings", trainingArray);
+        result.put("experiences", experienceArray);
+        
+        return result;
     }
 }
 

@@ -2,6 +2,7 @@ package com.imatchprofile.model.pojo;
 // Generated 27 d�c. 2017 17:10:07 by Hibernate Tools 4.3.1
 
 
+import com.imatchprofile.helper.DateHelper;
 import java.util.Date;
 import org.json.JSONObject;
 
@@ -93,7 +94,16 @@ public class Training  implements java.io.Serializable {
         return trainingJSON.toString();
     }
 
-
+    public JSONObject toJSONObject() {
+        JSONObject result = new JSONObject();
+        result.put("training_id", getTrainingId());
+        result.put("title", getTitle());
+        result.put("institute", getInstitute());
+        result.put("description", getDescription());
+        result.put("start_date", DateHelper.getPrettyDate(startDate));
+        result.put("end_date", DateHelper.getPrettyDate(endDate));
+        return result;
+    }
 }
 
 

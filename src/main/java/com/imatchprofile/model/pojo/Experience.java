@@ -2,6 +2,7 @@ package com.imatchprofile.model.pojo;
 // Generated 27 d�c. 2017 17:10:07 by Hibernate Tools 4.3.1
 
 
+import com.imatchprofile.helper.DateHelper;
 import java.util.Date;
 import org.json.JSONObject;
 
@@ -91,6 +92,18 @@ public class Experience  implements java.io.Serializable {
         experienceJSON.put("company", company);
         
         return experienceJSON.toString();
+    }
+
+    public JSONObject toJSONObject() {
+        JSONObject experienceJSON = new JSONObject();
+        experienceJSON.put("experience_id", experienceId);
+        experienceJSON.put("title", title);
+        experienceJSON.put("description", description);
+        experienceJSON.put("start_date", DateHelper.getPrettyDate(startDate));
+        experienceJSON.put("end_date", DateHelper.getPrettyDate(endDate));
+        experienceJSON.put("company", company);
+        
+        return experienceJSON;
     }
 
 

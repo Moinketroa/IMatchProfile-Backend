@@ -10,6 +10,7 @@ import com.imatchprofile.dao.UserDAO;
 import com.imatchprofile.exceptions.IMPBadFormatException;
 import com.imatchprofile.exceptions.IMPEmailAlreadyTakenException;
 import com.imatchprofile.exceptions.IMPException;
+import com.imatchprofile.exceptions.IMPNotACandidateException;
 import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.User;
@@ -84,5 +85,15 @@ public class CandidateService extends Service {
     
     public String search(String query) throws IMPException {
         return null;
+    }
+    
+    public String getMyProfile(Integer userId) throws IMPException {
+        User meUser = userDAO.findById(userId);
+        Candidate meCandidate = meUser.getCandidate();
+        
+        if (meCandidate == null)
+            throw new IMPNotACandidateException();
+        
+        return meCandidate.toJSONComplete().toString();
     }
 }

@@ -1,5 +1,8 @@
 package com.imatchprofile.model.pojo;
-// Generated 27 déc. 2017 17:10:07 by Hibernate Tools 4.3.1
+// Generated 27 dï¿½c. 2017 17:10:07 by Hibernate Tools 4.3.1
+
+import org.json.JSONObject;
+
 
 
 
@@ -43,9 +46,12 @@ public class Media  implements java.io.Serializable {
         this.path = path;
     }
 
-
-
-
+    public JSONObject toJSON() {
+        JSONObject result = new JSONObject();
+        result.put("media_id", getMediaId());
+        result.put("path", getPath());
+        return result;
+    }
 }
 
 

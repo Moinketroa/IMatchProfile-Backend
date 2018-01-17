@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.imatchprofile.dao.CandidateDAO;
 import com.imatchprofile.exceptions.IMPException;
+import com.imatchprofile.helper.TokenHelper;
 import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.service.CandidateService;
@@ -22,6 +23,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -108,6 +110,22 @@ public class CandidateRoutes {
     public Response searchCandidatByQuery(@PathParam("query") String query) {
         try {
             return Response.status(Response.Status.OK).entity(candidateService.search(query)).build();
+        } catch (IMPException ex) {
+            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
+        }
+    }
+    
+    @GET
+    @Path("/me")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMyCandidate(@HeaderParam("Authorization") String token) {
+        try {
+            Object[] resultTH = TokenHelper.verifyNeededAndRefresh(token);
+            String result = candidateService.getMyProfile((Integer) resultTH[1]);
+            return Response.status(Response.Status.OK).entity(TokenHelper.concatJsonsToken(result, "candidate", (String) resultTH[0])).build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
         } catch (Throwable t) {
