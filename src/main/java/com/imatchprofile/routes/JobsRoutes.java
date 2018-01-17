@@ -51,6 +51,7 @@ public class JobsRoutes {
         } catch (Throwable t) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{}").build();
         }
+         
     }
     
     @POST
@@ -67,4 +68,15 @@ public class JobsRoutes {
         }
     }
     
+    @GET
+    @Path("/{pagenumber}/{entitiesperpage}")
+    public Response getRecentJobs(@PathParam("pagenumber") String pagenumber,@PathParam("entitiesperpage") String entitiesPerPage){
+         try {
+            return Response.status(Response.Status.OK).entity(jobService.getRecentJobs(pagenumber, entitiesPerPage)).build();
+        } catch (IMPException ex) {
+            return Response.status(ex.getStatus()).entity("{}").build();
+        } catch (Throwable t) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{}").build();
+        }
+    }    
 }

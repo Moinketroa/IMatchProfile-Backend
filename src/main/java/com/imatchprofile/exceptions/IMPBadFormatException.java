@@ -9,10 +9,10 @@ package com.imatchprofile.exceptions;
  *
  * @author j-m_d
  */
-public class IMPPayloadException extends IMPBadRequestException {
+public class IMPBadFormatException extends IMPBadRequestException {
     
-    public IMPPayloadException() {
-        super("Missing parameter in Payload");
+    public IMPBadFormatException(String whatFormat) {
+        super ("Bad format : " + whatFormat + " format is incorrect");
     }
     
 }

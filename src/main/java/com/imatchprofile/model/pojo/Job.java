@@ -31,7 +31,12 @@ public class Job  implements java.io.Serializable {
     public Job() {
     }
 
-	
+     public Job( String title, String description, byte visibility, Date createDate) {
+        this.title = title;
+        this.description = description;
+        this.visibility = visibility;
+        this.createDate = createDate;
+    }
     public Job(Recruiter recruiter, String title, String description, byte visibility, Date createDate) {
         this.recruiter = recruiter;
         this.title = title;
@@ -138,15 +143,46 @@ public class Job  implements java.io.Serializable {
         return result;
     }
 
-    public String allJson(){
-        StringBuilder json = new StringBuilder();
-        json.append("{\n\"jobId\": \""+jobId+"\",\n");
-        json.append("\"recruiter\": "+recruiter.toJSON()+",\n");
-        json.append("\"title\": \""+title+"\",\n");
-        json.append("\"description\": \""+description+"\"\n}");
-        return json.toString();
+
+   public JSONObject allJson(){
+        Instant instantCreated = this.createDate.toInstant();
+        ZoneId z = ZoneId.of( "Europe/Paris" );
+        ZonedDateTime zdt = instantCreated.atZone( z );
+        String dateString = zdt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace( "T" , " " );
+        
+        JSONObject result = new JSONObject();
+        result.put("jod_id", this.jobId);
+        result.put("company", this.recruiter.getCompany());
+        result.put("title", this.title);
+        result.put("create_date", dateString);
+        
+        return result;
+    }
+    
+    public JSONObject toJsonJob(){
+        Instant instantCreated = this.createDate.toInstant();
+        ZoneId z = ZoneId.of( "Europe/Paris" );
+        ZonedDateTime zdt = instantCreated.atZone( z );
+        String dateString = zdt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace( "T" , " " );
+        
+        JSONObject result = new JSONObject();
+        result.put("jod_id", this.jobId);
+        result.put("company", this.recruiter.getCompany());
+        result.put("recuiter", recruiter.toJSON());
+        result.put("title", this.title);
+        result.put("create_date", dateString);
+        
+        return result;
     }
 
+    public String visiteurJson(){
+        JSONObject result = new JSONObject();
+        result.put("jod_id", this.jobId);
+        result.put("company", this.recruiter.getCompany());
+        result.put("title", this.title);
+        
+        return result.toString();
+    }
      @Override
     public String toString() {
         return "Job{" + "jobId=" + jobId + ", recruiter=" + recruiter + ", title=" + title + ", description=" + description + ", visibility=" + visibility + ", createDate=" + createDate + ", applieses=" + applieses + ", needses=" + needses + ", matcheses=" + matcheses + ", jobreportses=" + jobreportses + '}';

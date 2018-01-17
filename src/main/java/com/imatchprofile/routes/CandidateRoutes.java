@@ -14,6 +14,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -37,9 +38,9 @@ public class CandidateRoutes {
         try {
             return Response.status(Response.Status.CREATED).entity(candidateService.signIn(content)).build();
         } catch (IMPException ex) {
-            return Response.status(ex.getStatus()).entity("{}").build();
+            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
         } catch (Throwable t) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{}").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
         }
     }
     
@@ -49,4 +50,17 @@ public class CandidateRoutes {
         return Response.status(Response.Status.OK).entity(candidateService.getAll()).build();
     }
     
+    @GET
+    @Path("{query}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchCandidatByQuery(@PathParam("query") String query) {
+        try {
+            return Response.status(Response.Status.OK).entity(candidateService.search(query)).build();
+        } catch (IMPException ex) {
+            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
+        }
+    }
 }

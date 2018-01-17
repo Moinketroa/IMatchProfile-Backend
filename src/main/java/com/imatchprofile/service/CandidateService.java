@@ -5,12 +5,17 @@
  */
 package com.imatchprofile.service;
 
+
+import com.imatchprofile.exceptions.IMPBadFormatException;
+import com.imatchprofile.exceptions.IMPEmailAlreadyTakenException;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
 import java.util.List;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -47,5 +52,9 @@ public class CandidateService extends UserService{
         sb.append(listCandidate.get(listCandidate.size()-1).toJSON());
         sb.append("\n]");
         return sb.toString();
+    }
+
+    public String search(String query) throws IMPException {
+        return null;
     }
 }

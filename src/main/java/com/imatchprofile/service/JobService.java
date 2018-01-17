@@ -25,6 +25,7 @@ import java.util.Date;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.imatchprofile.util.HibernateUtil;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -111,16 +112,16 @@ public class JobService extends Service {
     }
     
     public String getAllJob(){
-        List<Job> listJobs = jobDAO.findAllJob();
+        List<JSONObject> listJobs = new ArrayList<>();
+        for(Job job : jobDAO.findAllJob()){
+            listJobs.add(job.allJson());
+        }
+        JSONObject jsonJobs = new JSONObject();
+        jsonJobs.put("jobs", listJobs);
+       
         HibernateUtil.getSessionFactory().getCurrentSession().close();
-        StringBuilder sb = new StringBuilder();
-        sb.append("[\n");
-        for (int i = 0; i < listJobs.size()-1;i++)
-            sb.append(listJobs.get(i).allJson()+",\n");
-        sb.append(listJobs.get(0).allJson());
-        sb.append("\n]");
-
-        return sb.toString();//sb.toString();
+        System.out.println(jsonJobs.toString());
+        return jsonJobs.toString();
     }
     
     public String getJobById(String Id) throws IMPException{
@@ -130,6 +131,24 @@ public class JobService extends Service {
         }
         Job job = jobDAO.findOneById(Integer.parseInt(Id));
         HibernateUtil.getSessionFactory().getCurrentSession().close();
-        return job.allJson();
+        return job.toJsonJob().toString();
     }
+
+    public String getRecentJobs(String pagenumber,String entitieperpages) throws IMPException{
+
+        if(!isInteger(pagenumber) || pagenumber == null || !isInteger(entitieperpages) || entitieperpages == null){
+            throw new IMPPayloadException();
+        }
+        List<Job> listJobs = jobDAO.getMostRecent(Integer.parseInt(pagenumber),Integer.parseInt(entitieperpages));
+         HibernateUtil.getSessionFactory().getCurrentSession().close();
+        StringBuilder sb = new StringBuilder();
+        sb.append("[\n");
+        for (int i = 0; i < listJobs.size()-1;i++)
+            sb.append(listJobs.get(i).visiteurJson()+ ",\n");
+        sb.append(listJobs.get(listJobs.size()-1).visiteurJson());
+        sb.append("\n]");
+
+        return sb.toString();
+    }
+
 }
