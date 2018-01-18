@@ -162,6 +162,9 @@ public class JobService extends Service {
                 listJobs.put(job.visiteurJsonObject());
         }
         
+        if (listJobs.length() == 0)
+            throw new IMPNoContentException();
+        
         return listJobs.toString();
         
         /*

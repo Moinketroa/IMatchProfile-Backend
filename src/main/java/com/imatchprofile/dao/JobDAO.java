@@ -5,6 +5,8 @@
  */
 package com.imatchprofile.dao;
 
+import com.imatchprofile.exceptions.IMPException;
+import com.imatchprofile.exceptions.IMPNoContentException;
 import com.imatchprofile.model.pojo.Job;
 import com.imatchprofile.util.HibernateUtil;
 import java.util.List;
@@ -20,7 +22,7 @@ import org.hibernate.Transaction;
  */
 public class JobDAO {
     
-    public List<Job> getMostRecent(int pageNumber, int entitiesPerPage) {
+    public List<Job> getMostRecent(int pageNumber, int entitiesPerPage) throws IMPException {
         
         Transaction transaction = null;
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -32,10 +34,14 @@ public class JobDAO {
         List<Job> res = session.createQuery(query).getResultList();
         List<Job> res1 = new Vector<>();
        
+        if ((pageNumber*entitiesPerPage)-entitiesPerPage > res.size())
+            throw new IMPNoContentException();
+        
         for(int i=(pageNumber*entitiesPerPage)-entitiesPerPage;i<(pageNumber*entitiesPerPage) ;i++){
             //Job job = new Job(res.get(i).getRecruiter(),res.get(i).getTitle(), res.get(i).getDescription()  , res.get(i).getVisibility(), res.get(i).getCreateDate());
             //job.setJobId(res.get(i).getJobId());
-            res1.add(res.get(i));
+            if (i < res.size())
+                res1.add(res.get(i));
         }
         
         session.close();
