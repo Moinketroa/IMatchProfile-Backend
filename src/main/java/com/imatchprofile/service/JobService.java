@@ -152,10 +152,21 @@ public class JobService extends Service {
     public String getRecentJobs(String pagenumber,String entitieperpages) throws IMPException{
 
         if(!isInteger(pagenumber) || pagenumber == null || !isInteger(entitieperpages) || entitieperpages == null){
-            throw new IMPPayloadException();
+            throw new IMPWrongURLParameterException();
         }
+        
+        JSONArray listJobs = new JSONArray();
+        
+        for (Job job : jobDAO.getMostRecent(Integer.parseInt(pagenumber),Integer.parseInt(entitieperpages))) {
+            if (job.getVisibility() != 0)
+                listJobs.put(job.visiteurJsonObject());
+        }
+        
+        return listJobs.toString();
+        
+        /*
         List<Job> listJobs = jobDAO.getMostRecent(Integer.parseInt(pagenumber),Integer.parseInt(entitieperpages));
-         HibernateUtil.getSessionFactory().getCurrentSession().close();
+        
         StringBuilder sb = new StringBuilder();
         sb.append("[\n");
         for (int i = 0; i < listJobs.size()-1;i++)
@@ -164,6 +175,7 @@ public class JobService extends Service {
         sb.append("\n]");
 
         return sb.toString();
+        */
     }
 
 }

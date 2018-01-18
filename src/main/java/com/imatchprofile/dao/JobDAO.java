@@ -33,11 +33,12 @@ public class JobDAO {
         List<Job> res1 = new Vector<>();
        
         for(int i=(pageNumber*entitiesPerPage)-entitiesPerPage;i<(pageNumber*entitiesPerPage) ;i++){
-            Job job = new Job(res.get(i).getRecruiter(),res.get(i).getTitle(), res.get(i).getDescription()  , res.get(i).getVisibility(), res.get(i).getCreateDate());
-            job.setJobId(res.get(i).getJobId());
-            res1.add(job);
+            //Job job = new Job(res.get(i).getRecruiter(),res.get(i).getTitle(), res.get(i).getDescription()  , res.get(i).getVisibility(), res.get(i).getCreateDate());
+            //job.setJobId(res.get(i).getJobId());
+            res1.add(res.get(i));
         }
-        //session.close();
+        
+        session.close();
         return res1;
     }
     
