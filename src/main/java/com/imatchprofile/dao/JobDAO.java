@@ -65,15 +65,25 @@ public class JobDAO {
         return res;
     }
      
-    public List<Job> findAllJob(){
+    public List<Job> findAllJob(int pageNumber, int entitiesPerPage) throws IMPException {
         Session session = HibernateUtil.getSessionFactory().openSession();
         CriteriaQuery<Job> query = session.getCriteriaBuilder().createQuery(Job.class);
         Root<Job> root = query.from(Job.class);
-        query.select(root);
+        query.select(root).where(session.getCriteriaBuilder().notEqual(root.get("visibility"), 0));
         
         List<Job> res = session.createQuery(query).getResultList();
+        List<Job> res1 = new Vector<>();
+       
+        if ((pageNumber*entitiesPerPage)-entitiesPerPage > res.size())
+            throw new IMPNoContentException();
+        
+        for(int i=(pageNumber*entitiesPerPage)-entitiesPerPage;i<(pageNumber*entitiesPerPage) ;i++){
+            if (i < res.size())
+                res1.add(res.get(i));
+        }
+        
         session.close();
-        return res;
+        return res1;
     }
     
     

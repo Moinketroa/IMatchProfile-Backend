@@ -40,11 +40,14 @@ public class JobsRoutes {
     }
     
     @GET
+    @Path("{pagenumber}/{entitiesperpage}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getJobs(@HeaderParam("Authorization") String token) {
+    public Response getJobs(@PathParam("pagenumber") String pagenumber,
+                            @PathParam("entitiesperpage") String entitiesPerPage,
+                            @HeaderParam("Authorization") String token) {
         try {
             TokenHelperResult thr = TokenHelper.verifyOptionalAndRefresh(token);
-            String result = jobService.getAllJob();
+            String result = jobService.getAllJob(pagenumber, entitiesPerPage);
             return Response.status(Response.Status.OK).entity(TokenHelper.concatJsonsToken(result, "jobs", thr.getNewToken())).build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();

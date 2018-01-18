@@ -114,10 +114,20 @@ public class JobService extends Service {
         return response.toString();
     }
     
-    public String getAllJob(){
+    public String getAllJob(String pagenumber, String entitieperpages) throws IMPException {
+        
+        if(!isInteger(pagenumber) || pagenumber == null || !isInteger(entitieperpages) || entitieperpages == null){
+            throw new IMPWrongURLParameterException();
+        }
+        
+        int pgNum = Integer.parseInt(pagenumber), entPerPg = Integer.parseInt(entitieperpages);
+        
+        if (pgNum == 0 || entPerPg == 0)
+            throw new IMPNoContentException();
+        
         JSONArray listJobs = new JSONArray();
         
-        for(Job job : jobDAO.findAllJob()){
+        for(Job job : jobDAO.findAllJob(pgNum, entPerPg)){
             if (job.getVisibility() != 0)
                 listJobs.put(job.visiteurJsonObject());
         }

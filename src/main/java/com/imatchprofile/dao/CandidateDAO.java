@@ -56,14 +56,24 @@ public class CandidateDAO {
         }
     }
     
-    public List<Candidate> findAll(){
+    public List<Candidate> findAll(int pageNumber, int entitiesPerPage) throws IMPException {
         Session session = HibernateUtil.getSessionFactory().openSession();
         CriteriaQuery<Candidate> queryCandidate = session.getCriteriaBuilder().createQuery(Candidate.class);
         Root<Candidate> root = queryCandidate.from(Candidate.class);
-        queryCandidate.select(root);
+        queryCandidate.select(root).where(session.getCriteriaBuilder().notEqual(root.get("visibility"), 0));
         List<Candidate> res = session.createQuery(queryCandidate).getResultList();
+        List<Candidate> res1 = new Vector<>();
+       
+        if ((pageNumber*entitiesPerPage)-entitiesPerPage > res.size())
+            throw new IMPNoContentException();
+        
+        for(int i=(pageNumber*entitiesPerPage)-entitiesPerPage;i<(pageNumber*entitiesPerPage) ;i++){
+            if (i < res.size())
+                res1.add(res.get(i));
+        }
+        
         session.close();
-        return res;
+        return res1;
     }
     
      public List<Candidate> getCandidatByTitle(String title, int pageNumber, int entitiesPerPage) throws IMPException {

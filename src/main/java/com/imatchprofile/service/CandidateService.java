@@ -55,10 +55,20 @@ public class CandidateService extends UserService{
         return candidate.profilJson();
     }
     
-    public String getAll(){
+    public String getAll(String pagenumber, String entitieperpages) throws IMPException {
+        
+        if(!isInteger(pagenumber) || pagenumber == null || !isInteger(entitieperpages) || entitieperpages == null){
+            throw new IMPWrongURLParameterException();
+        }
+        
+        int pgNum = Integer.parseInt(pagenumber), entPerPg = Integer.parseInt(entitieperpages);
+        
+        if (pgNum == 0 || entPerPg == 0)
+            throw new IMPNoContentException();
+        
         JSONArray listCandidates = new JSONArray();
         
-        for (Candidate c : candidateDAO.findAll()) {
+        for (Candidate c : candidateDAO.findAll(pgNum, entPerPg)) {
             if (c.getVisibility() != 0)
                 listCandidates.put(c.visiteurJsonObject());
         }
@@ -98,17 +108,5 @@ public class CandidateService extends UserService{
         }
         
         return listCandidates.toString();
-        
-        /*
-          List<Candidate> listCandidate = getCandidateDAO().getUserCandidat(title);
-        HibernateUtil.getSessionFactory().getCurrentSession().close();
-        StringBuilder sb = new StringBuilder();
-        sb.append("[\n");
-        for (int i=0; i < listCandidate.size()-1; i++)
-            sb.append(listCandidate.get(i).toJSON()+",\n");
-        sb.append(listCandidate.get(listCandidate.size()-1).toJSON());
-        sb.append("\n]");
-        return sb.toString();
-        */
     }
 }
