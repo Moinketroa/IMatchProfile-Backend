@@ -47,12 +47,15 @@ public class CandidateService extends UserService{
     }
     
     public String getProfilById(String Id) throws IMPException{
-        if(!isInteger(Id) || Id == null){
-            throw new IMPPayloadException();
-        }
-        Candidate candidate = this.getUserDAO().findById(Integer.parseInt(Id)).getCandidate();
-        HibernateUtil.getSessionFactory().getCurrentSession().close();
-        return candidate.profilJson();
+        if(!isInteger(Id) || Id == null)
+            throw new IMPWrongURLParameterException();
+            
+        Candidate candidate = this.getCandidateDAO().findCandidateById(Integer.parseInt(Id));
+        
+        if (candidate == null)
+            throw new IMPNotACandidateException();
+        
+        return candidate.toJSONComplete().toString();
     }
     
     public String getAll(String pagenumber, String entitieperpages) throws IMPException {

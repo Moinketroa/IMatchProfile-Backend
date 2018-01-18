@@ -13,6 +13,7 @@ import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
 import java.util.List;
 import java.util.Vector;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -98,5 +99,22 @@ public class CandidateDAO {
         
         session.close();
         return res1;
-  }
+    }
+     
+    public Candidate findCandidateById(int candidateId) {
+        //ouverture session
+        Transaction transaction = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        transaction = session.beginTransaction();
+        Candidate candFound;
+        try {
+            candFound = session.get(Candidate.class, candidateId);
+        } catch (NoResultException ex) {
+            candFound = null;
+        }
+        transaction.commit();
+        //fermeture session
+        session.close();
+        return candFound;
+    }
 }

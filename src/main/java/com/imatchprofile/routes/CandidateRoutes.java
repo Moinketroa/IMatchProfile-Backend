@@ -64,7 +64,22 @@ public class CandidateRoutes {
         }
     }
     
-    
+    @GET
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProfil(  @HeaderParam("Authorization") String token,
+                                @PathParam("id") String id){
+        try {
+            TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
+            String result = candidateService.getProfilById(id);
+            return Response.status(Response.Status.OK).entity(TokenHelper.concatJsonsToken(result, "candidate", thr.getNewToken())).build();
+        } catch (IMPException ex) {
+            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
+        }
+    }
     
     @GET
     @Path("/me")
