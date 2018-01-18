@@ -7,12 +7,15 @@ package com.imatchprofile.service;
 
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPInternalServerException;
+import com.imatchprofile.exceptions.IMPNoContentException;
 import com.imatchprofile.exceptions.IMPNotACandidateException;
 import com.imatchprofile.exceptions.IMPPayloadException;
+import com.imatchprofile.exceptions.IMPWrongURLParameterException;
 import com.imatchprofile.helper.JWTHelper;
 import com.imatchprofile.helper.TokenHelper;
 import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.User;
+import static com.imatchprofile.service.Service.oneOfIsNull;
 import com.imatchprofile.util.HibernateUtil;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -73,7 +76,30 @@ public class CandidateService extends UserService{
         
         return meCandidate.toJSONComplete().toString();
     }
-    public String getcandidatesbytitle(String title){
+    
+    public String getcandidatesbytitle(String title, String pagenumber, String entitieperpages) throws IMPException {
+        
+        if(!isInteger(pagenumber) || !isInteger(entitieperpages))
+            throw new IMPWrongURLParameterException();
+        
+        if(oneOfIsNull(title, pagenumber, entitieperpages))
+            throw new IMPWrongURLParameterException();
+        
+        int pgNum = Integer.parseInt(pagenumber), entPerPg = Integer.parseInt(entitieperpages);
+        
+        if (pgNum == 0 || entPerPg == 0)
+            throw new IMPNoContentException();
+        
+        JSONArray listCandidates = new JSONArray();
+        
+        for(Candidate can : candidateDAO.getCandidatByTitle(title, pgNum, entPerPg)) {
+            if (can.getVisibility() != 0)
+                listCandidates.put(can.visiteurJsonObject());
+        }
+        
+        return listCandidates.toString();
+        
+        /*
           List<Candidate> listCandidate = getCandidateDAO().getUserCandidat(title);
         HibernateUtil.getSessionFactory().getCurrentSession().close();
         StringBuilder sb = new StringBuilder();
@@ -83,5 +109,6 @@ public class CandidateService extends UserService{
         sb.append(listCandidate.get(listCandidate.size()-1).toJSON());
         sb.append("\n]");
         return sb.toString();
+        */
     }
 }

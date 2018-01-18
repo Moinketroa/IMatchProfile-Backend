@@ -11,7 +11,9 @@ import com.imatchprofile.model.pojo.Job;
 import com.imatchprofile.util.HibernateUtil;
 import java.util.List;
 import java.util.Vector;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -29,7 +31,7 @@ public class JobDAO {
         CriteriaQuery<Job> query = session.getCriteriaBuilder().createQuery(Job.class);
 
         Root<Job> root = query.from(Job.class);
-        query.select(root);
+        query.select(root).where(session.getCriteriaBuilder().notEqual(root.get("visibility"), 0));
         query.orderBy( session.getCriteriaBuilder().asc(root.get("createDate")));
         List<Job> res = session.createQuery(query).getResultList();
         List<Job> res1 = new Vector<>();
@@ -38,8 +40,6 @@ public class JobDAO {
             throw new IMPNoContentException();
         
         for(int i=(pageNumber*entitiesPerPage)-entitiesPerPage;i<(pageNumber*entitiesPerPage) ;i++){
-            //Job job = new Job(res.get(i).getRecruiter(),res.get(i).getTitle(), res.get(i).getDescription()  , res.get(i).getVisibility(), res.get(i).getCreateDate());
-            //job.setJobId(res.get(i).getJobId());
             if (i < res.size())
                 res1.add(res.get(i));
         }
@@ -77,15 +77,27 @@ public class JobDAO {
     }
     
     
-    public List<Job> getJobbyTitle(String title){
-          Session session = HibernateUtil.getSessionFactory().openSession();
-        CriteriaQuery<Job> query = session.getCriteriaBuilder().createQuery(Job.class);
+    public List<Job> getJobbyTitle(String title, int pageNumber, int entitiesPerPage) throws IMPException {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Job> query = cb.createQuery(Job.class);
         Root<Job> root = query.from(Job.class);
-        query.select(root).where(session.getCriteriaBuilder().equal(root.get("title"), title));
-        
+        Expression<String> literal = cb.literal((String) "%" + title + "%");
+        query.select(root).where(cb.and(cb.like(root.<String>get("title"), literal), cb.notEqual(root.get("visibility"), 0)));
         List<Job> res = session.createQuery(query).getResultList();
+        
+        List<Job> res1 = new Vector<>();
+       
+        if ((pageNumber*entitiesPerPage)-entitiesPerPage > res.size())
+            throw new IMPNoContentException();
+        
+        for(int i=(pageNumber*entitiesPerPage)-entitiesPerPage;i<(pageNumber*entitiesPerPage) ;i++){
+            if (i < res.size())
+                res1.add(res.get(i));
+        }
+        
         session.close();
-        return res;
+        return res1;
   }
     
     

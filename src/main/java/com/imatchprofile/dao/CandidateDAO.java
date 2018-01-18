@@ -5,14 +5,18 @@
  */
 package com.imatchprofile.dao;
 
+import com.imatchprofile.exceptions.IMPException;
+import com.imatchprofile.exceptions.IMPNoContentException;
 import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.Role;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
 import java.util.List;
 import java.util.Vector;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Expression;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -62,16 +66,27 @@ public class CandidateDAO {
         return res;
     }
     
-     public List<Candidate> getUserCandidat(String title){
+     public List<Candidate> getCandidatByTitle(String title, int pageNumber, int entitiesPerPage) throws IMPException {
        
-           Session session = HibernateUtil.getSessionFactory().openSession();
-        CriteriaQuery<Candidate> queryCandidate = session.getCriteriaBuilder().createQuery(Candidate.class);
-        Root<Candidate> root = queryCandidate.from(Candidate.class);
-        queryCandidate.select(root).where(session.getCriteriaBuilder().equal(root.get("title"), title));
-        List<Candidate> res = session.createQuery(queryCandidate).getResultList();
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Candidate> query = session.getCriteriaBuilder().createQuery(Candidate.class);
+        Root<Candidate> root = query.from(Candidate.class);
+        Expression<String> literal = cb.literal((String) "%" + title + "%");
+        query.select(root).where(cb.and(cb.like(root.<String>get("title"), literal), cb.notEqual(root.get("visibility"), 0)));
+        List<Candidate> res = session.createQuery(query).getResultList();
          
-         //session.close();
-        return res;
-         
+        List<Candidate> res1 = new Vector<>();
+       
+        if ((pageNumber*entitiesPerPage)-entitiesPerPage > res.size())
+            throw new IMPNoContentException();
+        
+        for(int i=(pageNumber*entitiesPerPage)-entitiesPerPage;i<(pageNumber*entitiesPerPage) ;i++){
+            if (i < res.size())
+                res1.add(res.get(i));
+        }
+        
+        session.close();
+        return res1;
   }
 }

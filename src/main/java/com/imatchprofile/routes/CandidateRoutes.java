@@ -79,14 +79,23 @@ public class CandidateRoutes {
         }
     }
     
-     @GET
-    @Path("{title}")
+    @GET
+    @Path("search/{title}/{pagenumber}/{entitiesperpage}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response searchCandidatByQuery(@PathParam("title") String title) {
+    public Response searchCandidatByQuery(  @PathParam("title") String title,
+                                            @PathParam("pagenumber") String pagenumber,
+                                            @PathParam("entitiesperpage") String entitiesPerPage,
+                                            @HeaderParam("Authorization") String token) {
         try {
-            return Response.status(Response.Status.OK).entity(candidateService.getcandidatesbytitle(title)).build();
+            TokenHelperResult thr = TokenHelper.verifyOptionalAndRefresh(token);
+            String result = candidateService.getcandidatesbytitle(title, pagenumber, entitiesPerPage);
+            return Response
+                    .status(Response.Status.OK)
+                    .entity(TokenHelper.concatJsonsToken(result, "candidates", thr.getNewToken()))
+                    .build();
+        } catch (IMPException ex) {
+            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
         } catch (Throwable t) {
-            t.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
         }
     }

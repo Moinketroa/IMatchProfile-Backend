@@ -137,27 +137,44 @@ public class JobService extends Service {
         
         return job.toJsonJob().toString();
     }
-      public String getJobBytitle(String title) throws IMPNoContentException {
-
-       
-         JSONArray listJobs = new JSONArray();
+    
+    public String getJobBytitle(String title, String pagenumber, String entitieperpages) throws IMPException {
         
-        for(Job job : jobDAO.getJobbyTitle(title)){
-            listJobs.put(job.toJson());
+        if(!isInteger(pagenumber) || !isInteger(entitieperpages))
+            throw new IMPWrongURLParameterException();
+        
+        if(oneOfIsNull(title, pagenumber, entitieperpages))
+            throw new IMPWrongURLParameterException();
+        
+        int pgNum = Integer.parseInt(pagenumber), entPerPg = Integer.parseInt(entitieperpages);
+        
+        if (pgNum == 0 || entPerPg == 0)
+            throw new IMPNoContentException();
+        
+        JSONArray listJobs = new JSONArray();
+        
+        for(Job job : jobDAO.getJobbyTitle(title, pgNum, entPerPg)){
+            if (job.getVisibility() != 0)
+                listJobs.put(job.visiteurJsonObject());
         }
         
         return listJobs.toString();
     }
 
-    public String getRecentJobs(String pagenumber,String entitieperpages) throws IMPException{
+    public String getRecentJobs(String pagenumber, String entitieperpages) throws IMPException {
 
         if(!isInteger(pagenumber) || pagenumber == null || !isInteger(entitieperpages) || entitieperpages == null){
             throw new IMPWrongURLParameterException();
         }
         
+        int pgNum = Integer.parseInt(pagenumber), entPerPg = Integer.parseInt(entitieperpages);
+        
+        if (pgNum == 0 || entPerPg == 0)
+            throw new IMPNoContentException();
+        
         JSONArray listJobs = new JSONArray();
         
-        for (Job job : jobDAO.getMostRecent(Integer.parseInt(pagenumber),Integer.parseInt(entitieperpages))) {
+        for (Job job : jobDAO.getMostRecent(pgNum, entPerPg)) {
             if (job.getVisibility() != 0)
                 listJobs.put(job.visiteurJsonObject());
         }
@@ -166,19 +183,6 @@ public class JobService extends Service {
             throw new IMPNoContentException();
         
         return listJobs.toString();
-        
-        /*
-        List<Job> listJobs = jobDAO.getMostRecent(Integer.parseInt(pagenumber),Integer.parseInt(entitieperpages));
-        
-        StringBuilder sb = new StringBuilder();
-        sb.append("[\n");
-        for (int i = 0; i < listJobs.size()-1;i++)
-            sb.append(listJobs.get(i).visiteurJson()+ ",\n");
-        sb.append(listJobs.get(listJobs.size()-1).visiteurJson());
-        sb.append("\n]");
-
-        return sb.toString();
-        */
     }
 
 }

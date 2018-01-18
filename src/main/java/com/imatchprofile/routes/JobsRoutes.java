@@ -104,14 +104,23 @@ public class JobsRoutes {
     }    
     
     @GET
-    @Path("{title}")
-    public Response getJobTitle(@PathParam("title") String title){
-         try {
-            return Response.status(Response.Status.OK).entity(jobService.getJobBytitle(title)).build();
+    @Path("search/{title}/{pagenumber}/{entitiesperpage}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getJobTitle(@PathParam("title") String title,
+                                @PathParam("pagenumber") String pagenumber,
+                                @PathParam("entitiesperpage") String entitiesPerPage,
+                                @HeaderParam("Authorization") String token){ 
+        try {
+            TokenHelperResult thr = TokenHelper.verifyOptionalAndRefresh(token);
+            String result = jobService.getJobBytitle(title, pagenumber, entitiesPerPage);
+            return Response
+                    .status(Response.Status.OK)
+                    .entity(TokenHelper.concatJsonsToken(result, "jobs", thr.getNewToken()))
+                    .build();
         } catch (IMPException ex) {
-            return Response.status(ex.getStatus()).entity("{}").build();
+            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
         } catch (Throwable t) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{}").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
         }
     }    
 }
