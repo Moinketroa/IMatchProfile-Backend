@@ -61,18 +61,6 @@ public class CandidateService extends UserService{
         }
         
         return listCandidates.toString();
-        
-        /*
-        List<Candidate> listCandidate = getCandidateDAO().findAll();
-        HibernateUtil.getSessionFactory().getCurrentSession().close();
-        StringBuilder sb = new StringBuilder();
-        sb.append("[\n");
-        for (int i=0; i < listCandidate.size()-1; i++)
-            sb.append(listCandidate.get(i).toJSON()+",\n");
-        sb.append(listCandidate.get(listCandidate.size()-1).toJSON());
-        sb.append("\n]");
-        return sb.toString();
-        */
     }
 
     

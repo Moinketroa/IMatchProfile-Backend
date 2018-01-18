@@ -118,7 +118,8 @@ public class JobService extends Service {
         JSONArray listJobs = new JSONArray();
         
         for(Job job : jobDAO.findAllJob()){
-            listJobs.put(job.visiteurJsonObject());
+            if (job.getVisibility() != 0)
+                listJobs.put(job.visiteurJsonObject());
         }
         
         return listJobs.toString();
