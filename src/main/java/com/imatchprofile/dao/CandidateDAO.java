@@ -58,7 +58,7 @@ public class CandidateDAO {
         Root<Candidate> root = queryCandidate.from(Candidate.class);
         queryCandidate.select(root);
         List<Candidate> res = session.createQuery(queryCandidate).getResultList();
-        //session.close();
+        session.close();
         return res;
     }
     

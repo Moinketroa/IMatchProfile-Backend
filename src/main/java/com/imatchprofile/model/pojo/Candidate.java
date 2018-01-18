@@ -237,6 +237,18 @@ public class Candidate  implements java.io.Serializable {
         
         return result;
     }
+    
+    public JSONObject visiteurJsonObject(){
+        JSONObject result = new JSONObject();
+        
+        result.put("candidate_id", candidateId);
+        result.put("title", title);
+        result.put("photoUrl", user.getPhotoUrl());
+        result.put("firstname", user.getFirstname());
+        result.put("lastname", user.getLastname());
+        
+        return result;
+    }
 }
 
 

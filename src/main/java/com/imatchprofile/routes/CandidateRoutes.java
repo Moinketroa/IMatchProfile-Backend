@@ -49,8 +49,16 @@ public class CandidateRoutes {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAll() {
-        return Response.status(Response.Status.OK).entity(candidateService.getAll()).build();
+    public Response getAll(@HeaderParam("Authorization") String token) {
+        try {
+            TokenHelperResult thr = TokenHelper.verifyOptionalAndRefresh(token);
+            String result = candidateService.getAll();
+            return Response.status(Response.Status.OK).entity(TokenHelper.concatJsonsToken(result, "candidates", thr.getNewToken())).build();
+        } catch (IMPException ex) {
+            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
+        } catch (Throwable t) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
+        }
     }
     
     

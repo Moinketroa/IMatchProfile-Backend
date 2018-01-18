@@ -18,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -52,6 +53,16 @@ public class CandidateService extends UserService{
     }
     
     public String getAll(){
+        JSONArray listCandidates = new JSONArray();
+        
+        for (Candidate c : candidateDAO.findAll()) {
+            if (c.getVisibility() != 0)
+                listCandidates.put(c.visiteurJsonObject());
+        }
+        
+        return listCandidates.toString();
+        
+        /*
         List<Candidate> listCandidate = getCandidateDAO().findAll();
         HibernateUtil.getSessionFactory().getCurrentSession().close();
         StringBuilder sb = new StringBuilder();
@@ -61,6 +72,7 @@ public class CandidateService extends UserService{
         sb.append(listCandidate.get(listCandidate.size()-1).toJSON());
         sb.append("\n]");
         return sb.toString();
+        */
     }
 
     
