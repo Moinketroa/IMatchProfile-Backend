@@ -53,19 +53,7 @@ public class CandidateRoutes {
         return Response.status(Response.Status.OK).entity(candidateService.getAll()).build();
     }
     
-    @GET
-    @Path("{query}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response searchCandidatByQuery(@PathParam("query") String query) {
-        try {
-            return Response.status(Response.Status.OK).entity(candidateService.search(query)).build();
-        } catch (IMPException ex) {
-            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
-        } catch (Throwable t) {
-            t.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
-        }
-    }
+    
     
     @GET
     @Path("/me")
@@ -77,6 +65,18 @@ public class CandidateRoutes {
             return Response.status(Response.Status.OK).entity(TokenHelper.concatJsonsToken(result, "candidate", thr.getNewToken())).build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
+        }
+    }
+    
+     @GET
+    @Path("{title}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchCandidatByQuery(@PathParam("title") String title) {
+        try {
+            return Response.status(Response.Status.OK).entity(candidateService.getcandidatesbytitle(title)).build();
         } catch (Throwable t) {
             t.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();

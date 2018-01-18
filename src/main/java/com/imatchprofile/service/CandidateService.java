@@ -50,9 +50,6 @@ public class CandidateService extends UserService{
         return sb.toString();
     }
 
-    public String search(String query) throws IMPException {
-        return null;
-    }
     
     public String getMyProfile(Integer userId) throws IMPException {
         User meUser = this.userDAO.findById(userId);
@@ -62,5 +59,16 @@ public class CandidateService extends UserService{
             throw new IMPNotACandidateException();
         
         return meCandidate.toJSONComplete().toString();
+    }
+    public String getcandidatesbytitle(String title){
+          List<Candidate> listCandidate = getCandidateDAO().getUserCandidat(title);
+        HibernateUtil.getSessionFactory().getCurrentSession().close();
+        StringBuilder sb = new StringBuilder();
+        sb.append("[\n");
+        for (int i=0; i < listCandidate.size()-1; i++)
+            sb.append(listCandidate.get(i).toJSON()+",\n");
+        sb.append(listCandidate.get(listCandidate.size()-1).toJSON());
+        sb.append("\n]");
+        return sb.toString();
     }
 }

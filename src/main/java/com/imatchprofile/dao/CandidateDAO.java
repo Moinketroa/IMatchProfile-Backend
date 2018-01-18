@@ -10,6 +10,7 @@ import com.imatchprofile.model.pojo.Role;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
 import java.util.List;
+import java.util.Vector;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -60,4 +61,17 @@ public class CandidateDAO {
         //session.close();
         return res;
     }
+    
+     public List<Candidate> getUserCandidat(String title){
+       
+           Session session = HibernateUtil.getSessionFactory().openSession();
+        CriteriaQuery<Candidate> queryCandidate = session.getCriteriaBuilder().createQuery(Candidate.class);
+        Root<Candidate> root = queryCandidate.from(Candidate.class);
+        queryCandidate.select(root).where(session.getCriteriaBuilder().equal(root.get("title"), title));
+        List<Candidate> res = session.createQuery(queryCandidate).getResultList();
+         
+         //session.close();
+        return res;
+         
+  }
 }
