@@ -6,12 +6,19 @@
 package com.imatchprofile.service;
 
 import com.imatchprofile.exceptions.IMPException;
+import com.imatchprofile.exceptions.IMPInternalServerException;
 import com.imatchprofile.exceptions.IMPNotACandidateException;
 import com.imatchprofile.exceptions.IMPPayloadException;
+import com.imatchprofile.helper.JWTHelper;
+import com.imatchprofile.helper.TokenHelper;
 import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONObject;
 
 /**
  *
@@ -25,8 +32,14 @@ public class CandidateService extends UserService{
         User userCandidate = new User(tabContent[0], tabContent[1], tabContent[2], tabContent[3]);
         userCandidate.setPhotoUrl(tabContent[4]);
         this.getCandidateDAO().create(userCandidate);
+        
         //reponse json
-        return userCandidate.getCandidate().toJSON().toString();
+        String userJson = userCandidate.getCandidate().toJSON().toString();
+        try {
+            return TokenHelper.concatJsonsToken(userJson, "user", JWTHelper.createToken(userCandidate.getUserId()));
+        } catch (IllegalArgumentException | UnsupportedEncodingException ex) {
+            throw new IMPInternalServerException(ex.getMessage());
+        }
     }
     
     public String getProfilById(String Id) throws IMPException{
