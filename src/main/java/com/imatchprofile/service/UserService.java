@@ -8,7 +8,10 @@ package com.imatchprofile.service;
 import com.imatchprofile.dao.CandidateDAO;
 import com.imatchprofile.dao.RecruiterDAO;
 import com.imatchprofile.dao.UserDAO;
+import com.imatchprofile.exceptions.IMPBadFormatException;
+import com.imatchprofile.exceptions.IMPEmailAlreadyTakenException;
 import com.imatchprofile.exceptions.IMPException;
+import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
 import java.util.List;
@@ -39,19 +42,20 @@ public class UserService extends Service {
             tabContent[3] = payload.getString("password");
             tabContent[4] = payload.getString("photoUrl");
         } catch (JSONException e) {
-            throw new IMPException(Response.Status.BAD_REQUEST);
+            throw new IMPPayloadException();
         }
         //verification de l'existence des champs
         if (oneOfIsNull(tabContent[0], tabContent[1], tabContent[2], tabContent[3], tabContent[4]))
-            throw new IMPException(Response.Status.BAD_REQUEST);
+            throw new IMPPayloadException();
         //verification de l'email et de l'url de la photo
-        if (!EmailValidator.getInstance().isValid(tabContent[2]) || 
-            !UrlValidator.getInstance().isValid(tabContent[4]))
-            throw new IMPException(Response.Status.BAD_REQUEST);
+        if (!EmailValidator.getInstance().isValid(tabContent[2]))
+            throw new IMPBadFormatException("email");
+        if (!UrlValidator.getInstance().isValid(tabContent[4]))
+            throw new IMPBadFormatException("url");
         //verification si email déjà présent
         User userFoundByEmail = userDAO.findOneByEmail(tabContent[2]);
         if (userFoundByEmail != null)
-            throw new IMPException(Response.Status.PRECONDITION_FAILED);
+            throw new IMPEmailAlreadyTakenException();
         //chiffrage du password
         tabContent[3] = User.encryptPassword(tabContent[3]);
         return tabContent;
