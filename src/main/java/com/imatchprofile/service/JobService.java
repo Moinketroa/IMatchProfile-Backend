@@ -136,6 +136,17 @@ public class JobService extends Service {
         
         return job.toJsonJob().toString();
     }
+      public String getJobBytitle(String title) throws IMPNoContentException {
+
+       
+         JSONArray listJobs = new JSONArray();
+        
+        for(Job job : jobDAO.getJobbyTitle(title)){
+            listJobs.put(job.toJson());
+        }
+        
+        return listJobs.toString();
+    }
 
     public String getRecentJobs(String pagenumber,String entitieperpages) throws IMPException{
 

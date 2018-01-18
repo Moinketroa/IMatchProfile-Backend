@@ -70,6 +70,17 @@ public class JobDAO {
     }
     
     
+    public List<Job> getJobbyTitle(String title){
+          Session session = HibernateUtil.getSessionFactory().openSession();
+        CriteriaQuery<Job> query = session.getCriteriaBuilder().createQuery(Job.class);
+        Root<Job> root = query.from(Job.class);
+        query.select(root).where(session.getCriteriaBuilder().equal(root.get("title"), title));
+        
+        List<Job> res = session.createQuery(query).getResultList();
+        session.close();
+        return res;
+  }
+    
     
     
     

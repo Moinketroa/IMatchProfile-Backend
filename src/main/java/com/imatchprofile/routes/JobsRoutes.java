@@ -94,4 +94,16 @@ public class JobsRoutes {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{}").build();
         }
     }    
+    
+        @GET
+    @Path("{title}")
+    public Response getJobTitle(@PathParam("title") String title){
+         try {
+            return Response.status(Response.Status.OK).entity(jobService.getJobBytitle(title)).build();
+        } catch (IMPException ex) {
+            return Response.status(ex.getStatus()).entity("{}").build();
+        } catch (Throwable t) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{}").build();
+        }
+    }    
 }
