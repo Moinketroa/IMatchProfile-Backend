@@ -40,12 +40,12 @@ public class JobService extends Service {
     private JobDAO jobDAO = new JobDAO();
     private UserDAO userDAO = new UserDAO();
     
-    public String postJob(String content) throws IMPException {
+    public String postJob(String content, Integer userId) throws IMPException {
         
         //analyse du payload
         JSONObject payload = new JSONObject(content);
         
-        String title, description, token;
+        String title, description;
         
         try {
             title = payload.getString("title");
@@ -54,30 +54,9 @@ public class JobService extends Service {
             throw new IMPPayloadException();
         }
         
-        //verification présence token
-        try {
-            token = payload.getString("token");
-        } catch (JSONException e) {
-            throw new IMPNoTokenException();
-        }
-        
         //verification de l'existence des champs
         if (oneOfIsNull(title, description)) {
             throw new IMPPayloadException();
-        }
-        if (token == null) {
-            throw new IMPNoTokenException();
-        }
-        
-        //traitement du token
-        Integer userId;
-        try {
-            userId = JWTHelper.decrypt(token);
-        } catch (IllegalArgumentException | UnsupportedEncodingException | JWTDecodeException ex) {
-            throw new IMPWrongTokenException();
-        }
-        if (userId == null) {
-            throw new IMPExpiredTokenException();
         }
         
         //recuperation du user authentifié
@@ -98,20 +77,7 @@ public class JobService extends Service {
         
         jobDAO.create(newJob);
         
-        //regeneration du token
-        String newToken;
-        
-        try {
-            newToken = JWTHelper.createToken(userId);
-        } catch (IllegalArgumentException | UnsupportedEncodingException ex) {
-            throw new IMPInternalServerException(ex.getMessage());
-        }
-        
-        JSONObject response = new JSONObject();
-        response.put("token", newToken);
-        response.put("job", newJob.toJson());
-        
-        return response.toString();
+        return newJob.toJson().toString();
     }
     
     public String getAllJob(String pagenumber, String entitieperpages) throws IMPException {

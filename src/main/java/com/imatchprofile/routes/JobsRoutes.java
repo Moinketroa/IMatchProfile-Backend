@@ -75,9 +75,12 @@ public class JobsRoutes {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response postJob(String content) {
+    public Response postJob(@HeaderParam("Authorization") String token,
+                            String content) {
         try {
-            return Response.status(Response.Status.CREATED).entity(jobService.postJob(content)).build();
+            TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
+            String result = jobService.postJob(content, thr.getUserId());
+            return Response.status(Response.Status.CREATED).entity(TokenHelper.concatJsonsToken(result, "job", thr.getNewToken())).build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
         } catch (Throwable t) {
