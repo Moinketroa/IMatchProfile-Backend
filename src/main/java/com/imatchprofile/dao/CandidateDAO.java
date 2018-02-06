@@ -9,6 +9,7 @@ import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPNoContentException;
 import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.Role;
+import com.imatchprofile.model.pojo.Skill;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
 import java.util.List;
@@ -117,4 +118,5 @@ public class CandidateDAO {
         session.close();
         return candFound;
     }
+   
 }

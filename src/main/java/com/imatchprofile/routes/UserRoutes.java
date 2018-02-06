@@ -5,6 +5,8 @@
  */
 package com.imatchprofile.routes;
 
+import com.imatchprofile.dao.SkillDao;
+import com.imatchprofile.model.pojo.Skill;
 import com.imatchprofile.service.UserService;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -35,7 +37,9 @@ public class UserRoutes {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsers() {
+         
         return Response.status(Response.Status.OK).entity(userService.getAllUsers()).build();
+      
     } 
     
 }

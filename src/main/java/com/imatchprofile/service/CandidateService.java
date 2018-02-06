@@ -5,6 +5,7 @@
  */
 package com.imatchprofile.service;
 
+import com.imatchprofile.dao.SkillDao;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPInternalServerException;
 import com.imatchprofile.exceptions.IMPNoContentException;
@@ -14,6 +15,7 @@ import com.imatchprofile.exceptions.IMPWrongURLParameterException;
 import com.imatchprofile.helper.JWTHelper;
 import com.imatchprofile.helper.TokenHelper;
 import com.imatchprofile.model.pojo.Candidate;
+import com.imatchprofile.model.pojo.Skill;
 import com.imatchprofile.model.pojo.User;
 import static com.imatchprofile.service.Service.oneOfIsNull;
 import com.imatchprofile.util.HibernateUtil;
@@ -59,7 +61,7 @@ public class CandidateService extends UserService{
     }
     
     public String getAll(String pagenumber, String entitieperpages) throws IMPException {
-        
+     
         if(!isInteger(pagenumber) || pagenumber == null || !isInteger(entitieperpages) || entitieperpages == null){
             throw new IMPWrongURLParameterException();
         }
@@ -109,7 +111,7 @@ public class CandidateService extends UserService{
             if (can.getVisibility() != 0)
                 listCandidates.put(can.visiteurJsonObject());
         }
-        
+       
         return listCandidates.toString();
     }
 }
