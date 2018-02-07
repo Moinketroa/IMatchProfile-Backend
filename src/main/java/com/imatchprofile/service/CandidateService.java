@@ -34,6 +34,7 @@ public class CandidateService extends UserService{
     
     public String signIn(String content) throws IMPException {
         String[] tabContent = this.signInToVerif(content);
+        
         //creation du User
         User userCandidate = new User(tabContent[0], tabContent[1], tabContent[2], tabContent[3]);
         userCandidate.setPhotoUrl(tabContent[4]);
