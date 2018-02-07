@@ -7,7 +7,13 @@ package com.imatchprofile.service;
 
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.imatchprofile.dao.UserDAO;
+import com.imatchprofile.exceptions.IMPBadFormatException;
+import com.imatchprofile.exceptions.IMPEmailNotFoundException;
 import com.imatchprofile.exceptions.IMPException;
+import com.imatchprofile.exceptions.IMPInternalServerException;
+import com.imatchprofile.exceptions.IMPPayloadException;
+import com.imatchprofile.exceptions.IMPUnauthorizedException;
+import com.imatchprofile.exceptions.IMPWrongPassword;
 import com.imatchprofile.helper.JWTHelper;
 import com.imatchprofile.helper.PasswordHelper;
 import com.imatchprofile.model.pojo.User;
@@ -23,7 +29,6 @@ import org.json.JSONObject;
  */
 public class LoginService extends Service {
     
-    private static final String SECRET = "3__v#LU_c-2R-J6#Mv-L2BMjK#_kh5r9y-6r7D59HD7fbs3#8vF55Rp--63-wc_La35dcSMqc93ZUDj-T-d-8HLPa-4_4_k-n_M85R#_gdrn2422##-Kha5FLR-#P_W-QzFFc3B4cc862";
     private final UserDAO userDAO = new UserDAO();
     
     public String login(String content) throws IMPException {
@@ -37,26 +42,26 @@ public class LoginService extends Service {
             email = payload.getString("email");
             password = payload.getString("password");
         } catch (JSONException e) {
-            throw new IMPException(Response.Status.BAD_REQUEST);
+            throw new IMPPayloadException();
         }
         
         //verification de l'existence des champs
         if (oneOfIsNull(email, password))
-            throw new IMPException(Response.Status.BAD_REQUEST);
+            throw new IMPPayloadException();
         
         //verification de l'email
         if (!EmailValidator.getInstance().isValid(email))
-            throw new IMPException(Response.Status.BAD_REQUEST);
+            throw new IMPBadFormatException("email");
         
         User userFound = userDAO.findOneByEmail(email);
         
         //verification si email trouvé
         if (userFound == null)
-            throw new IMPException(Response.Status.UNAUTHORIZED);
+            throw new IMPEmailNotFoundException();
         
         //verification password
         if (!(userFound.getPassword().equals(PasswordHelper.encryptPassword(password))))
-            throw new IMPException(Response.Status.UNAUTHORIZED);
+            throw new IMPWrongPassword();
         
         //creation token JWT
         String jwtToken;
@@ -64,7 +69,7 @@ public class LoginService extends Service {
             jwtToken = JWTHelper.createToken(userFound.getUserId());      
         } catch (UnsupportedEncodingException | IllegalArgumentException | JWTCreationException | NullPointerException ex) {
             System.out.println(ex.getMessage());
-            throw new IMPException(Response.Status.INTERNAL_SERVER_ERROR);
+            throw new IMPInternalServerException("not able to create token");
         } 
         
         //creation de la reponse json
