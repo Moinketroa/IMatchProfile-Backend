@@ -9,6 +9,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.imatchprofile.dao.UserDAO;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.helper.JWTHelper;
+import com.imatchprofile.helper.PasswordHelper;
 import com.imatchprofile.model.pojo.User;
 import java.io.UnsupportedEncodingException;
 import javax.ws.rs.core.Response;
@@ -54,7 +55,7 @@ public class LoginService extends Service {
             throw new IMPException(Response.Status.UNAUTHORIZED);
         
         //verification password
-        if (!(userFound.getPassword().equals(User.encryptPassword(password))))
+        if (!(userFound.getPassword().equals(PasswordHelper.encryptPassword(password))))
             throw new IMPException(Response.Status.UNAUTHORIZED);
         
         //creation token JWT

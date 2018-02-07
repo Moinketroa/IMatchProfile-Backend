@@ -12,6 +12,7 @@ import com.imatchprofile.exceptions.IMPBadFormatException;
 import com.imatchprofile.exceptions.IMPEmailAlreadyTakenException;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPPayloadException;
+import com.imatchprofile.helper.PasswordHelper;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
 import java.util.List;
@@ -57,7 +58,7 @@ public class UserService extends Service {
         if (userFoundByEmail != null)
             throw new IMPEmailAlreadyTakenException();
         //chiffrage du password
-        tabContent[3] = User.encryptPassword(tabContent[3]);
+        tabContent[3] = PasswordHelper.encryptPassword(tabContent[3]);
         return tabContent;
     }
 

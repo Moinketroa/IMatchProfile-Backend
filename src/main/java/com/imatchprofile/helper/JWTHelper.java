@@ -50,4 +50,11 @@ public class JWTHelper {
         Claim claim = decoded.getClaim("user_id");
         return claim.asInt();
     }
+    
+    public static String encrypt(String value) throws IllegalArgumentException, UnsupportedEncodingException {
+        Algorithm algorithm = Algorithm.HMAC256(JWTHelper.SECRET);
+        return JWT.create()
+                    .withClaim("password", value)
+                    .sign(algorithm);
+    }
 }
