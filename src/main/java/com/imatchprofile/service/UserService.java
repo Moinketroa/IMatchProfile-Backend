@@ -15,14 +15,11 @@ import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPInternalServerException;
 import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.helper.PasswordHelper;
-import com.imatchprofile.helper.UploadHelper;
+import com.imatchprofile.helper.FileHelper;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ws.rs.core.Response;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.json.JSONException;
@@ -128,11 +125,7 @@ public class UserService extends Service {
             if (!(filetype.equals("image/png")))
                 throw new IMPBadUploadFormatException("png");
             
-            try {
-                return UploadHelper.writeByteArraysToFile(filename, value);
-            } catch (IOException ex) {
-                throw new IMPInternalServerException("unable to write file");
-            }
+            return FileHelper.writeBase64ToFile(filename, value);
         } else {
             //verification de l'url de la photo
             if (!UrlValidator.getInstance().isValid(photoUrl))
