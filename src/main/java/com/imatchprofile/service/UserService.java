@@ -122,10 +122,14 @@ public class UserService extends Service {
                 throw new IMPPayloadException();
             }
             
-            if (!(filetype.equals("image/png")))
-                throw new IMPBadUploadFormatException("png");
+            //verification de l'existence des champs
+            if (oneOfIsNull(filename, filetype, value))
+                throw new IMPPayloadException();
             
-            return FileHelper.writeBase64ToFile(filename, value);
+            if (!(filetype.equals("image/png") || filetype.equals("image/jpeg")))
+                throw new IMPBadUploadFormatException("image");
+            
+            return FileHelper.writeAvatarBase64ToFile(filename, value);
         } else {
             //verification de l'url de la photo
             if (!UrlValidator.getInstance().isValid(photoUrl))

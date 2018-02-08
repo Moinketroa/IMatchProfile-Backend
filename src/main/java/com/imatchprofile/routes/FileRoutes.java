@@ -5,7 +5,10 @@
  */
 package com.imatchprofile.routes;
 
+import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.helper.FileHelper;
+import com.imatchprofile.helper.TokenHelper;
+import com.imatchprofile.helper.TokenHelperResult;
 import java.io.File;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -30,12 +33,30 @@ public class FileRoutes {
     @GET
     @Path("avatar/{filename}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response getJson(@PathParam("filename") String filename) {
+    public Response getAvatar(@PathParam("filename") String filename) {
         try {
             File file = FileHelper.fetchAvatarFile(filename);
             return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
-                .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"" ) //optional
+                .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"" )
                 .build();
+        } catch (Throwable t) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
+        }
+    }
+    
+    @GET
+    @Path("upload/{filename}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getUpload(  @PathParam("filename") String filename,
+                                @HeaderParam("Authorization") String token) {
+        try {
+            TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
+            File file = FileHelper.fetchUploadedFile(filename);
+            return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
+                .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"" )
+                .build();
+        } catch (IMPException ex) {
+            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
         } catch (Throwable t) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
         }

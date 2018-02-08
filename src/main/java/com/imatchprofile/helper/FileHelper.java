@@ -26,21 +26,37 @@ public class FileHelper {
     private static final String UPLOADED_FOLDER = "/uploadedFiles/uploads/";
     private static final String AVATAR_FOLDER = "/uploadedFiles/avatar/";
     
-    public static String writeBase64ToFile(String fileName, String content) throws IMPException {
-        
+    public static String writeAvatarBase64ToFile(String fileName, String content) throws IMPException { 
         createFolderIfNotExists(AVATAR_FOLDER);
         
         Date now = new Date();
         String name = now.getTime() + fileName;
         
+        writeBase64ToFile(AVATAR_FOLDER + name, content);
+        
+        return SERVER_URL + "avatar/" + name;
+    }
+    
+    public static String writeUploadBase64ToFile(String fileName, String content) throws IMPException {
+        createFolderIfNotExists(UPLOADED_FOLDER);
+        
+        Date now = new Date();
+        String name = now.getTime() + fileName;
+        
+        writeBase64ToFile(UPLOADED_FOLDER + name, content);
+        
+        return SERVER_URL + "upload/" + name;
+    }
+    
+    private static void writeBase64ToFile(String fullFileName, String content) throws IMPException {
         BufferedOutputStream writer = null;
+        
         try {
-            File file = new File(AVATAR_FOLDER + name);
+            File file = new File(fullFileName);
             writer = new BufferedOutputStream(new FileOutputStream(file));
             writer.write(Base64.getDecoder().decode(content));
             writer.flush();
             writer.close();
-            return SERVER_URL + "avatar/" + name;
         } catch (FileNotFoundException ex) {
             throw new IMPInternalServerException("cannot create file - file not found");
         } catch (IOException ex) {
@@ -66,7 +82,10 @@ public class FileHelper {
     }
     
     public static File fetchAvatarFile(String filename){
-        System.out.println("AVATAR_FOLDER + filename");
         return new File(AVATAR_FOLDER + filename);
+    }
+    
+    public static File fetchUploadedFile(String filename){
+        return new File(UPLOADED_FOLDER + filename);
     }
 }

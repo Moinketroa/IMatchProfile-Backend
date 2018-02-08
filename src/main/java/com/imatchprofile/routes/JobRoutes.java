@@ -27,7 +27,7 @@ import javax.ws.rs.core.UriInfo;
  * @author brice
  */
 @Path("jobs")
-public class JobsRoutes {
+public class JobRoutes {
     
     @Context
     private UriInfo context;
@@ -36,7 +36,7 @@ public class JobsRoutes {
     /**
      * Creates a new instance of UserRoutes
      */
-    public JobsRoutes() {
+    public JobRoutes() {
     }
     
     @GET
