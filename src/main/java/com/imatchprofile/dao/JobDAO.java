@@ -59,10 +59,6 @@ public class JobDAO {
     public void editJob(Job editJob){
         Transaction transaction = null;
         Session session = HibernateUtil.getSessionFactory().openSession();
-        System.out.println("++++++++++++++++++++++++");
-        System.out.println(editJob.getJobId()); 
-        System.out.println("titre = "+editJob.getTitle());
-        System.out.println("descrption = "+editJob.getDescription());
         transaction = session.beginTransaction();
         session.merge(editJob);
         session.getTransaction().commit();
