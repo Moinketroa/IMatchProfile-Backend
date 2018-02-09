@@ -49,12 +49,22 @@ public class JobDAO {
     }
     
     public void create(Job newJob) {
-        
         Transaction transaction = null;
         Session session = HibernateUtil.getSessionFactory().openSession();
-        
         transaction = session.beginTransaction();
         session.save(newJob);
+        session.getTransaction().commit();
+    }
+    
+    public void editJob(Job editJob){
+        Transaction transaction = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        System.out.println("++++++++++++++++++++++++");
+        System.out.println(editJob.getJobId()); 
+        System.out.println("titre = "+editJob.getTitle());
+        System.out.println("descrption = "+editJob.getDescription());
+        transaction = session.beginTransaction();
+        session.merge(editJob);
         session.getTransaction().commit();
     }
     
@@ -109,8 +119,5 @@ public class JobDAO {
         session.close();
         return res1;
   }
-    
-    
-    
     
 }

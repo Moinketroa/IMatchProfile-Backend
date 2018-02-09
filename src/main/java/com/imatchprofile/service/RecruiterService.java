@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  *
- * @author achyle
+ * @author Nihad
  */
 public class RecruiterService extends UserService{
     
