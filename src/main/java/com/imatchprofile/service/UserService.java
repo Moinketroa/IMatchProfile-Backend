@@ -12,13 +12,12 @@ import com.imatchprofile.exceptions.IMPBadFormatException;
 import com.imatchprofile.exceptions.IMPBadUploadFormatException;
 import com.imatchprofile.exceptions.IMPEmailAlreadyTakenException;
 import com.imatchprofile.exceptions.IMPException;
-import com.imatchprofile.exceptions.IMPInternalServerException;
+import com.imatchprofile.exceptions.IMPNotAUserException;
 import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.helper.PasswordHelper;
 import com.imatchprofile.helper.FileHelper;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
-import java.io.IOException;
 import java.util.List;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -137,5 +136,41 @@ public class UserService extends Service {
             
             return photoUrl;
         }
+    }
+    
+    public String editUser(String content, Integer userId) throws IMPException {
+        //analyse du payload
+        JSONObject payload = new JSONObject(content);
+        JSONObject avatar = null;
+        int user_id;
+        String lastname, firstname, email;
+        try {
+            user_id = payload.getInt("user_id");
+            lastname = payload.getString("lastname");
+            firstname = payload.getString("firstname");
+            email = payload.getString("email");
+        } catch (JSONException e) {
+            throw new IMPPayloadException();
+        }
+        //verification de l'existence des champs
+        if (oneOfIsNull(user_id, lastname, firstname, email))
+            throw new IMPPayloadException();
+        //verification de l'email
+        if (!EmailValidator.getInstance().isValid(email))
+            throw new IMPBadFormatException("email");
+        //verification si email déjà présent
+        User userFoundByEmail = userDAO.findOneByEmail(email);
+        if (userFoundByEmail != null && userFoundByEmail.getUserId() != user_id)
+            throw new IMPEmailAlreadyTakenException();
+        //recuperation du user authentifié
+        User userFound = userDAO.findById(userId);
+        //verification si id trouvé
+        if (userFound == null)
+            throw new IMPNotAUserException();
+        userFound.setLastname(lastname);
+        userFound.setFirstname(firstname);
+        userFound.setEmail(email);
+        userDAO.editUser(userFound);
+        return userFound.toJSON().toString();
     }
 }

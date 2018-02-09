@@ -79,7 +79,6 @@ public class CandidateRoutes {
             t.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
         }
-           
     }
     
     @GET
