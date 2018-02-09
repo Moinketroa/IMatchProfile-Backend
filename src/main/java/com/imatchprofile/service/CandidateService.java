@@ -5,30 +5,22 @@
  */
 package com.imatchprofile.service;
 
-import com.imatchprofile.dao.SkillDao;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPInternalServerException;
 import com.imatchprofile.exceptions.IMPNoContentException;
 import com.imatchprofile.exceptions.IMPNotACandidateException;
-import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.exceptions.IMPWrongURLParameterException;
 import com.imatchprofile.helper.JWTHelper;
 import com.imatchprofile.helper.TokenHelper;
 import com.imatchprofile.model.pojo.Candidate;
-import com.imatchprofile.model.pojo.Skill;
 import com.imatchprofile.model.pojo.User;
 import static com.imatchprofile.service.Service.oneOfIsNull;
-import com.imatchprofile.util.HibernateUtil;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 /**
  *
- * @author achyle
+ * @author Nihad
  */
 public class CandidateService extends UserService{
     

@@ -74,7 +74,7 @@ public class Recruiter  implements java.io.Serializable {
     public void setChatrooms(Set chatrooms) {
         this.chatrooms = chatrooms;
     }
-    public Set getJobs() {
+    public Set<Job> getJobs() {
         return this.jobs;
     }
     

@@ -5,11 +5,9 @@
  */
 package com.imatchprofile.routes;
 
-import com.imatchprofile.dao.SkillDao;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.helper.TokenHelper;
 import com.imatchprofile.helper.TokenHelperResult;
-import com.imatchprofile.model.pojo.Skill;
 import com.imatchprofile.service.CandidateService;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;

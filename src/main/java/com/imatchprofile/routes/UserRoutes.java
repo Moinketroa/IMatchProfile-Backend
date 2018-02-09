@@ -5,8 +5,6 @@
  */
 package com.imatchprofile.routes;
 
-import com.imatchprofile.dao.SkillDao;
-import com.imatchprofile.model.pojo.Skill;
 import com.imatchprofile.service.UserService;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;

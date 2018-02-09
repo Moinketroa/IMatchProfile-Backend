@@ -19,6 +19,10 @@ public class IMPException extends Exception {
     public IMPException(Status status) {
         this.httpStatus = status;
     }
+
+    public IMPException() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     public Status getStatus(){
         return httpStatus;
