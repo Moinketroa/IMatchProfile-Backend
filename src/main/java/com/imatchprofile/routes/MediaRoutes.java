@@ -41,7 +41,7 @@ public class MediaRoutes {
         try {
             TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
             String result = mediaService.addMedia(content, thr.getUserId());
-            return Response.status(Response.Status.CREATED).entity(TokenHelper.concatJsonsToken(result, "media", thr.getNewToken())).build();
+            return Response.status(Response.Status.CREATED).entity(TokenHelper.concatJsonsToken(result, "medias", thr.getNewToken())).build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
         } catch (Throwable t) {
