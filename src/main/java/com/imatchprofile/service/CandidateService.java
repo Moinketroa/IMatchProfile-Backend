@@ -9,6 +9,7 @@ import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPInternalServerException;
 import com.imatchprofile.exceptions.IMPNoContentException;
 import com.imatchprofile.exceptions.IMPNotACandidateException;
+import com.imatchprofile.exceptions.IMPNotFoundEntityException;
 import com.imatchprofile.exceptions.IMPWrongURLParameterException;
 import com.imatchprofile.helper.JWTHelper;
 import com.imatchprofile.helper.TokenHelper;
@@ -48,7 +49,7 @@ public class CandidateService extends UserService{
         Candidate candidate = this.getCandidateDAO().findCandidateById(Integer.parseInt(Id));
         
         if (candidate == null)
-            throw new IMPNoContentException();
+            throw new IMPNotFoundEntityException("candidate");
         
         return candidate.toJSONComplete().toString();
     }

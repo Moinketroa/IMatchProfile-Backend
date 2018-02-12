@@ -13,6 +13,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -129,15 +130,16 @@ public class JobRoutes {
         }
     }    
     
-    @POST
-    @Path("edit")
+    @PUT
+    @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response editJob(@HeaderParam("Authorization") String token,
+                            @PathParam("id") String id,
                             String content) {
         try {
             TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
-            String result = jobService.editJob(content, thr.getUserId());
+            String result = jobService.editJob(content, id, thr.getUserId());
             return Response.status(Response.Status.OK).entity(TokenHelper.concatJsonsToken(result, "job", thr.getNewToken())).build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();

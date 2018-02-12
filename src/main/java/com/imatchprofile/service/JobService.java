@@ -11,6 +11,7 @@ import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPNoContentException;
 import com.imatchprofile.exceptions.IMPNotARecruiterException;
 import com.imatchprofile.exceptions.IMPNotAUserException;
+import com.imatchprofile.exceptions.IMPNotFoundEntityException;
 import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.exceptions.IMPWrongURLParameterException;
 import com.imatchprofile.model.pojo.Job;
@@ -59,20 +60,23 @@ public class JobService extends Service {
         return newJob.toJson().toString();
     }
     
-    public String editJob(String content, Integer userId) throws IMPException {
+    public String editJob(String content, String id, Integer userId) throws IMPException {
+        
+        //verification du parametre
+        if(!isInteger(id) || id == null)
+            throw new IMPWrongURLParameterException();
+        
         //analyse du payload
         JSONObject payload = new JSONObject(content);
-        int job_id;
         String title, description;
         try {
-            job_id = payload.getInt("job_id");
             title = payload.getString("title");
             description = payload.getString("description");
         } catch (JSONException e) {
             throw new IMPPayloadException();
         }
         //verification de l'existence des champs
-        if (oneOfIsNull(job_id, title, description)) {
+        if (oneOfIsNull(title, description)) {
             throw new IMPPayloadException();
         }
         //recuperation du user authentifié
@@ -80,23 +84,25 @@ public class JobService extends Service {
         //verification si id trouvé
         if (userFound == null)
             throw new IMPNotAUserException();
-        Recruiter recruiter = userFound.getRecruiter();
+       
         //verification si le user est un recruiter
+        Recruiter recruiter = userFound.getRecruiter();
         if (recruiter == null)
             throw new IMPNotARecruiterException();
-       Job job = null;
+        
+        Job job = null;
         for(Job _job : recruiter.getJobs()){
-            if(_job.getJobId() == job_id){
+            if(_job.getJobId() == Integer.parseInt(id)){
                 _job.setTitle(title);
                 _job.setDescription(description);
                 job = _job;
             }
         }
-        if (job != null){
+        if (job != null) {
             jobDAO.editJob(job);
             return job.toJson().toString();
-        }else{
-            throw new IMPException();
+        } else {
+            throw new IMPNotFoundEntityException("job");
         }
     }
     
@@ -129,7 +135,7 @@ public class JobService extends Service {
         Job job = jobDAO.findOneById(Integer.parseInt(Id));
         
         if (job == null)
-            throw new IMPNoContentException();
+            throw new IMPNotFoundEntityException("job");
         
         return job.toJsonJob().toString();
     }
