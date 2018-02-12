@@ -48,7 +48,7 @@ public class CandidateService extends UserService{
         Candidate candidate = this.getCandidateDAO().findCandidateById(Integer.parseInt(Id));
         
         if (candidate == null)
-            throw new IMPNotACandidateException();
+            throw new IMPNoContentException();
         
         return candidate.toJSONComplete().toString();
     }

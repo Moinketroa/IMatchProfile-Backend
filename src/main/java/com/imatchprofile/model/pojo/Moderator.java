@@ -51,18 +51,19 @@ public class Moderator  implements java.io.Serializable {
     }
 
     public JSONObject toJSON() {
-        JSONObject candidateJSON = new JSONObject();
+        JSONObject moderatorJSON = new JSONObject();
         
         //info user
-        candidateJSON.put("user_id", user.getUserId());
-        candidateJSON.put("firstname", user.getFirstname());
-        candidateJSON.put("lastname", user.getLastname());
-        candidateJSON.put("email", user.getEmail());
-        candidateJSON.put("photoUrl", user.getPhotoUrl());
+        moderatorJSON.put("user_id", user.getUserId());
+        moderatorJSON.put("firstname", user.getFirstname());
+        moderatorJSON.put("lastname", user.getLastname());
+        moderatorJSON.put("email", user.getEmail());
+        moderatorJSON.put("photoUrl", user.getPhotoUrl());
+        moderatorJSON.put("role", user.getRole());
         //info moderateur
-        candidateJSON.put("moderator_id", moderatorId);
+        moderatorJSON.put("moderator_id", moderatorId);
         
-        return candidateJSON;
+        return moderatorJSON;
     }
     
     public JSONObject toJSONComplete() {

@@ -90,20 +90,21 @@ public class Recruiter  implements java.io.Serializable {
     }
  
     public JSONObject toJSON() {
-        JSONObject candidateJSON = new JSONObject();
+        JSONObject recruiterJSON = new JSONObject();
         
         //info user
-        candidateJSON.put("user_id", user.getUserId());
-        candidateJSON.put("firstname", user.getFirstname());
-        candidateJSON.put("lastname", user.getLastname());
-        candidateJSON.put("email", user.getEmail());
-        candidateJSON.put("photoUrl", user.getPhotoUrl());
+        recruiterJSON.put("user_id", user.getUserId());
+        recruiterJSON.put("firstname", user.getFirstname());
+        recruiterJSON.put("lastname", user.getLastname());
+        recruiterJSON.put("email", user.getEmail());
+        recruiterJSON.put("photoUrl", user.getPhotoUrl());
+        recruiterJSON.put("role", user.getRole());
         //info recruteur
-        candidateJSON.put("recruiter_id", recruiterId);
-        candidateJSON.put("description", description);
-        candidateJSON.put("company", company);
+        recruiterJSON.put("recruiter_id", recruiterId);
+        recruiterJSON.put("description", description);
+        recruiterJSON.put("company", company);
         
-        return candidateJSON;
+        return recruiterJSON;
     }
 
     @Override
