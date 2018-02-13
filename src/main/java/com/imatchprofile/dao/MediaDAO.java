@@ -26,6 +26,7 @@ public class MediaDAO {
         transaction = session.beginTransaction();
         session.save(newMedia);
         session.getTransaction().commit();
+        session.close();
     }
     
     public Media findById(Integer id) {

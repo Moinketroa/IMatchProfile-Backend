@@ -55,7 +55,7 @@ public class MediaRoutes {
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteMedia(  @HeaderParam("Authorization") String token,
+    public Response deleteMedia(@HeaderParam("Authorization") String token,
                                 @PathParam("id") String idMedia) {
         try {
             TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
