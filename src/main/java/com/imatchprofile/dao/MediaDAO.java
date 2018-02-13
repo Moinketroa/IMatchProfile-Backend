@@ -6,7 +6,9 @@
 package com.imatchprofile.dao;
 
 import com.imatchprofile.model.pojo.Media;
+import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
+import javax.persistence.NoResultException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -24,6 +26,37 @@ public class MediaDAO {
         transaction = session.beginTransaction();
         session.save(newMedia);
         session.getTransaction().commit();
+        session.close();
+    }
+    
+    public Media findById(Integer id) {
+        //ouverture session
+        Transaction transaction = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        transaction = session.beginTransaction();
+        Media mediaFound;
+        try {
+            mediaFound = session.get(Media.class, id);
+        } catch (NoResultException ex) {
+            mediaFound = null;
+        }
+        transaction.commit();
+        //fermeture session
+        session.close();
+        return mediaFound;
+    }
+
+    public void delete(Media myMedia) {
+        //ouverture session
+        Transaction transaction = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        transaction = session.beginTransaction();
+        
+        //suppression du media
+        session.remove(myMedia);
+        
+        transaction.commit();
+        session.close();
     }
     
 }
