@@ -49,4 +49,28 @@ public class SkillService {
       Skill s = skillDAO.AddSkillToCandidat(c.getCandidateId(), skillname);
         return s.toJSON().toString();
     }
+    
+    
+     public String deleteSkill(String content) throws IMPException{
+        JSONObject payload = new JSONObject(content);
+        int user_id;
+        int skill_id;
+           try {
+            user_id = payload.getInt("candidate_id");
+            skill_id = payload.getInt("skill_id");
+        } catch (JSONException e) {
+            throw new IMPPayloadException();
+        }
+      
+        if (oneOfIsNull(user_id, skill_id))
+            throw new IMPPayloadException();
+       
+        Candidate c = candidateDAO.findCandidateById(user_id);
+  
+        if (c == null)
+            throw new IMPNotACandidateException();
+        
+      Candidate co = skillDAO.deleteSkill(skill_id,c.getCandidateId());
+        return co.toJSON().toString();
+    }
 }
