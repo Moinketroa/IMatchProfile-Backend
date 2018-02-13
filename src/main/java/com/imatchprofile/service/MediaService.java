@@ -12,8 +12,12 @@ import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPNotACandidateException;
 import com.imatchprofile.exceptions.IMPNotARecruiterException;
 import com.imatchprofile.exceptions.IMPNotAUserException;
+import com.imatchprofile.exceptions.IMPNotFoundEntityException;
+import com.imatchprofile.exceptions.IMPNotTheOwnerException;
 import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.exceptions.IMPTooMuchMediasException;
+import com.imatchprofile.exceptions.IMPUnauthorizedException;
+import com.imatchprofile.exceptions.IMPWrongURLParameterException;
 import com.imatchprofile.helper.FileHelper;
 import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.Media;
@@ -92,6 +96,36 @@ public class MediaService extends Service {
         }
         
         return responseMedias.toString();
+    }
+
+    public void removeMedia(String idMedia, Integer userId) throws IMPException {
+        //verification parametre url
+        if(!isInteger(idMedia) || idMedia == null)
+            throw new IMPWrongURLParameterException();
+        
+        //verification user
+        User meUser = this.userDAO.findById(userId);
+        
+        if (meUser == null)
+            throw new IMPNotAUserException();
+        
+        //verification candidat
+        Candidate meCandidate = meUser.getCandidate();
+        
+        if (meCandidate == null)
+            throw new IMPNotACandidateException();
+        
+        //verification media
+        Media myMedia = mediaDAO.findById(Integer.parseInt(idMedia));
+        
+        if (myMedia == null)
+            throw new IMPNotFoundEntityException("media");
+        
+        //verification que le media est celui du candidat
+        if (myMedia.getCandidate().getCandidateId() != meCandidate.getCandidateId())
+            throw new IMPNotTheOwnerException();
+        
+        mediaDAO.delete(myMedia);
     }
     
 }
