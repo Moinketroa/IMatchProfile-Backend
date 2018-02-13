@@ -6,6 +6,7 @@
 package com.imatchprofile.dao;
 
 import com.imatchprofile.model.pojo.Candidate;
+import com.imatchprofile.model.pojo.Masters;
 import com.imatchprofile.model.pojo.Skill;
 import com.imatchprofile.util.HibernateUtil;
 import javax.persistence.NoResultException;
@@ -22,7 +23,7 @@ import org.hibernate.Transaction;
  */
 public class SkillDao {
     
-     public Skill addSkill(Skill s){
+     public Skill addSkill(String s){
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction t =null;
         Skill findskill;
@@ -30,7 +31,7 @@ public class SkillDao {
          CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<Skill> query = session.getCriteriaBuilder().createQuery(Skill.class);
         Root<Skill> root = query.from(Skill.class);
-        query.select(root).where(cb.like(root.<String>get("title"), s.getTitle()));
+        query.select(root).where(cb.like(root.<String>get("title"), s));
         findskill=session.createQuery(query).getSingleResult();
         session.clear();
         } catch (NoResultException ex) {
@@ -40,14 +41,37 @@ public class SkillDao {
         
         if(findskill==null){
             t = session.beginTransaction();
-            session.save(s);
-            findskill=s;
+            findskill = new Skill(s);
+            session.save(findskill);
+           
             t.commit();
         }
          System.out.println("com.imatchprofile.dao.SkillDao.addSkill()");
         //fermeture session
         session.close();
         return findskill;
-
     }
+     public Skill AddSkillToCandidat(int idcandidat,String s){
+         CandidateDAO c = new CandidateDAO();
+        Candidate candidate= c.findCandidateById(idcandidat);
+         Skill skill =null;
+        if(candidate!=null){
+            skill = addSkill(s);
+            MastersDao mastersDao = new MastersDao();
+            if(mastersDao.Search(candidate.getCandidateId(), skill.getSkillId()) ==null){
+            Masters m =new Masters(candidate, skill);
+             
+            candidate.getMasterses().add(m);
+             Transaction transaction = null;
+                Session session = HibernateUtil.getSessionFactory().openSession();
+                transaction = session.beginTransaction();
+                session.merge(m);
+                transaction.commit();
+                 session.close();
+                
+            }
+           return skill;
+        }
+         return null;
+     } 
 }
