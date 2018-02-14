@@ -11,6 +11,7 @@ import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPNotACandidateException;
 import com.imatchprofile.exceptions.IMPNotARecruiterException;
 import com.imatchprofile.exceptions.IMPPayloadException;
+import com.imatchprofile.exceptions.IMPWrongURLParameterException;
 import com.imatchprofile.helper.DateHelper;
 import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.Job;
@@ -73,5 +74,25 @@ public class TrainingService extends Service{
       Training  s = trainingDAO.AddTraining(candidate, training);
         return s.toJSON();
     }
+     
+     public String deleteTraining(int user_id,String training_id) throws IMPException{
+         int training_idint;
+         
+         if(!isInteger(training_id ) || training_id==null)
+            throw new IMPWrongURLParameterException();
+         
+         training_idint=Integer.parseInt(training_id);
+          User user = userDAO.findById(user_id);
+        Candidate candidate = user.getCandidate();
+        if (candidate == null)
+            throw new IMPNotARecruiterException();
+        Training training = trainingDAO.Search( candidate.getCandidateId(),training_idint);
+        if(training!=null){
+          trainingDAO.DeleteTraining(candidate, training);
+        }
+        else throw new IMPException();
+        
+        return training.toJSON();
+     }
     
 }

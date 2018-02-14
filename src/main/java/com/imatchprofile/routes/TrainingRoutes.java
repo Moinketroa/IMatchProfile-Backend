@@ -10,9 +10,11 @@ import com.imatchprofile.helper.TokenHelper;
 import com.imatchprofile.helper.TokenHelperResult;
 import com.imatchprofile.service.TrainingService;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -42,6 +44,24 @@ public class TrainingRoutes {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
         } catch (Throwable t) {
              t.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
+        }
+    }
+    
+    @DELETE
+    @Path("{training_id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response postFormationDelete(@HeaderParam("Authorization") String token,@PathParam("training_id") String training_id){
+        try {
+              TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
+              String result = trainingService.deleteTraining(thr.getUserId(),training_id);
+            return Response.status(Response.Status.CREATED).entity(TokenHelper.concatJsonsToken(result, "training", thr.getNewToken())).build();
+        } catch (IMPException ex) {
+            
+            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
+        } catch (Throwable t) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
         }
     }

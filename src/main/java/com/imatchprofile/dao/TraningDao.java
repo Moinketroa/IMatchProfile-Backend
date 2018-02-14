@@ -55,4 +55,18 @@ public class TraningDao {
          
             return s;
      }
+     public Training DeleteTraining(Candidate c,Training s){
+          Session session = HibernateUtil.getSessionFactory().openSession();
+             Transaction t = session.beginTransaction();
+             Training training = Search(c.getCandidateId(), s.getTrainingId());
+            if( t!=null){
+                
+             session.delete(s);
+           
+             t.commit();
+         
+            return s;
+            }
+            return null;
+     }
 }
