@@ -35,7 +35,7 @@ public class NeedRoutes {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response postSkillUpdate(@HeaderParam("Authorization") String token,String content){
+    public Response postneedadd(@HeaderParam("Authorization") String token,String content){
         try {
               TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
               String result = skillService.addSkill(content,thr.getUserId());
