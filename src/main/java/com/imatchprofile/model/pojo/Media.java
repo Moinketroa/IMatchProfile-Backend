@@ -50,7 +50,12 @@ public class Media  implements java.io.Serializable {
         JSONObject result = new JSONObject();
         result.put("media_id", getMediaId());
         result.put("path", getPath());
+        result.put("filename", findNameFromPath());
         return result;
+    } 
+    
+    private String findNameFromPath() {
+        return path.substring(74);
     }
 }
 
