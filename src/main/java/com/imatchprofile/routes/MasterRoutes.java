@@ -8,7 +8,7 @@ package com.imatchprofile.routes;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.helper.TokenHelper;
 import com.imatchprofile.helper.TokenHelperResult;
-import com.imatchprofile.service.SkillService;
+import com.imatchprofile.service.MasterService;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
@@ -22,11 +22,11 @@ import javax.ws.rs.core.Response;
  *
  * @author MasterChief
  */
-@Path("skills")
-public class SkillRoutes {
+@Path("masters")
+public class MasterRoutes {
 
     
-    private final SkillService skillService = new SkillService();
+    private final MasterService masterservice = new MasterService();
     @Path("1")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -34,7 +34,7 @@ public class SkillRoutes {
     public Response postSkillUpdate(@HeaderParam("Authorization") String token,String content){
         try {
               TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
-              String result = skillService.addSkill(content);
+              String result = masterservice.addSkill(content);
             return Response.status(Response.Status.CREATED).entity(TokenHelper.concatJsonsToken(result, "skill", thr.getNewToken())).build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
@@ -50,7 +50,7 @@ public class SkillRoutes {
     public Response postSkillDelete(@HeaderParam("Authorization") String token,String content){
         try {
               TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
-              String result = skillService.deleteSkill(content);
+              String result = masterservice.deleteSkill(content);
             return Response.status(Response.Status.CREATED).entity(TokenHelper.concatJsonsToken(result, "candidate", thr.getNewToken())).build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
@@ -58,5 +58,7 @@ public class SkillRoutes {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
         }
     }
+    
+    
   
 }

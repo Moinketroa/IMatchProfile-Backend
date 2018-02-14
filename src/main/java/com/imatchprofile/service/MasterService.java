@@ -6,14 +6,13 @@
 package com.imatchprofile.service;
 
 import com.imatchprofile.dao.CandidateDAO;
+import com.imatchprofile.dao.MastersDao;
 import com.imatchprofile.dao.SkillDao;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPNotACandidateException;
-import com.imatchprofile.exceptions.IMPNotAUserException;
 import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.Skill;
-import com.imatchprofile.model.pojo.User;
 import static com.imatchprofile.service.Service.oneOfIsNull;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,10 +21,10 @@ import org.json.JSONObject;
  *
  * @author AmraniDriss
  */
-public class SkillService {
+public class MasterService {
     
     protected final  CandidateDAO candidateDAO=new CandidateDAO();
-    protected  final  SkillDao skillDAO=new SkillDao();
+    protected  final  MastersDao masterDao=new MastersDao();
     
     public String addSkill(String content) throws IMPException{
         JSONObject payload = new JSONObject(content);
@@ -46,7 +45,7 @@ public class SkillService {
         if (c == null)
             throw new IMPNotACandidateException();
         
-      Skill s = skillDAO.AddSkillToCandidat(c.getCandidateId(), skillname);
+      Skill s = masterDao.AddSkillToCandidat(c.getCandidateId(), skillname);
         return s.toJSON().toString();
     }
     
@@ -70,7 +69,7 @@ public class SkillService {
         if (c == null)
             throw new IMPNotACandidateException();
         
-      Candidate co = skillDAO.deleteSkill(skill_id,c.getCandidateId());
+      Candidate co = masterDao.deleteSkill(skill_id,c.getCandidateId());
         return co.toJSON().toString();
     }
 }
