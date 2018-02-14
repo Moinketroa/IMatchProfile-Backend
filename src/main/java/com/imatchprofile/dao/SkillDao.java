@@ -51,52 +51,6 @@ public class SkillDao {
         session.close();
         return findskill;
     }
-     public Skill AddSkillToCandidat(int idcandidat,String s){
-         CandidateDAO c = new CandidateDAO();
-        Candidate candidate= c.findCandidateById(idcandidat);
-         Skill skill =null;
-        if(candidate!=null){
-            skill = addSkill(s);
-            MastersDao mastersDao = new MastersDao();
-            if(mastersDao.Search(candidate.getCandidateId(), skill.getSkillId()) ==null){
-            Masters m =new Masters(candidate, skill);
-             
-            candidate.getMasterses().add(m);
-             Transaction transaction = null;
-                Session session = HibernateUtil.getSessionFactory().openSession();
-                transaction = session.beginTransaction();
-                session.merge(m);
-                transaction.commit();
-                 session.close();
-                
-            }
-           return skill;
-        }
-         return null;
-     } 
      
-     public Candidate deleteSkill(int skill_id,int  candidate_id){
-          CandidateDAO c = new CandidateDAO();
-        Candidate candidate= c.findCandidateById(candidate_id);
-         Masters masters=null;
-         
-        if(candidate!=null){
-         MastersDao m = new MastersDao();
-        masters= m.Search(candidate_id ,skill_id);
-            
-         if(masters!=null) {
-              Transaction transaction = null;
-                Session session = HibernateUtil.getSessionFactory().openSession();
-                transaction = session.beginTransaction();
-                Masters masterstodelete = session.get(Masters.class, masters.getMastersId());
-                session.delete(masterstodelete);
-                transaction.commit();
-                System.out.println("Master!=null");
-                 session.close();
-         }
-         else candidate=null;
-     }
-        return candidate;
-     }
      
 }

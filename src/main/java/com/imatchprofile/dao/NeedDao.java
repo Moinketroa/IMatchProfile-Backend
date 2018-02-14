@@ -6,7 +6,9 @@
 package com.imatchprofile.dao;
 
 import com.imatchprofile.model.pojo.Candidate;
+import com.imatchprofile.model.pojo.Job;
 import com.imatchprofile.model.pojo.Masters;
+import com.imatchprofile.model.pojo.Needs;
 import com.imatchprofile.model.pojo.Skill;
 import com.imatchprofile.util.HibernateUtil;
 import javax.persistence.NoResultException;
@@ -20,44 +22,44 @@ import org.hibernate.Transaction;
  *
  * @author AmraniDriss
  */
-public class MastersDao {
+public class NeedDao {
     
-    public Masters Search(int candidate_id,int skill_id){
+     public Needs Search(int job_id,int skill_id){
           Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction t =null;
-        Masters m=null;
+        Needs n=null;
         try {
          CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<Masters> query = session.getCriteriaBuilder().createQuery(Masters.class);
-        Root<Masters> root = query.from(Masters.class);
-        query.select(root).where(cb.equal(root.<Integer>get("candidate").get("candidateId"),candidate_id),
+        CriteriaQuery<Needs> query = session.getCriteriaBuilder().createQuery(Needs.class);
+        Root<Needs> root = query.from(Needs.class);
+        query.select(root).where(cb.equal(root.<Integer>get("job").get("jobId"),job_id),
                cb.equal(root.<Integer>get("skill").get("skillId"),skill_id) ) ;
-        m=session.createQuery(query).getSingleResult();
+        n=session.createQuery(query).getSingleResult();
         session.clear();
         } catch (NoResultException ex) {
             
-          m=null;
+          n=null;
         }
         
-        return m;
+        return n;
     }
-    public Skill AddSkillToCandidat(int idcandidat,String s){
-         CandidateDAO c = new CandidateDAO();
-        Candidate candidate= c.findCandidateById(idcandidat);
+    public Skill AddSkillToJob(int idjob,String s){
+         JobDAO c = new JobDAO();
+         Job job= c.findOneById(idjob);
          Skill skill =null;
          SkillDao skillDao = new SkillDao();
-        if(candidate!=null){
+        if(job!=null){
             
             skill = skillDao.addSkill(s);
             MastersDao mastersDao = new MastersDao();
-            if(mastersDao.Search(candidate.getCandidateId(), skill.getSkillId()) ==null){
-            Masters m =new Masters(candidate, skill);
+            if(Search(job.getJobId(), skill.getSkillId()) ==null){
+            Needs n =new Needs(job, skill);
              
-            candidate.getMasterses().add(m);
+            job.getNeedses().add(n);
              Transaction transaction = null;
                 Session session = HibernateUtil.getSessionFactory().openSession();
                 transaction = session.beginTransaction();
-                session.merge(m);
+                session.merge(n);
                 transaction.commit();
                  session.close();
                 
@@ -67,28 +69,26 @@ public class MastersDao {
          return null;
      } 
      
-     public Candidate deleteSkill(int skill_id,int  candidate_id){
-          CandidateDAO c = new CandidateDAO();
-        Candidate candidate= c.findCandidateById(candidate_id);
-         Masters masters=null;
+     public Job deleteSkill(int skill_id,int  job_id){
+          JobDAO c = new JobDAO();
+        Job job= c.findOneById(job_id);
+         Needs needs=null;
          
-        if(candidate!=null){
-         MastersDao m = new MastersDao();
-        masters= m.Search(candidate_id ,skill_id);
+        if(job!=null){
+        needs= Search(job_id ,skill_id);
             
-         if(masters!=null) {
+         if(needs!=null) {
               Transaction transaction = null;
                 Session session = HibernateUtil.getSessionFactory().openSession();
                 transaction = session.beginTransaction();
-                Masters masterstodelete = session.get(Masters.class, masters.getMastersId());
-                session.delete(masterstodelete);
+                Needs needtodelete = session.get(Needs.class, needs.getNeedsId());
+                session.delete(needtodelete);
                 transaction.commit();
                 System.out.println("Master!=null");
                  session.close();
          }
-         else candidate=null;
+         else job=null;
      }
-        return candidate;
+        return job;
      }
-    
 }

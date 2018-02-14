@@ -14,6 +14,8 @@ import com.imatchprofile.exceptions.IMPNotAUserException;
 import com.imatchprofile.exceptions.IMPNotFoundEntityException;
 import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.exceptions.IMPWrongURLParameterException;
+import com.imatchprofile.model.pojo.Applies;
+import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.Job;
 import com.imatchprofile.model.pojo.Recruiter;
 import com.imatchprofile.model.pojo.User;
@@ -127,7 +129,7 @@ public class JobService extends Service {
         return listJobs.toString();
     }
     
-    public String getJobById(String Id) throws IMPException{
+    public String getJobById(String Id, Integer userId) throws IMPException{
 
         if(!isInteger(Id) || Id == null)
             throw new IMPWrongURLParameterException();
@@ -137,7 +139,31 @@ public class JobService extends Service {
         if (job == null)
             throw new IMPNotFoundEntityException("job");
         
-        return job.toJsonJob().toString();
+        JSONObject jobJSON = job.toJsonJob();
+        boolean hasApplied = false;
+        
+        // verification si user pas supprimé
+        User user = userDAO.findById(userId);
+        if (user == null) 
+            throw new IMPNotAUserException();
+        
+        // verification si candidat ou non
+        Candidate candidate = user.getCandidate();
+        if (!(candidate == null)) {
+           
+            //recherche si a deja postulé
+            for (Object _applyO : job.getApplieses()) {
+                Applies _apply = (Applies) _applyO;
+
+                if (_apply.getCandidate().getCandidateId().equals(candidate.getCandidateId()))
+                    hasApplied = true;
+            }
+        }
+        
+        //rajout du champ has_applied
+        jobJSON.put("has_applied", hasApplied);
+        
+        return jobJSON.toString();
     }
     
     public String getJobBytitle(String title, String pagenumber, String entitieperpages) throws IMPException {

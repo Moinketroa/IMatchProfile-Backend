@@ -5,6 +5,8 @@
  */
 package com.imatchprofile.helper;
 
+import com.imatchprofile.exceptions.IMPException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -22,6 +24,18 @@ public class DateHelper {
         ZoneId z = ZoneId.of( "Europe/Paris" );
         ZonedDateTime zdt = instantCreated.atZone( z );
         return zdt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace( "T" , " " );
+    }
+    public static Date converStringToDate(String datestring){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+       
+
+        try {
+            Date date = formatter.parse(datestring);
+            return date;
+        } catch (Exception e) {
+            e.printStackTrace();
+               return null;
+        }
     }
     
 }
