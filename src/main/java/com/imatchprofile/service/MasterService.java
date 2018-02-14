@@ -7,12 +7,16 @@ package com.imatchprofile.service;
 
 import com.imatchprofile.dao.CandidateDAO;
 import com.imatchprofile.dao.MastersDao;
-import com.imatchprofile.dao.SkillDao;
+import com.imatchprofile.dao.UserDAO;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPNotACandidateException;
+import com.imatchprofile.exceptions.IMPNotAUserException;
 import com.imatchprofile.exceptions.IMPPayloadException;
+import com.imatchprofile.exceptions.IMPWrongURLParameterException;
 import com.imatchprofile.model.pojo.Candidate;
+import com.imatchprofile.model.pojo.Masters;
 import com.imatchprofile.model.pojo.Skill;
+import com.imatchprofile.model.pojo.User;
 import static com.imatchprofile.service.Service.oneOfIsNull;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,27 +25,27 @@ import org.json.JSONObject;
  *
  * @author AmraniDriss
  */
-public class MasterService {
+public class MasterService extends Service{
     
-    protected final  CandidateDAO candidateDAO=new CandidateDAO();
+    protected final  UserDAO userDao=new UserDAO();
     protected  final  MastersDao masterDao=new MastersDao();
     
-    public String addSkill(String content) throws IMPException{
+    public String addSkill(String content,int user_id) throws IMPException{
         JSONObject payload = new JSONObject(content);
-        int user_id;
+  
         String skillname;
            try {
-            user_id = payload.getInt("candidate_id");
+         
             skillname = payload.getString("skill");
         } catch (JSONException e) {
             throw new IMPPayloadException();
         }
       
-        if (oneOfIsNull(user_id, skillname))
+        if (oneOfIsNull(skillname))
             throw new IMPPayloadException();
        
-        Candidate c = candidateDAO.findCandidateById(user_id);
-  
+        User u = userDao.findById(user_id);
+        Candidate c = u.getCandidate();
         if (c == null)
             throw new IMPNotACandidateException();
         
@@ -50,26 +54,22 @@ public class MasterService {
     }
     
     
-     public String deleteSkill(String content) throws IMPException{
-        JSONObject payload = new JSONObject(content);
-        int user_id;
-        int skill_id;
-           try {
-            user_id = payload.getInt("candidate_id");
-            skill_id = payload.getInt("skill_id");
-        } catch (JSONException e) {
-            throw new IMPPayloadException();
-        }
-      
-        if (oneOfIsNull(user_id, skill_id))
-            throw new IMPPayloadException();
+     public String deleteSkill(String skill_id,int user_id) throws IMPException{
        
-        Candidate c = candidateDAO.findCandidateById(user_id);
-  
+      
+         if(!isInteger(skill_id ) || skill_id==null)
+            throw new IMPWrongURLParameterException();
+       int skillint = Integer.parseInt(skill_id);
+         
+         User u = userDao.findById(user_id);
+        Candidate c = u.getCandidate();
+         
         if (c == null)
             throw new IMPNotACandidateException();
         
-      Candidate co = masterDao.deleteSkill(skill_id,c.getCandidateId());
+       Masters m= masterDao.Search(c.getCandidateId(), skillint);
+       if(m==null)  throw new IMPException();
+      Candidate co = masterDao.deleteSkill(skillint,c.getCandidateId());
         return co.toJSON().toString();
     }
 }
