@@ -2,10 +2,6 @@ package com.imatchprofile.model.pojo;
 
 
 import com.imatchprofile.helper.DateHelper;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;

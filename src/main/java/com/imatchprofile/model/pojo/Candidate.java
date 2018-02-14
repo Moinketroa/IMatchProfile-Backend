@@ -172,6 +172,7 @@ public class Candidate  implements java.io.Serializable {
         candidateJSON.put("lastname", user.getLastname());
         candidateJSON.put("email", user.getEmail());
         candidateJSON.put("photoUrl", user.getPhotoUrl());
+        candidateJSON.put("role", user.getRole());
         //info candidat
         candidateJSON.put("candidate_id", candidateId);
         candidateJSON.put("title", title);

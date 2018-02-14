@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response;
 
 /**
  *
- * @author achyle
+ * @author Nihad
  */
 @Path("recruiters")
 public class RecruiterRoutes {

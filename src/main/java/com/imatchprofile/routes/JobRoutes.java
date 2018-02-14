@@ -6,7 +6,6 @@
 package com.imatchprofile.routes;
 
 import com.imatchprofile.exceptions.IMPException;
-import com.imatchprofile.exceptions.IMPNoContentException;
 import com.imatchprofile.helper.TokenHelper;
 import com.imatchprofile.helper.TokenHelperResult;
 import com.imatchprofile.service.JobService;
@@ -14,6 +13,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -129,4 +129,23 @@ public class JobRoutes {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
         }
     }    
+    
+    @PUT
+    @Path("{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editJob(@HeaderParam("Authorization") String token,
+                            @PathParam("id") String id,
+                            String content) {
+        try {
+            TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
+            String result = jobService.editJob(content, id, thr.getUserId());
+            return Response.status(Response.Status.OK).entity(TokenHelper.concatJsonsToken(result, "job", thr.getNewToken())).build();
+        } catch (IMPException ex) {
+            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
+        }
+    }
 }

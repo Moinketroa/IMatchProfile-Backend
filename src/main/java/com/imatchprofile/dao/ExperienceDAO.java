@@ -5,58 +5,64 @@
  */
 package com.imatchprofile.dao;
 
+import com.imatchprofile.model.pojo.Candidate;
+import com.imatchprofile.model.pojo.Experience;
 import com.imatchprofile.model.pojo.Media;
-import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
+import java.util.Date;
 import javax.persistence.NoResultException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 /**
  *
- * @author j-m_d
+ * @author brice
  */
-public class MediaDAO {
+public class ExperienceDAO {
     
-    public void create(Media newMedia) {
+    public Experience addExperience(Experience expenrience){
         
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction t =null;
+        t = session.beginTransaction();
+        session.save(expenrience);
+        t.commit();
+        session.close();
+        return expenrience;
+    }
+    
+    public void editExperience(Experience editExperience){
         Transaction transaction = null;
         Session session = HibernateUtil.getSessionFactory().openSession();
-        
         transaction = session.beginTransaction();
-        session.save(newMedia);
+        session.merge(editExperience);
         session.getTransaction().commit();
+    }
+    
+    public void delete(Experience exp) {
+        Transaction transaction = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        transaction = session.beginTransaction();
+        session.remove(exp);
+        transaction.commit();
         session.close();
     }
     
-    public Media findById(Integer id) {
+    public Experience findById(Integer id) {
         //ouverture session
         Transaction transaction = null;
         Session session = HibernateUtil.getSessionFactory().openSession();
         transaction = session.beginTransaction();
-        Media mediaFound;
+        Experience experienceFound;
         try {
-            mediaFound = session.get(Media.class, id);
+            experienceFound = session.get(Experience.class, id);
         } catch (NoResultException ex) {
-            mediaFound = null;
+            experienceFound = null;
         }
         transaction.commit();
         //fermeture session
         session.close();
-        return mediaFound;
+        return experienceFound;
     }
-
-    public void delete(Media myMedia) {
-        //ouverture session
-        Transaction transaction = null;
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        transaction = session.beginTransaction();
-        
-        //suppression du media
-        session.remove(myMedia);
-        
-        transaction.commit();
-        session.close();
-    }
+} 
     
-}

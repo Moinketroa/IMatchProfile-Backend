@@ -1,10 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `imatchprofile` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `imatchprofile`;
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: localhost    Database: imatchprofile
 -- ------------------------------------------------------
--- Server version	5.7.20-log
+-- Server version	5.7.14
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -37,6 +35,15 @@ CREATE TABLE `applies` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `applies`
+--
+
+LOCK TABLES `applies` WRITE;
+/*!40000 ALTER TABLE `applies` DISABLE KEYS */;
+/*!40000 ALTER TABLE `applies` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `candidate`
 --
 
@@ -52,9 +59,19 @@ CREATE TABLE `candidate` (
   `user_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`candidate_id`),
   KEY `fk_candidate_user_idx` (`user_id`),
-  CONSTRAINT `fk_candidate_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_candidate_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `candidate`
+--
+
+LOCK TABLES `candidate` WRITE;
+/*!40000 ALTER TABLE `candidate` DISABLE KEYS */;
+INSERT INTO `candidate` VALUES (19,'','','',1,26),(20,'','','',1,27),(21,'','','',1,28),(22,'','','',1,29),(23,'','','',1,30),(24,'','','',1,31);
+/*!40000 ALTER TABLE `candidate` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `candidatereports`
@@ -74,6 +91,15 @@ CREATE TABLE `candidatereports` (
   CONSTRAINT `fk_candidateReports_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `candidatereports`
+--
+
+LOCK TABLES `candidatereports` WRITE;
+/*!40000 ALTER TABLE `candidatereports` DISABLE KEYS */;
+/*!40000 ALTER TABLE `candidatereports` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `chatroom`
@@ -96,6 +122,15 @@ CREATE TABLE `chatroom` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `chatroom`
+--
+
+LOCK TABLES `chatroom` WRITE;
+/*!40000 ALTER TABLE `chatroom` DISABLE KEYS */;
+/*!40000 ALTER TABLE `chatroom` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `experience`
 --
 
@@ -113,8 +148,18 @@ CREATE TABLE `experience` (
   PRIMARY KEY (`experience_id`),
   KEY `fk_experience_candidate_idx` (`candidate_id`),
   CONSTRAINT `fk_experience_candidate` FOREIGN KEY (`candidate_id`) REFERENCES `candidate` (`candidate_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `experience`
+--
+
+LOCK TABLES `experience` WRITE;
+/*!40000 ALTER TABLE `experience` DISABLE KEYS */;
+INSERT INTO `experience` VALUES (1,19,'IMatchProfile','Projet à 6 personnes à faire pendant un semestre','2018-03-19 08:00:00','2018-03-19 08:00:00','FST Nancy'),(2,20,'IMatchProfile','Projet à 6 personnes à faire pendant un semestre','2018-03-19 08:00:00','2018-03-19 08:00:00','FST Nancy'),(3,21,'IMatchProfile','Projet à 6 personnes à faire pendant un semestre','2018-03-19 08:00:00','2018-03-19 08:00:00','FST Nancy'),(4,22,'IMatchProfile','Projet à 6 personnes à faire pendant un semestre','2018-03-19 08:00:00','2018-03-19 08:00:00','FST Nancy'),(5,23,'IMatchProfile','Projet à 6 personnes à faire pendant un semestre','2018-03-19 08:00:00','2018-03-19 08:00:00','FST Nancy'),(6,24,'IMatchProfile','Projet à 6 personnes à faire pendant un semestre','2018-03-19 08:00:00','2018-03-19 08:00:00','FST Nancy');
+/*!40000 ALTER TABLE `experience` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `job`
@@ -133,8 +178,18 @@ CREATE TABLE `job` (
   PRIMARY KEY (`job_id`),
   KEY `fk_job_recruiter_idx` (`recruiter_id`),
   CONSTRAINT `fk_job_recruiter` FOREIGN KEY (`recruiter_id`) REFERENCES `recruiter` (`recruiter_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `job`
+--
+
+LOCK TABLES `job` WRITE;
+/*!40000 ALTER TABLE `job` DISABLE KEYS */;
+INSERT INTO `job` VALUES (1,1,'Stage - Prolog','Super Stage en Prolog !',1,'2018-03-19 08:00:00'),(2,1,'Stage PLIC','Allez venez svp',1,'2018-03-19 08:00:00');
+/*!40000 ALTER TABLE `job` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `jobreports`
@@ -156,6 +211,15 @@ CREATE TABLE `jobreports` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `jobreports`
+--
+
+LOCK TABLES `jobreports` WRITE;
+/*!40000 ALTER TABLE `jobreports` DISABLE KEYS */;
+/*!40000 ALTER TABLE `jobreports` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `masters`
 --
 
@@ -171,8 +235,18 @@ CREATE TABLE `masters` (
   KEY `fk_masters_skill_idx` (`skill_id`),
   CONSTRAINT `fk_masters_candidate` FOREIGN KEY (`candidate_id`) REFERENCES `candidate` (`candidate_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_masters_skill` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`skill_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `masters`
+--
+
+LOCK TABLES `masters` WRITE;
+/*!40000 ALTER TABLE `masters` DISABLE KEYS */;
+INSERT INTO `masters` VALUES (1,19,3),(2,20,3),(3,21,3),(4,23,3),(5,22,3),(6,24,3),(7,19,1),(8,20,1),(9,21,4),(10,22,2),(11,23,5),(12,24,5);
+/*!40000 ALTER TABLE `masters` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `matches`
@@ -194,6 +268,15 @@ CREATE TABLE `matches` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `matches`
+--
+
+LOCK TABLES `matches` WRITE;
+/*!40000 ALTER TABLE `matches` DISABLE KEYS */;
+/*!40000 ALTER TABLE `matches` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `media`
 --
 
@@ -209,6 +292,15 @@ CREATE TABLE `media` (
   CONSTRAINT `fk_media_candidate` FOREIGN KEY (`candidate_id`) REFERENCES `candidate` (`candidate_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `media`
+--
+
+LOCK TABLES `media` WRITE;
+/*!40000 ALTER TABLE `media` DISABLE KEYS */;
+/*!40000 ALTER TABLE `media` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `message`
@@ -230,6 +322,15 @@ CREATE TABLE `message` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `message`
+--
+
+LOCK TABLES `message` WRITE;
+/*!40000 ALTER TABLE `message` DISABLE KEYS */;
+/*!40000 ALTER TABLE `message` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `moderator`
 --
 
@@ -241,9 +342,19 @@ CREATE TABLE `moderator` (
   `user_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`moderator_id`),
   KEY `fk_moderator_user_idx` (`user_id`),
-  CONSTRAINT `fk_moderator_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_moderator_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `moderator`
+--
+
+LOCK TABLES `moderator` WRITE;
+/*!40000 ALTER TABLE `moderator` DISABLE KEYS */;
+INSERT INTO `moderator` VALUES (1,33);
+/*!40000 ALTER TABLE `moderator` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `needs`
@@ -261,8 +372,18 @@ CREATE TABLE `needs` (
   KEY `fk_needs_skill_idx` (`skill_id`),
   CONSTRAINT `fk_needs_job` FOREIGN KEY (`job_id`) REFERENCES `job` (`job_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_needs_skill` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`skill_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `needs`
+--
+
+LOCK TABLES `needs` WRITE;
+/*!40000 ALTER TABLE `needs` DISABLE KEYS */;
+INSERT INTO `needs` VALUES (1,1,5),(2,2,4);
+/*!40000 ALTER TABLE `needs` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `recruiter`
@@ -278,9 +399,19 @@ CREATE TABLE `recruiter` (
   `user_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`recruiter_id`),
   KEY `fk_recruiter_user_idx` (`user_id`),
-  CONSTRAINT `fk_recruiter_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_recruiter_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `recruiter`
+--
+
+LOCK TABLES `recruiter` WRITE;
+/*!40000 ALTER TABLE `recruiter` DISABLE KEYS */;
+INSERT INTO `recruiter` VALUES (1,'Recruteur d\'une super boîte ! #Desespere #VenezAMonStageSVP','Sopra Steria',32);
+/*!40000 ALTER TABLE `recruiter` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `skill`
@@ -293,8 +424,18 @@ CREATE TABLE `skill` (
   `skill_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(45) NOT NULL,
   PRIMARY KEY (`skill_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `skill`
+--
+
+LOCK TABLES `skill` WRITE;
+/*!40000 ALTER TABLE `skill` DISABLE KEYS */;
+INSERT INTO `skill` VALUES (1,'C++'),(2,'Brute Force'),(3,'Java'),(4,'PLIC'),(5,'Prolog');
+/*!40000 ALTER TABLE `skill` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `training`
@@ -314,8 +455,18 @@ CREATE TABLE `training` (
   PRIMARY KEY (`training_id`),
   KEY `fk_training_candidate_idx` (`candidate_id`),
   CONSTRAINT `fk_training_candidate` FOREIGN KEY (`candidate_id`) REFERENCES `candidate` (`candidate_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `training`
+--
+
+LOCK TABLES `training` WRITE;
+/*!40000 ALTER TABLE `training` DISABLE KEYS */;
+INSERT INTO `training` VALUES (1,19,'Formation Java','On a appris plein de choses','2018-03-19 08:00:00','2018-03-19 08:00:00','FST Nancy'),(2,20,'Formation Java','On a appris plein de choses','2018-03-19 08:00:00','2018-03-19 08:00:00','FST Nancy'),(3,21,'Formation Java','On a appris plein de choses','2018-03-19 08:00:00','2018-03-19 08:00:00','FST Nancy'),(4,22,'Formation Java','On a appris plein de choses','2018-03-19 08:00:00','2018-03-19 08:00:00','FST Nancy'),(5,23,'Formation Java','On a appris plein de choses','2018-03-19 08:00:00','2018-03-19 08:00:00','FST Nancy'),(6,24,'Formation Java','On a appris plein de choses','2018-03-19 08:00:00','2018-03-19 08:00:00','FST Nancy');
+/*!40000 ALTER TABLE `training` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `user`
@@ -329,8 +480,8 @@ CREATE TABLE `user` (
   `lastname` varchar(45) NOT NULL,
   `firstname` varchar(45) NOT NULL,
   `email` varchar(45) NOT NULL,
-  `password` varchar(45) NOT NULL,
-  `photoUrl` varchar(45) DEFAULT NULL,
+  `password` varchar(200) NOT NULL,
+  `photoUrl` varchar(500) DEFAULT NULL,
   `role` varchar(45) DEFAULT NULL,
   `candidate_id` int(10) unsigned DEFAULT NULL,
   `recruiter_id` int(10) unsigned DEFAULT NULL,
@@ -340,11 +491,21 @@ CREATE TABLE `user` (
   KEY `fk_user_candidate_idx` (`candidate_id`),
   KEY `fk_user_recruiter_idx` (`recruiter_id`),
   KEY `fk_user_moderator_idx` (`moderator_id`),
-  CONSTRAINT `fk_user_candidate` FOREIGN KEY (`candidate_id`) REFERENCES `candidate` (`candidate_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_user_moderator` FOREIGN KEY (`moderator_id`) REFERENCES `moderator` (`moderator_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_user_recruiter` FOREIGN KEY (`recruiter_id`) REFERENCES `recruiter` (`recruiter_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_user_candidate` FOREIGN KEY (`candidate_id`) REFERENCES `candidate` (`candidate_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_moderator` FOREIGN KEY (`moderator_id`) REFERENCES `moderator` (`moderator_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_recruiter` FOREIGN KEY (`recruiter_id`) REFERENCES `recruiter` (`recruiter_id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (26,'Parwany','Ashmat','ashmat@laposte.fr','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InBhc3N3b3JkI3gjNTQyajcjWjMtSjg0RVUtVyNkeHhEU0Q3cyNtXzRmIn0.oqpTWPnMcoUIV2H-Tz7Fea0AZJIQXf9qh5Immi01L3s','http://images.pausecafein.fr/images/cafein/2015/06/20-faits-bresil/carte-drapeau-bresil.gif','C',19,NULL,NULL),(27,'Stocchi','Laurent','laurent@laposte.fr','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InBhc3N3b3JkI3gjNTQyajcjWjMtSjg0RVUtVyNkeHhEU0Q3cyNtXzRmIn0.oqpTWPnMcoUIV2H-Tz7Fea0AZJIQXf9qh5Immi01L3s','http://m.memegen.com/1zzl08.jpg','C',20,NULL,NULL),(28,'Peters','Brice','brice@laposte.fr','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InBhc3N3b3JkI3gjNTQyajcjWjMtSjg0RVUtVyNkeHhEU0Q3cyNtXzRmIn0.oqpTWPnMcoUIV2H-Tz7Fea0AZJIQXf9qh5Immi01L3s','https://i.ytimg.com/vi/B0-7RbQCL00/maxresdefault.jpg','C',21,NULL,NULL),(29,'Debicki','Jean-Marc','jm@laposte.fr','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InBhc3N3b3JkI3gjNTQyajcjWjMtSjg0RVUtVyNkeHhEU0Q3cyNtXzRmIn0.oqpTWPnMcoUIV2H-Tz7Fea0AZJIQXf9qh5Immi01L3s','https://images-na.ssl-images-amazon.com/images/I/41kbIruQrnL.jpg','C',22,NULL,NULL),(30,'Ajdarpasic','Nihad','nihad@laposte.fr','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InBhc3N3b3JkI3gjNTQyajcjWjMtSjg0RVUtVyNkeHhEU0Q3cyNtXzRmIn0.oqpTWPnMcoUIV2H-Tz7Fea0AZJIQXf9qh5Immi01L3s','http://www.clps.net/upload/image_1428_shutterstock_128748086NTC.jpg','C',23,NULL,NULL),(31,'Amrani','Driss','driss@laposte.fr','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InBhc3N3b3JkI3gjNTQyajcjWjMtSjg0RVUtVyNkeHhEU0Q3cyNtXzRmIn0.oqpTWPnMcoUIV2H-Tz7Fea0AZJIQXf9qh5Immi01L3s','https://cdn.xl.thumbs.canstockphoto.fr/tasse-%C3%A0-caf%C3%A9-serveur-tenue-sourire-plateau-image_csp11181119.jpg','C',24,NULL,NULL),(32,'Steria','Sopra','sopra@steria.fr','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InBhc3N3b3JkI3gjNTQyajcjWjMtSjg0RVUtVyNkeHhEU0Q3cyNtXzRmIn0.oqpTWPnMcoUIV2H-Tz7Fea0AZJIQXf9qh5Immi01L3s','https://s3-eu-west-1.amazonaws.com/th-prod/booth/0001/17/2409632a4db94f87baa2464e46ca2e176d866e67.jpeg','R',NULL,1,NULL),(33,'Modo','Modo','modo@modo.fr','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InBhc3N3b3JkI3gjNTQyajcjWjMtSjg0RVUtVyNkeHhEU0Q3cyNtXzRmIn0.oqpTWPnMcoUIV2H-Tz7Fea0AZJIQXf9qh5Immi01L3s','https://akphoto1.ask.fm/498/028/229/2390003003-1rlhqmt-6flg9tp5b5q5qbk/original/agkkm7.jpg','M',NULL,NULL,1);
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -355,4 +516,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-28 15:07:51
+-- Dump completed on 2018-02-09 16:52:54

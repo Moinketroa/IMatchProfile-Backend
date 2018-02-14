@@ -5,6 +5,9 @@
  */
 package com.imatchprofile.dao;
 
+import com.imatchprofile.exceptions.IMPException;
+import com.imatchprofile.helper.TokenHelper;
+import com.imatchprofile.helper.TokenHelperResult;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
 import java.util.List;
@@ -12,6 +15,13 @@ import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -77,6 +87,12 @@ public class UserDAO {
         return res;
     }
     
-    
+    public void editUser(User editUser){
+        Transaction transaction = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        transaction = session.beginTransaction();
+        session.merge(editUser);
+        session.getTransaction().commit();
+    }
     
 }

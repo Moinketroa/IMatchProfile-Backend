@@ -5,30 +5,21 @@
  */
 package com.imatchprofile.service;
 
-import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.imatchprofile.dao.JobDAO;
 import com.imatchprofile.dao.UserDAO;
 import com.imatchprofile.exceptions.IMPException;
-import com.imatchprofile.exceptions.IMPExpiredTokenException;
-import com.imatchprofile.exceptions.IMPInternalServerException;
 import com.imatchprofile.exceptions.IMPNoContentException;
-import com.imatchprofile.exceptions.IMPNoTokenException;
 import com.imatchprofile.exceptions.IMPNotARecruiterException;
 import com.imatchprofile.exceptions.IMPNotAUserException;
+import com.imatchprofile.exceptions.IMPNotFoundEntityException;
 import com.imatchprofile.exceptions.IMPPayloadException;
-import com.imatchprofile.exceptions.IMPWrongTokenException;
 import com.imatchprofile.exceptions.IMPWrongURLParameterException;
-import com.imatchprofile.helper.JWTHelper;
 import com.imatchprofile.model.pojo.Job;
 import com.imatchprofile.model.pojo.Recruiter;
 import com.imatchprofile.model.pojo.User;
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.imatchprofile.util.HibernateUtil;
-import java.util.ArrayList;
-import java.util.List;
 import org.json.JSONArray;
 
 /**
@@ -41,43 +32,78 @@ public class JobService extends Service {
     private UserDAO userDAO = new UserDAO();
     
     public String postJob(String content, Integer userId) throws IMPException {
-        
-        //analyse du payload
+       //analyse du payload
         JSONObject payload = new JSONObject(content);
-        
         String title, description;
-        
         try {
             title = payload.getString("title");
             description = payload.getString("description");
         } catch (JSONException e) {
             throw new IMPPayloadException();
         }
-        
         //verification de l'existence des champs
         if (oneOfIsNull(title, description)) {
             throw new IMPPayloadException();
         }
-        
         //recuperation du user authentifié
         User userFound = userDAO.findById(userId);
-        
         //verification si id trouvé
         if (userFound == null)
             throw new IMPNotAUserException();
-        
         Recruiter recruiter = userFound.getRecruiter();
-        
         //verification si le user est un recruiter
         if (recruiter == null)
             throw new IMPNotARecruiterException();
-        
         //creation de l'annonce
         Job newJob = new Job(recruiter, title, description, (byte) 1, new Date());
-        
         jobDAO.create(newJob);
-        
         return newJob.toJson().toString();
+    }
+    
+    public String editJob(String content, String id, Integer userId) throws IMPException {
+        
+        //verification du parametre
+        if(!isInteger(id) || id == null)
+            throw new IMPWrongURLParameterException();
+        
+        //analyse du payload
+        JSONObject payload = new JSONObject(content);
+        String title, description;
+        try {
+            title = payload.getString("title");
+            description = payload.getString("description");
+        } catch (JSONException e) {
+            throw new IMPPayloadException();
+        }
+        //verification de l'existence des champs
+        if (oneOfIsNull(title, description)) {
+            throw new IMPPayloadException();
+        }
+        //recuperation du user authentifié
+        User userFound = userDAO.findById(userId);
+        //verification si id trouvé
+        if (userFound == null)
+            throw new IMPNotAUserException();
+       
+        //verification si le user est un recruiter
+        Recruiter recruiter = userFound.getRecruiter();
+        if (recruiter == null)
+            throw new IMPNotARecruiterException();
+        
+        Job job = null;
+        for(Job _job : recruiter.getJobs()){
+            if(_job.getJobId() == Integer.parseInt(id)){
+                _job.setTitle(title);
+                _job.setDescription(description);
+                job = _job;
+            }
+        }
+        if (job != null) {
+            jobDAO.editJob(job);
+            return job.toJson().toString();
+        } else {
+            throw new IMPNotFoundEntityException("job");
+        }
     }
     
     public String getAllJob(String pagenumber, String entitieperpages) throws IMPException {
@@ -109,7 +135,7 @@ public class JobService extends Service {
         Job job = jobDAO.findOneById(Integer.parseInt(Id));
         
         if (job == null)
-            throw new IMPNoContentException();
+            throw new IMPNotFoundEntityException("job");
         
         return job.toJsonJob().toString();
     }

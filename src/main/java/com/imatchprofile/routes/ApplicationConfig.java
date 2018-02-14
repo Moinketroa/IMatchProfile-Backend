@@ -29,15 +29,17 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(com.imatchprofile.routes.ApplyRoutes.class);
         resources.add(com.imatchprofile.routes.CandidateRoutes.class);
         resources.add(com.imatchprofile.routes.CrossOriginResourceSharingFilter.class);
+        resources.add(com.imatchprofile.routes.ExperienceRoutes.class);
         resources.add(com.imatchprofile.routes.FileRoutes.class);
         resources.add(com.imatchprofile.routes.JobRoutes.class);
         resources.add(com.imatchprofile.routes.LoginRoutes.class);
         resources.add(com.imatchprofile.routes.MediaRoutes.class);
         resources.add(com.imatchprofile.routes.ModeratorRoutes.class);
-        resources.add(com.imatchprofile.routes.ProfilRoutes.class);
         resources.add(com.imatchprofile.routes.RecruiterRoutes.class);
+        resources.add(com.imatchprofile.routes.SkillRoutes.class);
         resources.add(com.imatchprofile.routes.UserRoutes.class);
     }  
 }

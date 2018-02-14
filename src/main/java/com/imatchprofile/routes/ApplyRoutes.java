@@ -8,52 +8,39 @@ package com.imatchprofile.routes;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.helper.TokenHelper;
 import com.imatchprofile.helper.TokenHelperResult;
-import com.imatchprofile.service.UserService;
-import javax.ws.rs.Consumes;
+import com.imatchprofile.service.ApplyService;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
  * REST Web Service
  *
- * @author MasterChief
+ * @author j-m_d
  */
-@Path("users")
-public class UserRoutes {
-
-    @Context
-    private UriInfo context;
-    private UserService userService = new UserService();
-
-    /**
-     * Creates a new instance of UserRoutes
-     */
-    public UserRoutes() {
-    }
+@Path("applies")
+public class ApplyRoutes {
     
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getUsers() {
-        return Response.status(Response.Status.OK).entity(userService.getAllUsers()).build();
-    } 
-    
-        
+    private final ApplyService applyService = new ApplyService();
+
     @POST
-    @Path("edit")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response editUser(@HeaderParam("Authorization") String token,String content) {
+    public Response deleteMedia(@HeaderParam("Authorization") String token,
+                                @PathParam("id") String idJob) {
         try {
             TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
-            String result = userService.editUser(content, thr.getUserId());
-            return Response.status(Response.Status.OK).entity(TokenHelper.concatJsonsToken(result, "user", thr.getNewToken())).build();
+            String result = applyService.applyToJob(idJob, thr.getUserId());
+            return Response.status(Response.Status.CREATED).entity(TokenHelper.concatJsonsToken(result, "apply", thr.getNewToken())).build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
         } catch (Throwable t) {
@@ -61,5 +48,5 @@ public class UserRoutes {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
         }
     }
-    
+
 }
