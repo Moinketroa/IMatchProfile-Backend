@@ -35,8 +35,10 @@ public class ApplicationConfig extends Application {
         resources.add(com.imatchprofile.routes.FileRoutes.class);
         resources.add(com.imatchprofile.routes.JobRoutes.class);
         resources.add(com.imatchprofile.routes.LoginRoutes.class);
+        resources.add(com.imatchprofile.routes.MasterRoutes.class);
         resources.add(com.imatchprofile.routes.MediaRoutes.class);
         resources.add(com.imatchprofile.routes.ModeratorRoutes.class);
+        resources.add(com.imatchprofile.routes.NeedRoutes.class);
         resources.add(com.imatchprofile.routes.RecruiterRoutes.class);
         resources.add(com.imatchprofile.routes.UserRoutes.class);
     }  
