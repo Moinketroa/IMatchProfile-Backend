@@ -63,7 +63,7 @@ public class JobRoutes {
     public Response getJob(@HeaderParam("Authorization") String token, @PathParam("id") String id){
         try {
             TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
-            String result = jobService.getJobById(id);
+            String result = jobService.getJobById(id, thr.getUserId());
             return Response.status(Response.Status.OK).entity(TokenHelper.concatJsonsToken(result, "job", thr.getNewToken())).build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();

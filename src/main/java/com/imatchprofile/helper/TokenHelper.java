@@ -30,7 +30,7 @@ public class TokenHelper {
                 Integer userId = null;
                 try {
                     userId = JWTHelper.decrypt(token);
-                } catch (IllegalArgumentException | UnsupportedEncodingException | JWTDecodeException ex) {
+                } catch (Throwable t) {
                     
                 }
                 
