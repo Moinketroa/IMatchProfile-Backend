@@ -12,6 +12,7 @@ import com.imatchprofile.service.ApplyService;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -33,10 +34,10 @@ public class ApplyRoutes {
     private final ApplyService applyService = new ApplyService();
 
     @POST
-    @Path("/{id}")
+    @Path("/{idJob}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteMedia(@HeaderParam("Authorization") String token,
-                                @PathParam("id") String idJob) {
+    public Response postApply(@HeaderParam("Authorization") String token,
+                                @PathParam("idJob") String idJob) {
         try {
             TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
             String result = applyService.applyToJob(idJob, thr.getUserId());
@@ -49,4 +50,21 @@ public class ApplyRoutes {
         }
     }
 
+    
+    @DELETE
+    @Path("/{idJob}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteApply(@HeaderParam("Authorization") String token,
+                                @PathParam("idJob") String idJob) {
+        try {
+            TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
+            applyService.removeApply(idJob, thr.getUserId());
+            return Response.status(Response.Status.OK).entity("{\"token\": \"" + thr.getNewToken() + "\"}").build();
+        } catch (IMPException ex) {
+            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
+        }
+    }
 }

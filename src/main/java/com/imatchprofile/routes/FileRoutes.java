@@ -45,10 +45,10 @@ public class FileRoutes {
     }
     
     @GET
-    @Path("upload/{filename}")
+    @Path("upload/{filename}/{token}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getUpload(  @PathParam("filename") String filename,
-                                @HeaderParam("Authorization") String token) {
+                                @PathParam("token") String token) {
         try {
             TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
             File file = FileHelper.fetchUploadedFile(filename);

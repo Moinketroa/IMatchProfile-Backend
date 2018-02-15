@@ -6,7 +6,6 @@
 package com.imatchprofile.dao;
 
 import com.imatchprofile.model.pojo.Applies;
-import com.imatchprofile.model.pojo.Media;
 import com.imatchprofile.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -25,6 +24,19 @@ public class AppliesDAO {
         transaction = session.beginTransaction();
         session.save(newApplies);
         session.getTransaction().commit();
+        session.close();
+    }
+    
+    public void delete(Applies apply) {
+        //ouverture session
+        Transaction transaction = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        transaction = session.beginTransaction();
+        
+        //suppression du media
+        session.remove(apply);
+        
+        transaction.commit();
         session.close();
     }
     
