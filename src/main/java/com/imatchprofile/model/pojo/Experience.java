@@ -82,18 +82,6 @@ public class Experience  implements java.io.Serializable {
         this.company = company;
     }
 
-    public String toJSON() {
-        JSONObject experienceJSON = new JSONObject();
-        experienceJSON.put("experience_id", experienceId);
-        experienceJSON.put("title", title);
-        experienceJSON.put("description", description);
-        experienceJSON.put("startDate", startDate);
-        experienceJSON.put("endDate", endDate);
-        experienceJSON.put("company", company);
-        
-        return experienceJSON.toString();
-    }
-
     public JSONObject toJSONObject() {
         JSONObject experienceJSON = new JSONObject();
         experienceJSON.put("experience_id", experienceId);

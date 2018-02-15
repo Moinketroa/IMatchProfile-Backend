@@ -183,26 +183,6 @@ public class Candidate  implements java.io.Serializable {
         return candidateJSON;
     }
     
-    public String profilJson(){
-        //StringBuilder sb = new StringBuilder(this.toJSON().toString());
-        //sb.append(",\n");
-        StringBuilder sb = new StringBuilder();
-        sb.append("[\n");
-        sb.append(this.toJSON().toString());
-        sb.append(",\n");
-        
-        for (Object obj : experiences) {
-            Experience experience = (Experience)obj;
-            sb.append(experience.toJSON());
-            sb.append(",\n");
-        }
-        for (Object obj : trainings) {
-            Training training = (Training)obj;
-            sb.append(training.toJSON());
-        }
-        sb.append("]\n");
-        return sb.toString();
-    }
     
     public JSONObject toJSONComplete() {
         JSONObject result = toJSON();
