@@ -29,7 +29,7 @@ import javax.ws.rs.core.Response;
 public class NeedRoutes {
 
     
-    private final NeedService skillService = new NeedService();
+    private final NeedService needService = new NeedService();
     
     
     @POST
@@ -38,7 +38,7 @@ public class NeedRoutes {
     public Response postneedadd(@HeaderParam("Authorization") String token,String content){
         try {
               TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
-              String result = skillService.addSkill(content,thr.getUserId());
+              String result = needService.addSkill(content,thr.getUserId());
             return Response.status(Response.Status.CREATED).entity(TokenHelper.concatJsonsToken(result, "skill", thr.getNewToken())).build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
@@ -49,14 +49,13 @@ public class NeedRoutes {
     
     @DELETE
     @Path("{job_id}/{skill_id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    
+    @Consumes(MediaType.APPLICATION_JSON)  
     @Produces(MediaType.APPLICATION_JSON)
     public Response postSkillDelete(@HeaderParam("Authorization") String token,@PathParam("job_id") String job_id,@PathParam("skill_id") String skill_id){
         try {
-              TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
-              String result = skillService.deleteSkill(job_id,skill_id,thr.getUserId());
-            return Response.status(Response.Status.CREATED).entity(TokenHelper.concatJsonsToken(result, "job", thr.getNewToken())).build();
+            TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
+            String result = needService.deleteSkill(job_id,skill_id,thr.getUserId());
+            return Response.status(Response.Status.OK).entity("{\"token\": \"" + thr.getNewToken() + "\"}").build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
         } catch (Throwable t) {

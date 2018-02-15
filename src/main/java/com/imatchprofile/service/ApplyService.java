@@ -69,4 +69,30 @@ public class ApplyService extends Service {
         return apply.toJSON().toString();
     }
     
+    public void removeApply(String idJob, Integer idUser) throws IMPException {
+        //verification parametre url
+        if(!isInteger(idJob) || idJob == null)
+            throw new IMPWrongURLParameterException();
+        
+        Integer idJobInteger = Integer.parseInt(idJob);
+        
+        //verification user
+        User user = this.userDAO.findById(idUser);
+        
+        if (user == null)
+            throw new IMPNotAUserException();
+        
+        //verification candidat
+        Candidate candidate = user.getCandidate();
+        
+        if (candidate == null)
+            throw new IMPNotACandidateException();
+        
+        for (Object _applyO : candidate.getApplieses()) {
+            Applies _apply = (Applies) _applyO;
+            
+            if (_apply.getJob().getJobId().equals(idJobInteger))
+                appliesDAO.delete(_apply);
+        }
+    }
 }

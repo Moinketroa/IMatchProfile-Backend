@@ -78,7 +78,7 @@ public class ExperienceService {
          
         Experience experience = new Experience(candidate,title,description,sDate,eDate,company);
         experienceDAO.addExperience(experience);
-        return experience.toJSON();
+        return experience.toJSONObject().toString();
     }
 
     public void deleteExperience(String experienceId, Integer userId)throws IMPException {
@@ -157,7 +157,7 @@ public class ExperienceService {
         meExperience.setEndDate(eDate);
         meExperience.setStartDate(sDate);
         experienceDAO.editExperience(meExperience);
-        return meExperience.toJSON();
+        return meExperience.toJSONObject().toString();
     }
         
       
