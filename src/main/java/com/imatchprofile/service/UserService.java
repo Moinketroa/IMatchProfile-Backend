@@ -167,7 +167,6 @@ public class UserService extends Service {
             if (userFoundByEmail.getUserId() != userId)
                 throw new IMPEmailAlreadyTakenException();
         }
-            
         //recuperation du user authentifié
         User userFound = userDAO.findById(userId);
         //verification si id trouvé
