@@ -141,42 +141,48 @@ public class UserService extends Service {
         }
     }
     
-    public String editBasicUser(String id, String content, Integer userId) throws IMPException {
-        //verification du parametre
-        if(!isInteger(id) || id == null)
-            throw new IMPWrongURLParameterException();
-        //analyse du payload
-        JSONObject payload = new JSONObject(content);
-        String lastname, firstname, email;
+    public String[] editUserVerif(JSONObject payload, Integer userId) throws IMPException {
+        JSONObject avatar = null;
+        String[] tabContent = new String[4];
         try {
-            lastname = payload.getString("lastname");
-            firstname = payload.getString("firstname");
-            email = payload.getString("email");
+            tabContent[0] = payload.getString("lastname");
+            tabContent[1] = payload.getString("firstname");
+            tabContent[2] = payload.getString("email");
         } catch (JSONException e) {
             throw new IMPPayloadException();
         }
+        
+        //recupération de photoUrl
+        try {
+            tabContent[3] = payload.getString("photoUrl");
+        } catch (JSONException e) {
+            tabContent[3] = null;
+        }
+        //recuperation de avatar
+        try {
+            avatar = payload.getJSONObject("avatar");
+        } catch (JSONException e) {
+            avatar = null;
+        }
+        
         //verification de l'existence des champs
-        if (oneOfIsNull(lastname, firstname, email))
+        if (oneOfIsNull(tabContent[0], tabContent[1], tabContent[2]))
             throw new IMPPayloadException();
+        
         //verification de l'email
-        if (!EmailValidator.getInstance().isValid(email))
+        if (!EmailValidator.getInstance().isValid(tabContent[2]))
             throw new IMPBadFormatException("email");
+
         //verification si email déjà présent
-        User userFoundByEmail = userDAO.findOneByEmail(email);
-        if (userFoundByEmail != null){
+        User userFoundByEmail = userDAO.findOneByEmail(tabContent[2]);
+        if (userFoundByEmail != null)
             if (userFoundByEmail.getUserId() != userId)
                 throw new IMPEmailAlreadyTakenException();
-        }
-        //recuperation du user authentifié
-        User userFound = userDAO.findById(userId);
-        //verification si id trouvé
-        if (userFound == null)
-            throw new IMPNotAUserException();
-        userFound.setLastname(lastname);
-        userFound.setFirstname(firstname);
-        userFound.setEmail(email);
-        userDAO.editUser(userFound);
-        return userFound.toJSON().toString();
+        
+        //recuperation et verification de l'url de l'avatar
+        tabContent[3] = decideAvatarUrl(tabContent[3], avatar);
+        
+        return tabContent;
     }
     
     public String editPwdUser(String id, String content, Integer userId) throws IMPException {

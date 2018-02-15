@@ -10,6 +10,7 @@ import com.imatchprofile.model.pojo.Role;
 import com.imatchprofile.model.pojo.User;
 import com.imatchprofile.util.HibernateUtil;
 import java.util.List;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -59,5 +60,30 @@ public class RecruiterDAO {
         List<Recruiter> res = session.createQuery(queryRecruiter).getResultList();
         //session.close();
         return res;
+    }
+    
+    public Recruiter findRecruiterById(int recruiterId) {
+        //ouverture session
+        Transaction transaction = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        transaction = session.beginTransaction();
+        Recruiter recruFound;
+        try {
+            recruFound = session.get(Recruiter.class, recruiterId);
+        } catch (NoResultException ex) {
+            recruFound = null;
+        }
+        transaction.commit();
+        //fermeture session
+        session.close();
+        return recruFound;
+    }
+    
+    public void editRecruiter(Recruiter editRecruiter){
+        Transaction transaction = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        transaction = session.beginTransaction();
+        session.merge(editRecruiter);
+        session.getTransaction().commit();
     }
 }

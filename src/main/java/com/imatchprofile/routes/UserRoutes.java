@@ -45,24 +45,6 @@ public class UserRoutes {
         return Response.status(Response.Status.OK).entity(userService.getAllUsers()).build();
     } 
     
-        
-    @PUT
-    @Path("{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response editBasicUser(@PathParam("id") String id, @HeaderParam("Authorization") String token, String content) {
-        try {
-            TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
-            String result = userService.editBasicUser(id, content, thr.getUserId());
-            return Response.status(Response.Status.OK).entity(TokenHelper.concatJsonsToken(result, "user", thr.getNewToken())).build();
-        } catch (IMPException ex) {
-            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
-        } catch (Throwable t) {
-            t.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
-        }
-    }
-    
     @PUT
     @Path("pwd/{id}")
     @Consumes(MediaType.APPLICATION_JSON)

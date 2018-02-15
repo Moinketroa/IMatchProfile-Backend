@@ -7,14 +7,21 @@ package com.imatchprofile.service;
 
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPInternalServerException;
+import com.imatchprofile.exceptions.IMPNotACandidateException;
 import com.imatchprofile.exceptions.IMPNotARecruiterException;
+import com.imatchprofile.exceptions.IMPPayloadException;
+import com.imatchprofile.exceptions.IMPWrongURLParameterException;
 import com.imatchprofile.helper.JWTHelper;
 import com.imatchprofile.helper.TokenHelper;
+import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.Recruiter;
 import com.imatchprofile.model.pojo.User;
+import static com.imatchprofile.service.Service.oneOfIsNull;
 import com.imatchprofile.util.HibernateUtil;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -59,5 +66,40 @@ public class RecruiterService extends UserService{
             throw new IMPNotARecruiterException();
         
         return meRecruiter.toJSONComplete().toString();
+    }
+    
+    public String editBasicRecruiter(String id, String content, Integer userId) throws IMPException {
+        //verification du parametre
+        if(!isInteger(id) || id == null)
+            throw new IMPWrongURLParameterException();
+        //analyse du payload
+        JSONObject payload = new JSONObject(content);
+        // verification info propre a un user
+        String[] tabContent = this.editUserVerif(payload,userId);
+        String description, company;
+        try {
+            description = payload.getString("description");
+            company = payload.getString("company");
+        } catch (JSONException e) {
+            throw new IMPPayloadException();
+        }
+        //verification de l'existence des champs
+        if (oneOfIsNull(description, company))
+            throw new IMPPayloadException();
+        //recuperation du user authentifié
+        Recruiter recruiterFound = recruiterDAO.findRecruiterById(userId);
+        System.out.println("XXXXXX === " + userId);
+        //verification si id trouvé
+        if (recruiterFound == null)
+            throw new IMPNotARecruiterException();
+        recruiterFound.getUser().setLastname(tabContent[0]);
+        recruiterFound.getUser().setFirstname(tabContent[1]);
+        recruiterFound.getUser().setEmail(tabContent[2]);
+        recruiterFound.getUser().setPhotoUrl(tabContent[3]);
+        recruiterFound.setDescription(description);
+        recruiterFound.setCompany(company);
+        userDAO.editUser(recruiterFound.getUser());
+        recruiterDAO.editRecruiter(recruiterFound);
+        return recruiterFound.toJSON().toString();
     }
 }

@@ -118,6 +118,12 @@ public class CandidateDAO {
         return candFound;
     }
     
-    
+    public void editCandidate(Candidate editCandidate){
+        Transaction transaction = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        transaction = session.beginTransaction();
+        session.merge(editCandidate);
+        session.getTransaction().commit();
+    }
    
 }

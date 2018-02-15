@@ -5,11 +5,13 @@
  */
 package com.imatchprofile.service;
 
+import com.imatchprofile.exceptions.IMPEmailAlreadyTakenException;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPInternalServerException;
 import com.imatchprofile.exceptions.IMPNoContentException;
 import com.imatchprofile.exceptions.IMPNotACandidateException;
 import com.imatchprofile.exceptions.IMPNotFoundEntityException;
+import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.exceptions.IMPWrongURLParameterException;
 import com.imatchprofile.helper.JWTHelper;
 import com.imatchprofile.helper.TokenHelper;
@@ -18,6 +20,8 @@ import com.imatchprofile.model.pojo.User;
 import static com.imatchprofile.service.Service.oneOfIsNull;
 import java.io.UnsupportedEncodingException;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -27,6 +31,10 @@ public class CandidateService extends UserService{
     
     public String signIn(String content) throws IMPException {
         String[] tabContent = this.signInToVerif(content);
+        //verification si email déjà présent
+        User userFoundByEmail = userDAO.findOneByEmail(tabContent[2]);
+        if (userFoundByEmail != null)
+                throw new IMPEmailAlreadyTakenException();
         
         //creation du User
         User userCandidate = new User(tabContent[0], tabContent[1], tabContent[2], tabContent[3]);
@@ -107,5 +115,45 @@ public class CandidateService extends UserService{
         }
        
         return listCandidates.toString();
+    }
+    
+    public String editBasicCandidate(String id, String content, Integer userId) throws IMPException {
+        //verification du parametre
+        if(!isInteger(id) || id == null)
+            throw new IMPWrongURLParameterException();
+        //analyse du payload
+        JSONObject payload = new JSONObject(content);
+        // verification info propre a un user
+        String[] tabContent = this.editUserVerif(payload,userId);
+        String title, description, company;
+        boolean visibility;
+        try {
+            title = payload.getString("title");
+            description = payload.getString("description");
+            company = payload.getString("company");
+            visibility = payload.getBoolean("visibility");
+        } catch (JSONException e) {
+            throw new IMPPayloadException();
+        }
+        //verification de l'existence des champs
+        if (oneOfIsNull(title, description, company, visibility))
+            throw new IMPPayloadException();
+        //recuperation du user authentifié
+        Candidate candidateFound = candidateDAO.findCandidateById(userId);
+        //verification si id trouvé
+        if (candidateFound == null)
+            throw new IMPNotACandidateException();
+        candidateFound.getUser().setLastname(tabContent[0]);
+        candidateFound.getUser().setFirstname(tabContent[1]);
+        candidateFound.getUser().setEmail(tabContent[2]);
+        candidateFound.getUser().setPhotoUrl(tabContent[3]);
+        candidateFound.setTitle(title);
+        candidateFound.setDescription(description);
+        candidateFound.setCompany(company);
+        byte tmpV = (byte) ((visibility)? 1 : 0);
+        candidateFound.setVisibility(tmpV);
+        userDAO.editUser(candidateFound.getUser());
+        candidateDAO.editCandidate(candidateFound);
+        return candidateFound.toJSON().toString();
     }
 }
