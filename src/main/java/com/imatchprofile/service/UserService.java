@@ -14,6 +14,9 @@ import com.imatchprofile.exceptions.IMPEmailAlreadyTakenException;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPNotAUserException;
 import com.imatchprofile.exceptions.IMPPayloadException;
+import com.imatchprofile.exceptions.IMPVerifWrongPassword;
+import com.imatchprofile.exceptions.IMPWrongPassword;
+import com.imatchprofile.exceptions.IMPWrongURLParameterException;
 import com.imatchprofile.helper.PasswordHelper;
 import com.imatchprofile.helper.FileHelper;
 import com.imatchprofile.model.pojo.User;
@@ -138,14 +141,14 @@ public class UserService extends Service {
         }
     }
     
-    public String editUser(String content, Integer userId) throws IMPException {
+    public String editBasicUser(String id, String content, Integer userId) throws IMPException {
+        //verification du parametre
+        if(!isInteger(id) || id == null)
+            throw new IMPWrongURLParameterException();
         //analyse du payload
         JSONObject payload = new JSONObject(content);
-        JSONObject avatar = null;
-        int user_id;
         String lastname, firstname, email;
         try {
-            user_id = payload.getInt("user_id");
             lastname = payload.getString("lastname");
             firstname = payload.getString("firstname");
             email = payload.getString("email");
@@ -153,15 +156,18 @@ public class UserService extends Service {
             throw new IMPPayloadException();
         }
         //verification de l'existence des champs
-        if (oneOfIsNull(user_id, lastname, firstname, email))
+        if (oneOfIsNull(lastname, firstname, email))
             throw new IMPPayloadException();
         //verification de l'email
         if (!EmailValidator.getInstance().isValid(email))
             throw new IMPBadFormatException("email");
         //verification si email déjà présent
         User userFoundByEmail = userDAO.findOneByEmail(email);
-        if (userFoundByEmail != null && userFoundByEmail.getUserId() != user_id)
-            throw new IMPEmailAlreadyTakenException();
+        if (userFoundByEmail != null){
+            if (userFoundByEmail.getUserId() != userId)
+                throw new IMPEmailAlreadyTakenException();
+        }
+            
         //recuperation du user authentifié
         User userFound = userDAO.findById(userId);
         //verification si id trouvé
@@ -170,6 +176,40 @@ public class UserService extends Service {
         userFound.setLastname(lastname);
         userFound.setFirstname(firstname);
         userFound.setEmail(email);
+        userDAO.editUser(userFound);
+        return userFound.toJSON().toString();
+    }
+    
+    public String editPwdUser(String id, String content, Integer userId) throws IMPException {
+        //verification du parametre
+        if(!isInteger(id) || id == null)
+            throw new IMPWrongURLParameterException();
+        //analyse du payload
+        JSONObject payload = new JSONObject(content);
+        String password, newPassword1, newPassword2;
+        try {
+            password = payload.getString("password");
+            newPassword1 = payload.getString("newPassword1");
+            newPassword2 = payload.getString("newPassword2");
+        } catch (JSONException e) {
+            throw new IMPPayloadException();
+        }
+        //verification de l'existence des champs
+        if (oneOfIsNull(password, newPassword1, newPassword2))
+            throw new IMPPayloadException();
+        //verification newPassword1 = newPassword2
+        if(!newPassword1.equals(newPassword2))
+            throw new IMPVerifWrongPassword();
+        //recuperation du user authentifié
+        User userFound = userDAO.findById(userId);
+        //verification si id trouvé
+        if (userFound == null)
+            throw new IMPNotAUserException();
+        //verification password
+        if (!(userFound.getPassword().equals(PasswordHelper.encryptPassword(password))))
+            throw new IMPWrongPassword();
+        
+        userFound.setPassword(PasswordHelper.encryptPassword(newPassword1));
         userDAO.editUser(userFound);
         return userFound.toJSON().toString();
     }
