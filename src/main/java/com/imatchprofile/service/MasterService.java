@@ -34,8 +34,7 @@ public class MasterService extends Service{
         JSONObject payload = new JSONObject(content);
   
         String skillname;
-           try {
-         
+        try {
             skillname = payload.getString("skill");
         } catch (JSONException e) {
             throw new IMPPayloadException();
@@ -49,7 +48,7 @@ public class MasterService extends Service{
         if (c == null)
             throw new IMPNotACandidateException();
         
-      Skill s = masterDao.AddSkillToCandidat(c.getCandidateId(), skillname);
+        Skill s = masterDao.AddSkillToCandidat(c.getCandidateId(), skillname);
         return s.toJSON().toString();
     }
     

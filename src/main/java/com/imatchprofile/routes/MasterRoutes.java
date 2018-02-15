@@ -53,7 +53,7 @@ public class MasterRoutes {
         try {
               TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
               String result = masterservice.deleteSkill(skill_id,thr.getUserId());
-            return Response.status(Response.Status.CREATED).entity(TokenHelper.concatJsonsToken(result, "candidate", thr.getNewToken())).build();
+            return Response.status(Response.Status.OK).entity("{\"token\": \"" + thr.getNewToken() + "\"}").build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
         } catch (Throwable t) {
