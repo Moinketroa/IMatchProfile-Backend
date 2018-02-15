@@ -8,62 +8,62 @@ package com.imatchprofile.routes;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.helper.TokenHelper;
 import com.imatchprofile.helper.TokenHelperResult;
-import com.imatchprofile.service.MasterService;
-import com.imatchprofile.service.NeedService;
-import javax.ws.rs.Produces;
+import com.imatchprofile.service.TrainingService;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * REST Web Service
  *
- * @author MasterChief
+ * @author AmraniDriss
  */
-@Path("needs")
-public class NeedRoutes {
-
+@Path("trainings")
+public class TrainingRoutes {
     
-    private final NeedService skillService = new NeedService();
-    
+        private final TrainingService trainingService = new TrainingService();
     
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response postneedadd(@HeaderParam("Authorization") String token,String content){
+    public Response postaddtraining(@HeaderParam("Authorization") String token,String content){
         try {
+             System.out.println("com.imatchprofile.routes.TrainingRoutes.postaddtraining()");
+            
               TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
-              String result = skillService.addSkill(content,thr.getUserId());
-            return Response.status(Response.Status.CREATED).entity(TokenHelper.concatJsonsToken(result, "skill", thr.getNewToken())).build();
+             
+              String result = trainingService.addTraining(content,thr.getUserId());
+            return Response.status(Response.Status.CREATED).entity(TokenHelper.concatJsonsToken(result, "training", thr.getNewToken())).build();
         } catch (IMPException ex) {
+              System.out.println("com.imatchprofile.routes.TrainingRoutes.postaddtraining()2");
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
         } catch (Throwable t) {
+             t.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
         }
     }
     
     @DELETE
-    @Path("{job_id}/{skill_id}")
+    @Path("{training_id}")
     @Consumes(MediaType.APPLICATION_JSON)
     
     @Produces(MediaType.APPLICATION_JSON)
-    public Response postSkillDelete(@HeaderParam("Authorization") String token,@PathParam("job_id") String job_id,@PathParam("skill_id") String skill_id){
+    public Response postFormationDelete(@HeaderParam("Authorization") String token,@PathParam("training_id") String training_id){
         try {
               TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
-              String result = skillService.deleteSkill(job_id,skill_id,thr.getUserId());
-            return Response.status(Response.Status.CREATED).entity(TokenHelper.concatJsonsToken(result, "job", thr.getNewToken())).build();
+              String result = trainingService.deleteTraining(thr.getUserId(),training_id);
+            return Response.status(Response.Status.CREATED).entity(TokenHelper.concatJsonsToken(result, "training", thr.getNewToken())).build();
         } catch (IMPException ex) {
+            
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
         } catch (Throwable t) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
         }
     }
     
-    
-  
 }

@@ -33,7 +33,7 @@ public class MasterRoutes {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response postSkillUpdate(@HeaderParam("Authorization") String token,String content){
+    public Response postSkillAdd(@HeaderParam("Authorization") String token,String content){
         try {
               TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
               String result = masterservice.addSkill(content,thr.getUserId());
