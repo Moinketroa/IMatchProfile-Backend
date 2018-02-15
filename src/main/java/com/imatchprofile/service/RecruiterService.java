@@ -9,6 +9,7 @@ import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPInternalServerException;
 import com.imatchprofile.exceptions.IMPNotACandidateException;
 import com.imatchprofile.exceptions.IMPNotARecruiterException;
+import com.imatchprofile.exceptions.IMPNotAUserException;
 import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.exceptions.IMPWrongURLParameterException;
 import com.imatchprofile.helper.JWTHelper;
@@ -68,10 +69,7 @@ public class RecruiterService extends UserService{
         return meRecruiter.toJSONComplete().toString();
     }
     
-    public String editBasicRecruiter(String id, String content, Integer userId) throws IMPException {
-        //verification du parametre
-        if(!isInteger(id) || id == null)
-            throw new IMPWrongURLParameterException();
+    public String editBasicRecruiter(String content, Integer userId) throws IMPException {
         //analyse du payload
         JSONObject payload = new JSONObject(content);
         // verification info propre a un user
@@ -87,18 +85,24 @@ public class RecruiterService extends UserService{
         if (oneOfIsNull(description, company))
             throw new IMPPayloadException();
         //recuperation du user authentifié
-        Recruiter recruiterFound = recruiterDAO.findRecruiterById(userId);
-        System.out.println("XXXXXX === " + userId);
-        //verification si id trouvé
+        User user = userDAO.findById(userId);
+        if (user == null)
+            throw new IMPNotAUserException();
+        
+        //verification si recruteur
+        Recruiter recruiterFound = user.getRecruiter();
         if (recruiterFound == null)
             throw new IMPNotARecruiterException();
-        recruiterFound.getUser().setLastname(tabContent[0]);
-        recruiterFound.getUser().setFirstname(tabContent[1]);
-        recruiterFound.getUser().setEmail(tabContent[2]);
-        recruiterFound.getUser().setPhotoUrl(tabContent[3]);
+        
+        //modification champs
+        user.setLastname(tabContent[0]);
+        user.setFirstname(tabContent[1]);
+        user.setEmail(tabContent[2]);
+        user.setPhotoUrl(tabContent[3]);
         recruiterFound.setDescription(description);
         recruiterFound.setCompany(company);
-        userDAO.editUser(recruiterFound.getUser());
+        
+        userDAO.editUser(user);
         recruiterDAO.editRecruiter(recruiterFound);
         return recruiterFound.toJSON().toString();
     }

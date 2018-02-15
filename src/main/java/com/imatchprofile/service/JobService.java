@@ -71,14 +71,17 @@ public class JobService extends Service {
         //analyse du payload
         JSONObject payload = new JSONObject(content);
         String title, description;
+        boolean visibility;
+        
         try {
             title = payload.getString("title");
             description = payload.getString("description");
+            visibility = payload.getBoolean("visibility");
         } catch (JSONException e) {
             throw new IMPPayloadException();
         }
         //verification de l'existence des champs
-        if (oneOfIsNull(title, description)) {
+        if (oneOfIsNull(title, description, visibility)) {
             throw new IMPPayloadException();
         }
         //recuperation du user authentifié
@@ -97,6 +100,8 @@ public class JobService extends Service {
             if(_job.getJobId() == Integer.parseInt(id)){
                 _job.setTitle(title);
                 _job.setDescription(description);
+                byte tmpV = (byte) ((visibility)? 1 : 0);
+                _job.setVisibility(tmpV);
                 job = _job;
             }
         }

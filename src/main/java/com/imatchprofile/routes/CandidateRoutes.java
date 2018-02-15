@@ -120,13 +120,12 @@ public class CandidateRoutes {
     }
     
     @PUT
-    @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response editBasicCandidate(@PathParam("id") String id, @HeaderParam("Authorization") String token, String content) {
+    public Response editBasicCandidate(@HeaderParam("Authorization") String token, String content) {
         try {
             TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
-            String result = candidateService.editBasicCandidate(id, content, thr.getUserId());
+            String result = candidateService.editBasicCandidate(content, thr.getUserId());
             return Response.status(Response.Status.OK).entity(TokenHelper.concatJsonsToken(result, "candidate", thr.getNewToken())).build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();

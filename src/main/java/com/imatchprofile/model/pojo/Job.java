@@ -130,6 +130,7 @@ public class Job  implements java.io.Serializable {
         result.put("recruiter_id", this.recruiter.getRecruiterId());
         result.put("title", this.title);
         result.put("description", this.description);
+        result.put("visibility", this.visibility != 0);
         result.put("create_date", DateHelper.getPrettyDate(createDate));
         
         return result;

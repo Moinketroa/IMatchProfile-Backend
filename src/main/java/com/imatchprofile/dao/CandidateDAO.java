@@ -124,6 +124,7 @@ public class CandidateDAO {
         transaction = session.beginTransaction();
         session.merge(editCandidate);
         session.getTransaction().commit();
+        session.close();
     }
    
 }

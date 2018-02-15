@@ -10,6 +10,7 @@ import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPInternalServerException;
 import com.imatchprofile.exceptions.IMPNoContentException;
 import com.imatchprofile.exceptions.IMPNotACandidateException;
+import com.imatchprofile.exceptions.IMPNotAUserException;
 import com.imatchprofile.exceptions.IMPNotFoundEntityException;
 import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.exceptions.IMPWrongURLParameterException;
@@ -117,10 +118,7 @@ public class CandidateService extends UserService{
         return listCandidates.toString();
     }
     
-    public String editBasicCandidate(String id, String content, Integer userId) throws IMPException {
-        //verification du parametre
-        if(!isInteger(id) || id == null)
-            throw new IMPWrongURLParameterException();
+    public String editBasicCandidate(String content, Integer userId) throws IMPException {
         //analyse du payload
         JSONObject payload = new JSONObject(content);
         // verification info propre a un user
@@ -138,22 +136,32 @@ public class CandidateService extends UserService{
         //verification de l'existence des champs
         if (oneOfIsNull(title, description, company, visibility))
             throw new IMPPayloadException();
+        
         //recuperation du user authentifié
-        Candidate candidateFound = candidateDAO.findCandidateById(userId);
-        //verification si id trouvé
+        User user = userDAO.findById(userId);
+        if (user == null)
+            throw new IMPNotAUserException();
+        
+        //verification si candidat
+        Candidate candidateFound = user.getCandidate();
         if (candidateFound == null)
             throw new IMPNotACandidateException();
-        candidateFound.getUser().setLastname(tabContent[0]);
-        candidateFound.getUser().setFirstname(tabContent[1]);
-        candidateFound.getUser().setEmail(tabContent[2]);
-        candidateFound.getUser().setPhotoUrl(tabContent[3]);
+        
+        user.setLastname(tabContent[0]);
+        user.setFirstname(tabContent[1]);
+        user.setEmail(tabContent[2]);
+        user.setPhotoUrl(tabContent[3]);
+        
         candidateFound.setTitle(title);
         candidateFound.setDescription(description);
         candidateFound.setCompany(company);
+        
         byte tmpV = (byte) ((visibility)? 1 : 0);
         candidateFound.setVisibility(tmpV);
-        userDAO.editUser(candidateFound.getUser());
+        
+        userDAO.editUser(user);
         candidateDAO.editCandidate(candidateFound);
+        
         return candidateFound.toJSON().toString();
     }
 }

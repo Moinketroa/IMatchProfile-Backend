@@ -85,5 +85,6 @@ public class RecruiterDAO {
         transaction = session.beginTransaction();
         session.merge(editRecruiter);
         session.getTransaction().commit();
+        session.close();
     }
 }
