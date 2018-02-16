@@ -59,7 +59,7 @@ public class TraningDao {
           Session session = HibernateUtil.getSessionFactory().openSession();
              Transaction t = session.beginTransaction();
              Training training = Search(c.getCandidateId(), s.getTrainingId());
-            if( t!=null){
+            if( training!=null){
                 
              session.delete(s);
            
@@ -69,4 +69,30 @@ public class TraningDao {
             }
             return null;
      }
+       public Training editTraining(Candidate c,Training s){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+             Transaction t = session.beginTransaction();
+           
+             session.merge(s);
+           
+             t.commit();
+         
+            return s;
+    }
+        public Training findById(Integer id) {
+        //ouverture session
+        Transaction transaction = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        transaction = session.beginTransaction();
+        Training trainingFound;
+        try {
+            trainingFound = session.get(Training.class, id);
+        } catch (NoResultException ex) {
+            trainingFound = null;
+        }
+        transaction.commit();
+        //fermeture session
+        session.close();
+        return trainingFound;
+    }
 }
