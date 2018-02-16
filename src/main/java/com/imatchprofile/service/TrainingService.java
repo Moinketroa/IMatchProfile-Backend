@@ -40,8 +40,7 @@ public class TrainingService extends Service{
           String start_date;
           String end_date;
          
-         
-           try {
+          try {
             title = payload.getString("title");
             description = payload.getString("description");
             institute = payload.getString("institute");

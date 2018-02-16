@@ -5,20 +5,14 @@
  */
 package com.imatchprofile.service;
 
-import com.imatchprofile.dao.CandidateDAO;
 import com.imatchprofile.dao.JobDAO;
-import com.imatchprofile.dao.MastersDao;
 import com.imatchprofile.dao.NeedDao;
-import com.imatchprofile.dao.RecruiterDAO;
 import com.imatchprofile.dao.UserDAO;
 import com.imatchprofile.exceptions.IMPException;
-import com.imatchprofile.exceptions.IMPNotACandidateException;
 import com.imatchprofile.exceptions.IMPNotARecruiterException;
 import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.exceptions.IMPWrongURLParameterException;
-import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.Job;
-import com.imatchprofile.model.pojo.Masters;
 import com.imatchprofile.model.pojo.Needs;
 import com.imatchprofile.model.pojo.Recruiter;
 import com.imatchprofile.model.pojo.Skill;
@@ -55,7 +49,8 @@ public class NeedService extends Service{
         Recruiter recruiter = user.getRecruiter();
         if (recruiter == null)
             throw new IMPNotARecruiterException();
-        
+         Job job =jobDao.Search(recruiter.getRecruiterId(),job_id);
+        if(job==null) throw  new IMPException();
       Skill s = needDao.AddSkillToJob(c.getJobId(), skillname);
         return s.toJSON().toString();
     }
@@ -78,7 +73,9 @@ public class NeedService extends Service{
         if (recruiter == null)
             throw new IMPNotARecruiterException();
          Needs m= needDao.Search(job_idint, skill_idint);
-       if(m==null)  throw new IMPException();
+        Job job =jobDao.Search(recruiter.getRecruiterId(),job_idint);
+        
+       if(m==null || job==null)  throw new IMPException();
       Job co = needDao.deleteSkill(skill_idint,c.getJobId());
         return co.toJson().toString();
     }

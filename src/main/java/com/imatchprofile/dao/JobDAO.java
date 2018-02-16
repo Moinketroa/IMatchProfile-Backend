@@ -8,9 +8,11 @@ package com.imatchprofile.dao;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPNoContentException;
 import com.imatchprofile.model.pojo.Job;
+import com.imatchprofile.model.pojo.Needs;
 import com.imatchprofile.util.HibernateUtil;
 import java.util.List;
 import java.util.Vector;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
@@ -115,5 +117,25 @@ public class JobDAO {
         session.close();
         return res1;
   }
+    
+     public Job Search(int recruiter_id,int job_id){
+          Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction t =null;
+        Job n=null;
+        try {
+         CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Job> query = session.getCriteriaBuilder().createQuery(Job.class);
+        Root<Job> root = query.from(Job.class);
+        query.select(root).where(cb.equal(root.<Integer>get("jobId"),job_id),
+               cb.equal(root.<Integer>get("recruiter").get("recruiterId"),recruiter_id) ) ;
+        n=session.createQuery(query).getSingleResult();
+        session.clear();
+        } catch (NoResultException ex) {
+            
+          n=null;
+        }
+        
+        return n;
+    }
     
 }
