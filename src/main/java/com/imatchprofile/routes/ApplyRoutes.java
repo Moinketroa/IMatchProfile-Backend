@@ -67,4 +67,22 @@ public class ApplyRoutes {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
         }
     }
+    
+    @GET
+    @Path("/candidate/{idJob}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getApplyCandidate(@HeaderParam("Authorization") String token,
+                                @PathParam("idJob") String idJob) {
+        try {
+            TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
+            String result = applyService.getApplyCandidate(idJob, thr.getUserId());
+              
+            return Response.status(Response.Status.OK).entity(TokenHelper.concatJsonsToken(result, "apply", thr.getNewToken())).build();
+        } catch (IMPException ex) {
+            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
+        }
+    }
 }

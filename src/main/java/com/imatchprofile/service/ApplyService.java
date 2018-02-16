@@ -11,13 +11,17 @@ import com.imatchprofile.dao.UserDAO;
 import com.imatchprofile.exceptions.IMPActionAlreadyDoneException;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPNotACandidateException;
+import com.imatchprofile.exceptions.IMPNotARecruiterException;
 import com.imatchprofile.exceptions.IMPNotAUserException;
 import com.imatchprofile.exceptions.IMPNotFoundEntityException;
 import com.imatchprofile.exceptions.IMPWrongURLParameterException;
 import com.imatchprofile.model.pojo.Applies;
 import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.model.pojo.Job;
+import com.imatchprofile.model.pojo.Recruiter;
 import com.imatchprofile.model.pojo.User;
+import java.util.List;
+import org.json.JSONArray;
 
 /**
  *
@@ -94,5 +98,33 @@ public class ApplyService extends Service {
             if (_apply.getJob().getJobId().equals(idJobInteger))
                 appliesDAO.delete(_apply);
         }
+    }
+
+    public String getApplyCandidate(String idJob, Integer userId) throws IMPException{
+        if(!isInteger(idJob) || idJob == null)
+            throw new IMPWrongURLParameterException();
+        
+        Integer idJobInteger = Integer.parseInt(idJob);
+        
+        //verification user
+        User user = this.userDAO.findById(userId);
+        
+        if (user == null)
+            throw new IMPNotAUserException();
+        
+        //verification candidat
+       Recruiter recruiter = user.getRecruiter();
+        
+        if (recruiter == null)
+            throw new IMPNotARecruiterException();
+        
+       JSONArray listCandidates = new JSONArray();
+        
+        for (Candidate c : this.appliesDAO.getCandidateByJobs(idJob)) {
+            if (c.getVisibility() != 0)
+                listCandidates.put(c.visiteurJsonObject());
+        }
+        
+        return listCandidates.toString();
     }
 }
