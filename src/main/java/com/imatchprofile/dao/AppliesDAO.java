@@ -5,6 +5,8 @@
  */
 package com.imatchprofile.dao;
 
+import com.imatchprofile.exceptions.IMPException;
+import com.imatchprofile.exceptions.IMPNoContentException;
 import com.imatchprofile.model.pojo.Applies;
 import com.imatchprofile.model.pojo.Candidate;
 import com.imatchprofile.util.HibernateUtil;
@@ -23,7 +25,7 @@ import org.hibernate.Transaction;
  */
 public class AppliesDAO {
     
-    public List<Candidate> getCandidateByJobs(String jobId){
+    public List<Candidate> getCandidateByJobs(String jobId,int pageNumber, int entitiesPerPage)throws IMPException{
         Session session = HibernateUtil.getSessionFactory().openSession();
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<Candidate> query = session.getCriteriaBuilder().createQuery(Candidate.class);
@@ -32,7 +34,18 @@ public class AppliesDAO {
         query.select(root.<Candidate>get("candidate"));
         query.where(cb.and(cb.equal(root.<Integer>get("job").get("jobId"), literal), cb.notEqual(root.get("candidate").get("visibility"), 0)));
         List<Candidate> res = session.createQuery(query).getResultList();
-        return res;
+         List<Candidate> res1 = new Vector<>();
+       
+        if ((pageNumber*entitiesPerPage)-entitiesPerPage > res.size())
+            throw new IMPNoContentException();
+        
+        for(int i=(pageNumber*entitiesPerPage)-entitiesPerPage;i<(pageNumber*entitiesPerPage) ;i++){
+            if (i < res.size())
+                res1.add(res.get(i));
+        }
+        
+        session.close();
+        return res1;
        
         
     }

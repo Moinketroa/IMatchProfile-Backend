@@ -10,6 +10,7 @@ import com.imatchprofile.dao.JobDAO;
 import com.imatchprofile.dao.UserDAO;
 import com.imatchprofile.exceptions.IMPActionAlreadyDoneException;
 import com.imatchprofile.exceptions.IMPException;
+import com.imatchprofile.exceptions.IMPNoContentException;
 import com.imatchprofile.exceptions.IMPNotACandidateException;
 import com.imatchprofile.exceptions.IMPNotARecruiterException;
 import com.imatchprofile.exceptions.IMPNotAUserException;
@@ -100,9 +101,18 @@ public class ApplyService extends Service {
         }
     }
 
-    public String getApplyCandidate(String idJob, Integer userId) throws IMPException{
+    public String getApplyCandidate(String idJob, String pagenumber, String entitieperpages,Integer userId) throws IMPException{
         if(!isInteger(idJob) || idJob == null)
             throw new IMPWrongURLParameterException();
+        
+        if(!isInteger(pagenumber) || pagenumber == null || !isInteger(entitieperpages) || entitieperpages == null){
+            throw new IMPWrongURLParameterException();
+        }
+        
+        int pgNum = Integer.parseInt(pagenumber), entPerPg = Integer.parseInt(entitieperpages);
+        
+        if (pgNum == 0 || entPerPg == 0)
+            throw new IMPNoContentException();
         
         Integer idJobInteger = Integer.parseInt(idJob);
         
@@ -120,7 +130,7 @@ public class ApplyService extends Service {
         
        JSONArray listCandidates = new JSONArray();
         
-        for (Candidate c : this.appliesDAO.getCandidateByJobs(idJob)) {
+        for (Candidate c : this.appliesDAO.getCandidateByJobs(idJob,pgNum, entPerPg)) {
             if (c.getVisibility() != 0)
                 listCandidates.put(c.visiteurJsonObject());
         }

@@ -69,13 +69,15 @@ public class ApplyRoutes {
     }
     
     @GET
-    @Path("/candidate/{idJob}")
+    @Path("/candidate/{pagenumber}/{entitiesperpage}/{idJob}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getApplyCandidate(@HeaderParam("Authorization") String token,
+                                @PathParam("pagenumber") String pagenumber,
+                                @PathParam("entitiesperpage") String entitiesPerPage,
                                 @PathParam("idJob") String idJob) {
         try {
             TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
-            String result = applyService.getApplyCandidate(idJob, thr.getUserId());
+            String result = applyService.getApplyCandidate(idJob,pagenumber,entitiesPerPage, thr.getUserId());
               
             return Response.status(Response.Status.OK).entity(TokenHelper.concatJsonsToken(result, "apply", thr.getNewToken())).build();
         } catch (IMPException ex) {
