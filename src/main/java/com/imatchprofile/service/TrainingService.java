@@ -40,8 +40,7 @@ public class TrainingService extends Service{
           String start_date;
           String end_date;
          
-         
-           try {
+          try {
             title = payload.getString("title");
             description = payload.getString("description");
             institute = payload.getString("institute");
@@ -72,7 +71,7 @@ public class TrainingService extends Service{
         training.setEndDate(endDate1);
         training.setInstitute(institute);
       Training  s = trainingDAO.AddTraining(candidate, training);
-        return s.toJSON();
+        return s.toJSONObject().toString();
     }
      
      public String deleteTraining(int user_id,String training_id) throws IMPException{
@@ -92,7 +91,65 @@ public class TrainingService extends Service{
         }
         else throw new IMPException();
         
-        return training.toJSON();
+        return training.toJSONObject().toString();
+     }
+     public String updateTraining(int user_id,String content,String training_id) throws IMPPayloadException, IMPNotACandidateException, IMPException{
+          JSONObject payload = new JSONObject(content);
+          String title;
+          String description;
+          String institute;
+          String start_date;
+          String end_date;
+         
+          try {
+            title = payload.getString("title");
+            description = payload.getString("description");
+            institute = payload.getString("institute");
+            start_date = payload.getString("start_date");
+            end_date = payload.getString("end_date");
+        } catch (JSONException e) {
+            
+            throw new IMPPayloadException();
+        }
+       
+        if (oneOfIsNull(title,institute,start_date,end_date,description))
+            throw new IMPPayloadException();
+       
+        int training_idint;
+         
+         if(!isInteger(training_id ) || training_id==null)
+            throw new IMPWrongURLParameterException();
+         
+         training_idint=Integer.parseInt(training_id);
+        
+        User user = userDAO.findById(user_id);
+        Candidate candidate = user.getCandidate();
+        if (candidate == null)
+            throw new IMPNotACandidateException();
+        
+       Date startDate1=  DateHelper.converStringToDate(start_date);
+       Date endDate1=  DateHelper.converStringToDate(end_date);
+        if(startDate1==null || endDate1==null)
+            throw new IMPException();
+        Training training = trainingDAO.findById(training_idint);
+        if(training==null) throw new IMPException();
+        training.setDescription(description);
+        training.setStartDate(startDate1);
+        training.setCandidate(candidate);
+        training.setTitle(title);
+        training.setEndDate(endDate1);
+        training.setInstitute(institute);
+       
+        Training t = trainingDAO.Search(candidate.getCandidateId(),training_idint);
+         if(t!=null){
+         training=  trainingDAO.editTraining(candidate, training);
+        
+         } else{
+             throw new IMPException();
+         }
+        
+        return training.toJSONObject().toString();
+      
      }
     
 }

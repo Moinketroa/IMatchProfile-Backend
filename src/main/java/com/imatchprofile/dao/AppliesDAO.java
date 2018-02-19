@@ -32,7 +32,6 @@ public class AppliesDAO {
         query.select(root.<Candidate>get("candidate"));
         query.where(cb.and(cb.equal(root.<Integer>get("job").get("jobId"), literal), cb.notEqual(root.get("candidate").get("visibility"), 0)));
         List<Candidate> res = session.createQuery(query).getResultList();
-         
         return res;
        
         

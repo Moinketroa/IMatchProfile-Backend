@@ -9,9 +9,12 @@ import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.helper.TokenHelper;
 import com.imatchprofile.helper.TokenHelperResult;
 import com.imatchprofile.service.MasterService;
+import com.imatchprofile.service.MatchingService;
+import com.imatchprofile.service.NeedService;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -24,36 +27,36 @@ import javax.ws.rs.core.Response;
  *
  * @author AmraniDriss
  */
-@Path("masters")
-public class MasterRoutes {
+@Path("matching")
+public class MatchingRoutes {
 
     
-    private final MasterService masterservice = new MasterService();
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    private final MatchingService matchingService = new MatchingService();
+    
+    
+    @GET
+    
+    @Path("/{job_id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response postSkillAdd(@HeaderParam("Authorization") String token,String content){
+    public Response matchingetcandidate(@HeaderParam("Authorization") String token,@PathParam("job_id") String job_id){
         try {
-              TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
-              String result = masterservice.addSkill(content,thr.getUserId());
-            return Response.status(Response.Status.CREATED).entity(TokenHelper.concatJsonsToken(result, "skill", thr.getNewToken())).build();
+            TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
+            String result = matchingService.matchingcandidatejob(job_id, thr.getUserId());
+            return Response.status(Response.Status.OK).entity(result).build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
         } catch (Throwable t) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
         }
     }
+      @GET
     
-    @DELETE
-    @Path("{skill_id}")
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response postSkillDelete(@HeaderParam("Authorization") String token,@PathParam("skill_id") String skill_id){
+    public Response matchingetcandidate(@HeaderParam("Authorization") String token){
         try {
-              TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
-              String result = masterservice.deleteSkill(skill_id,thr.getUserId());
-            return Response.status(Response.Status.OK).entity("{\"token\": \"" + thr.getNewToken() + "\"}").build();
+            TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
+            String result = matchingService.matchingjobcandidate(thr.getUserId());
+            return Response.status(Response.Status.OK).entity(result).build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
         } catch (Throwable t) {
