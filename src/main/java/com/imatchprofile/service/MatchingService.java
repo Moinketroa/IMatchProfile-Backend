@@ -12,6 +12,7 @@ import com.imatchprofile.dao.MatchingDao;
 import com.imatchprofile.dao.UserDAO;
 import com.imatchprofile.exceptions.IMPException;
 import com.imatchprofile.exceptions.IMPNotACandidateException;
+import com.imatchprofile.exceptions.IMPNotARecruiterException;
 import com.imatchprofile.exceptions.IMPNotAUserException;
 import com.imatchprofile.exceptions.IMPPayloadException;
 import com.imatchprofile.exceptions.IMPWrongURLParameterException;
@@ -50,7 +51,7 @@ import org.json.JSONObject;
         Recruiter r = u.getRecruiter();
          
         if (r == null)
-            throw new IMPNotACandidateException();
+            throw new IMPNotARecruiterException();
         
        Job j =jobDao.findOneById(job_idint);
        if(j==null)  throw new IMPException();
@@ -63,5 +64,27 @@ import org.json.JSONObject;
         }
         
         return listcandidat.toString();
+    }
+     
+      public String matchingjobcandidate(int user_id) throws IMPException{
+       
+      
+         
+         
+         User u = userDao.findById(user_id);
+        Candidate c = u.getCandidate();
+         
+        if (c == null)
+            throw new IMPNotACandidateException();
+        
+       
+        List<Job> co = matchingDao.MatchingJobCandidat(c.getCandidateId());
+       JSONArray listjob=new JSONArray();
+          for(Job j : co){
+            if (j.getVisibility() != 0)
+                listjob.put(j.toJson());
+        }
+        
+        return listjob.toString();
     }
 }

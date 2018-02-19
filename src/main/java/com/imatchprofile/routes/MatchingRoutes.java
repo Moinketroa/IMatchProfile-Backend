@@ -35,12 +35,27 @@ public class MatchingRoutes {
     
     
     @GET
-    @Path("{job_id}")
+    
+    @Path("/{job_id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response matchingetcandidate(@HeaderParam("Authorization") String token,@PathParam("job_id") String job_id){
         try {
             TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
             String result = matchingService.matchingcandidatejob(job_id, thr.getUserId());
+            return Response.status(Response.Status.OK).entity(result).build();
+        } catch (IMPException ex) {
+            return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
+        } catch (Throwable t) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\": \"" + t.getMessage() + "\"}").build();
+        }
+    }
+      @GET
+    
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response matchingetcandidate(@HeaderParam("Authorization") String token){
+        try {
+            TokenHelperResult thr = TokenHelper.verifyNeededAndRefresh(token);
+            String result = matchingService.matchingjobcandidate(thr.getUserId());
             return Response.status(Response.Status.OK).entity(result).build();
         } catch (IMPException ex) {
             return Response.status(ex.getStatus()).entity("{\"error\": \"" + ex.getErrorMessage() + "\"}").build();
