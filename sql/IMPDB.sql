@@ -53,7 +53,7 @@ DROP TABLE IF EXISTS `candidate`;
 CREATE TABLE `candidate` (
   `candidate_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(45) NOT NULL,
-  `description` varchar(300) NOT NULL,
+  `description` varchar(800) NOT NULL,
   `company` varchar(45) NOT NULL,
   `visibility` tinyint(4) NOT NULL DEFAULT '1',
   `user_id` int(10) unsigned NOT NULL,
@@ -141,7 +141,7 @@ CREATE TABLE `experience` (
   `experience_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `candidate_id` int(10) unsigned NOT NULL,
   `title` varchar(45) NOT NULL,
-  `description` varchar(300) NOT NULL,
+  `description` varchar(800) NOT NULL,
   `start_date` datetime NOT NULL,
   `end_date` datetime NOT NULL,
   `company` varchar(45) NOT NULL,
@@ -172,7 +172,7 @@ CREATE TABLE `job` (
   `job_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `recruiter_id` int(10) unsigned NOT NULL,
   `title` varchar(45) NOT NULL,
-  `description` varchar(300) NOT NULL,
+  `description` varchar(800) NOT NULL,
   `visibility` tinyint(4) NOT NULL DEFAULT '1',
   `create_date` datetime NOT NULL,
   PRIMARY KEY (`job_id`),
@@ -286,7 +286,7 @@ DROP TABLE IF EXISTS `media`;
 CREATE TABLE `media` (
   `media_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `candidate_id` int(10) unsigned NOT NULL,
-  `path` varchar(300) NOT NULL,
+  `path` varchar(800) NOT NULL,
   PRIMARY KEY (`media_id`),
   KEY `fk_media_candidate_idx` (`candidate_id`),
   CONSTRAINT `fk_media_candidate` FOREIGN KEY (`candidate_id`) REFERENCES `candidate` (`candidate_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -313,7 +313,7 @@ CREATE TABLE `message` (
   `message_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `chatroom_id` int(10) unsigned NOT NULL,
   `sent_by_recruiter` tinyint(4) NOT NULL,
-  `content` varchar(300) NOT NULL,
+  `content` varchar(800) NOT NULL,
   `sending_date` datetime NOT NULL,
   PRIMARY KEY (`message_id`),
   KEY `fk_message_chatroom_idx` (`chatroom_id`),
@@ -394,7 +394,7 @@ DROP TABLE IF EXISTS `recruiter`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `recruiter` (
   `recruiter_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `description` varchar(300) NOT NULL,
+  `description` varchar(800) NOT NULL,
   `company` varchar(45) NOT NULL,
   `user_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`recruiter_id`),
@@ -448,7 +448,7 @@ CREATE TABLE `training` (
   `training_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `candidate_id` int(10) unsigned NOT NULL,
   `title` varchar(45) NOT NULL,
-  `description` varchar(300) NOT NULL,
+  `description` varchar(800) NOT NULL,
   `start_date` datetime NOT NULL,
   `end_date` datetime NOT NULL,
   `institute` varchar(45) NOT NULL,
