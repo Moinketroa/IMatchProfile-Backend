@@ -178,7 +178,8 @@ public class Job  implements java.io.Serializable {
         JSONObject result = new JSONObject();
         
         result.put("jod_id", this.jobId);
-        result.put("recruiter_id", this.recruiter.getRecruiterId());
+        result.put("recruiter", this.recruiter.toJSON());
+        result.put("company", this.recruiter.getCompany());
         result.put("title", this.title);
         result.put("description", this.description);
         
