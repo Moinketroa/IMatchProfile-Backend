@@ -5,6 +5,7 @@ import com.imatchprofile.helper.DateHelper;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -136,6 +137,7 @@ public class Job  implements java.io.Serializable {
         return result;
     }
     
+    
     public JSONObject toJsonJob(){
         JSONObject result = new JSONObject();
         
@@ -144,6 +146,7 @@ public class Job  implements java.io.Serializable {
         result.put("recuiter", recruiter.toJSON());
         result.put("title", this.title);
         result.put("description", this.description);
+         result.put("visibility", this.visibility != 0);
         result.put("create_date", DateHelper.getPrettyDate(createDate));
         
         return result;
@@ -153,6 +156,7 @@ public class Job  implements java.io.Serializable {
         JSONObject result = new JSONObject();
         result.put("jod_id", this.jobId);
         result.put("company", this.recruiter.getCompany());
+         result.put("visibility", this.visibility != 0);
         result.put("title", this.title);
         result.put("create_date", DateHelper.getPrettyDate(createDate));
         
@@ -163,11 +167,35 @@ public class Job  implements java.io.Serializable {
         JSONObject result = new JSONObject();
         result.put("jod_id", this.jobId);
         result.put("company", this.recruiter.getCompany());
+         result.put("visibility", this.visibility != 0);
         result.put("title", this.title);
         result.put("create_date", DateHelper.getPrettyDate(createDate));
         
         return result;
     }
+    
+       public JSONObject toJsonALL() {
+        JSONObject result = new JSONObject();
+        
+        result.put("jod_id", this.jobId);
+        result.put("recruiter_id", this.recruiter.getRecruiterId());
+        result.put("title", this.title);
+        result.put("description", this.description);
+        
+          JSONArray needsArray = new JSONArray();
+        for (Object o : needses) {
+            Needs m = (Needs) o;
+            needsArray.put(m.getSkill().toJSON());
+        }
+        result.put("needs", needsArray);
+        result.put("visibility", this.visibility != 0);
+        result.put("create_date", DateHelper.getPrettyDate(createDate));
+        
+        return result;
+    }
+    
+    
+    
     
      @Override
     public String toString() {

@@ -144,7 +144,7 @@ public class JobService extends Service {
         if (job == null)
             throw new IMPNotFoundEntityException("job");
         
-        JSONObject jobJSON = job.toJsonJob();
+        JSONObject jobJSON = job.toJsonALL();
         boolean hasApplied = false;
         
         // verification si user pas supprimé
