@@ -28,16 +28,8 @@ import javax.ws.rs.core.UriInfo;
  */
 @Path("jobs")
 public class JobRoutes {
-    
-    @Context
-    private UriInfo context;
 
     private JobService jobService = new JobService();
-    /**
-     * Creates a new instance of UserRoutes
-     */
-    public JobRoutes() {
-    }
     
     @GET
     @Path("{pagenumber}/{entitiesperpage}")
