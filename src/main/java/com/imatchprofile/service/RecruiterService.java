@@ -74,13 +74,16 @@ public class RecruiterService extends UserService{
         JSONObject payload = new JSONObject(content);
         // verification info propre a un user
         String[] tabContent = this.editUserVerif(payload,userId);
+        
         String description, company;
         try {
             description = payload.getString("description");
             company = payload.getString("company");
         } catch (JSONException e) {
+            e.printStackTrace();
             throw new IMPPayloadException();
         }
+        
         //verification de l'existence des champs
         if (oneOfIsNull(description, company))
             throw new IMPPayloadException();

@@ -134,8 +134,10 @@ public class UserService extends Service {
             return FileHelper.writeAvatarBase64ToFile(filename, value);
         } else {
             //verification de l'url de la photo
-            if (!UrlValidator.getInstance().isValid(photoUrl))
-                throw new IMPBadFormatException("url");
+            if (!UrlValidator.getInstance().isValid(photoUrl)) {
+                /* commenté à cause des problèmes d'url d'avatar importé sur une api locale */
+                //throw new IMPBadFormatException("url");
+            }
             
             return photoUrl;
         }
@@ -149,6 +151,7 @@ public class UserService extends Service {
             tabContent[1] = payload.getString("firstname");
             tabContent[2] = payload.getString("email");
         } catch (JSONException e) {
+            e.printStackTrace();
             throw new IMPPayloadException();
         }
         
